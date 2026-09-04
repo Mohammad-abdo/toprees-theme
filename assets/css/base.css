@@ -1,0 +1,294 @@
+/* ==========================================================================
+   TOPPERS — Design System
+   Palette:  --ink #0E1730 (deep navy, near-black)
+             --navy #1C2F5E (primary navy)
+             --navy-2 #2A4380 (lighter navy for gradients)
+             --gold #C99A3B (primary gold)
+             --gold-light #E9C877 (light gold / highlights)
+             --paper #FBF8F1 (warm paper background)
+             --paper-2 #F3EEE1 (deeper paper for section contrast)
+             --ink-soft #4A5170 (muted text on paper)
+   Type: Display (Arabic) = 'Cairo', Display (Latin) = 'Fraunces'
+         Body (Arabic) = 'Tajawal', Body (Latin) = 'Inter'
+   Signature element: an animated quill that "writes" a gold underline beneath
+   headings, and a five-point star motif (from the mark) used as a structural
+   bullet / divider throughout — never decorative alone, always marking a
+   point that matters (a stat, a step, a highlighted service).
+   ========================================================================== */
+
+
+:root {
+  --ink: #0e1730;
+  --navy: #1c2f5e;
+  --navy-2: #2a4380;
+  --navy-glass: rgba(28, 47, 94, 0.86);
+  --gold: #c99a3b;
+  --gold-light: #e9c877;
+  --gold-deep: #9c7420;
+  --paper: #fbf8f1;
+  --paper-2: #f1eada;
+  --ink-soft: #4a5170;
+  --ink-faint: #8189a3;
+  --white: #ffffff;
+  --line: rgba(14, 23, 48, 0.1);
+  --line-light: rgba(255, 255, 255, 0.16);
+  --shadow: 0 20px 50px -20px rgba(14, 23, 48, 0.35);
+  --shadow-sm: 0 8px 24px -12px rgba(14, 23, 48, 0.25);
+  --radius: 8px;
+  --radius-sm: 8px;
+  --maxw: 1200px;
+  --ease: cubic-bezier(0.22, 0.7, 0.2, 1);
+}
+
+html[lang="ar"],
+html[dir="rtl"],
+html[lang^="ar"] {
+  --f-display: "Cairo", system-ui, sans-serif;
+  --f-body: "Cairo", "Tajawal", system-ui, sans-serif;
+}
+html[lang="en"],
+html[lang^="en"] {
+  --f-display: "Fraunces", Georgia, serif;
+  --f-body: "Inter", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+html[dir="rtl"],
+html.tk-rtl,
+body.rtl,
+body.tk-rtl {
+  direction: rtl;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body, "Cairo", system-ui, sans-serif);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+html[dir="rtl"] body,
+body.rtl,
+body.tk-rtl {
+  letter-spacing: 0;
+  text-align: right;
+}
+html[dir="ltr"] body:not(.rtl):not(.tk-rtl) {
+  letter-spacing: 0.01em;
+  text-align: left;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--f-display);
+  color: var(--ink);
+  margin: 0 0 0.5em;
+  line-height: 1.18;
+  font-weight: 700;
+}
+p {
+  margin: 0 0 1em;
+  color: var(--ink-soft);
+}
+
+.container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+.section {
+  padding: 96px 0;
+}
+.section--tight {
+  padding: 64px 0;
+}
+.section--alt {
+  background: var(--paper-2);
+}
+.section--navy {
+  background: linear-gradient(
+    160deg,
+    var(--ink),
+    var(--navy) 60%,
+    var(--navy-2)
+  );
+  color: var(--white);
+}
+.section--navy p {
+  color: rgba(255, 255, 255, 0.72);
+}
+.section--navy h2,
+.section--navy h3 {
+  color: var(--white);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Reveal-on-scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s var(--ease),
+    transform 0.8s var(--ease);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.7s var(--ease);
+}
+.reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-stagger.is-visible > *:nth-child(1) {
+  transition-delay: 0.05s;
+}
+.reveal-stagger.is-visible > *:nth-child(2) {
+  transition-delay: 0.14s;
+}
+.reveal-stagger.is-visible > *:nth-child(3) {
+  transition-delay: 0.23s;
+}
+.reveal-stagger.is-visible > *:nth-child(4) {
+  transition-delay: 0.32s;
+}
+.reveal-stagger.is-visible > *:nth-child(5) {
+  transition-delay: 0.41s;
+}
+.reveal-stagger.is-visible > *:nth-child(6) {
+  transition-delay: 0.5s;
+}
+
+/* ---------- Eyebrow / labels ---------- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--f-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 14px;
+}
+html[lang="ar"] .eyebrow {
+  letter-spacing: 0;
+  font-size: 14px;
+}
+.eyebrow .star {
+  width: 11px;
+  height: 11px;
+  color: var(--gold);
+}
+
+/* ---------- Star bullet (signature motif) ---------- */
+.star-ic {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.12em;
+  fill: currentColor;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: 15px;
+  border: 1px solid transparent;
+  transition:
+    transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease),
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+  white-space: nowrap;
+}
+.btn-gold {
+  background: linear-gradient(
+    135deg,
+    var(--gold-light),
+    var(--gold) 55%,
+    var(--gold-deep)
+  );
+  color: var(--ink);
+  box-shadow: 0 14px 30px -12px rgba(201, 154, 59, 0.6);
+}
+.btn-gold:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 38px -14px rgba(201, 154, 59, 0.75);
+}
+.btn-outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--white);
+}
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-3px);
+}
+.btn-outline-dark {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+}
+.btn-outline-dark:hover {
+  border-color: var(--gold);
+  background: rgba(201, 154, 59, 0.08);
+  transform: translateY(-3px);
+}
+.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+.btn-sm {
+  padding: 10px 18px;
+  font-size: 13.5px;
+}
+
