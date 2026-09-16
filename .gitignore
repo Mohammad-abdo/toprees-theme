@@ -1,0 +1,5 @@
+# Ignore duplicate nested folder and zip archives
+toppers/
+*.zip
+.DS_Store
+Thumbs.db

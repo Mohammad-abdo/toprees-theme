@@ -1,6 +1,6 @@
 <?php
 /**
- * Front page.
+ * Template Name: الرئيسية (توبرز)
  *
  * @package Toppers
  */
@@ -9,14 +9,10 @@ get_header();
 ?>
 <main class="site-main">
 	<?php
-	if ( have_posts() ) {
+	if ( toppers_is_elementor_page() ) {
 		while ( have_posts() ) {
 			the_post();
-			if ( toppers_is_elementor_page() ) {
-				the_content();
-			} else {
-				get_template_part( 'template-parts/home' );
-			}
+			the_content();
 		}
 	} else {
 		get_template_part( 'template-parts/home' );

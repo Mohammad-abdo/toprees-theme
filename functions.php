@@ -1,40 +1,28 @@
 <?php
 /**
- * Tek-Craft Toppres theme bootstrap.
+ * Toppers theme bootstrap.
  *
- * @package Tek_Craft_Toppres
+ * @package Toppers
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TK_THEME_VERSION', '1.5.5' );
-define( 'TK_THEME_DIR', get_template_directory() );
-define( 'TK_THEME_URI', get_template_directory_uri() );
-
-$tk_includes = array(
-	'/inc/helpers.php',
-	'/inc/icons.php',
-	'/inc/i18n.php',
-	'/inc/nav-walker.php',
-	'/inc/setup.php',
-	'/inc/enqueue.php',
-	'/inc/customizer.php',
-	'/inc/template-functions.php',
-	'/inc/template-hooks.php',
-	'/inc/theme-images.php',
-	'/inc/localize-media.php',
-	'/inc/theme-activation.php',
-	'/inc/elementor.php',
-	'/inc/performance.php',
-	'/inc/seo.php',
-	'/inc/cpt-services.php',
-);
-
-foreach ( $tk_includes as $tk_file ) {
-	$tk_path = TK_THEME_DIR . $tk_file;
-	if ( file_exists( $tk_path ) ) {
-		require_once $tk_path;
-	}
+if ( ! defined( 'TOPPERS_VERSION' ) ) {
+	define( 'TOPPERS_VERSION', '1.2.2' );
 }
+if ( ! defined( 'TOPPERS_DIR' ) ) {
+	define( 'TOPPERS_DIR', get_template_directory() );
+}
+if ( ! defined( 'TOPPERS_URI' ) ) {
+	define( 'TOPPERS_URI', get_template_directory_uri() );
+}
+
+require_once TOPPERS_DIR . '/inc/helpers.php';
+require_once TOPPERS_DIR . '/inc/setup.php';
+require_once TOPPERS_DIR . '/inc/cpt.php';
+require_once TOPPERS_DIR . '/inc/customizer.php';
+require_once TOPPERS_DIR . '/inc/admin-content.php';
+require_once TOPPERS_DIR . '/inc/demo-content.php';
+require_once TOPPERS_DIR . '/inc/elementor.php';

@@ -1,0 +1,94 @@
+:root {
+  --dash-bg: #f8fafc;
+  --dash-surface: #ffffff;
+  --dash-border: #e2e8f0;
+  --dash-text: #1e293b;
+  --dash-muted: #64748b;
+  --dash-primary: var(--navy);
+  --dash-accent: var(--gold);
+}
+.dash-section { background: var(--dash-bg); padding: 60px 0; min-height: 80vh; overflow-x: clip; }
+.dash-section .container { max-width: var(--maxw); width: 100%; }
+.dash-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; align-items: start; width: 100%; }
+.dash-sidebar { width: 100%; max-width: 100%; background: var(--dash-surface); border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.04); overflow: hidden; position: sticky; top: 100px; border: 1px solid var(--dash-border); }
+.dash-user-card { padding: 40px 20px; text-align: center; background: linear-gradient(135deg, var(--dash-primary), #0a132b); position: relative; }
+.dash-avatar { width: 80px; height: 80px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: #fff; }
+.dash-user-name { color: #fff; font-size: 18px; margin-bottom: 4px; font-weight: 700; }
+.dash-user-role { color: var(--dash-accent); font-size: 13px; }
+.dash-nav { padding: 20px 0; }
+.dash-nav-btn { width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 20px; border: none; background: transparent; color: var(--dash-muted); font-size: 15px; font-family: inherit; font-weight: 600; cursor: pointer; text-align: right; }
+.dash-nav-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+.dash-nav-btn.active, .dash-nav-btn:hover { color: var(--dash-primary); background: #f1f5f9; }
+.dash-main { min-width: 0; max-width: 100%; overflow: hidden; }
+.dash-tab { display: none; }
+.dash-tab.active { display: block; }
+.dash-header { margin-bottom: 30px; }
+.dash-stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-bottom: 40px; }
+.dash-stat-card { background: #fff; padding: 24px; border-radius: 20px; border: 1px solid var(--dash-border); display: flex; align-items: center; gap: 16px; }
+.dash-stat-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+.dash-stat-icon.blue { background: rgba(37,99,235,0.1); color: #2563eb; }
+.dash-stat-icon.green { background: rgba(16,185,129,0.1); color: #10b981; }
+.dash-stat-icon.gold { background: rgba(201,154,59,0.1); color: var(--dash-accent); }
+.dash-panel { background: #fff; border-radius: 20px; border: 1px solid var(--dash-border); padding: 30px; margin-bottom: 30px; }
+.dash-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.dash-table th, .dash-table td { text-align: right; padding: 16px; border-bottom: 1px solid var(--dash-border); overflow: hidden; text-overflow: ellipsis; }
+.dash-badge { display: inline-flex; padding: 6px 12px; border-radius: 30px; font-size: 12px; font-weight: 600; }
+.dash-badge.progress { background: rgba(201,154,59,0.1); color: #b48528; }
+.dash-badge.completed { background: rgba(16,185,129,0.1); color: #10b981; }
+.dash-wallet-card { background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 24px; padding: 40px; color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 30px; }
+.dash-chat-box { background: #fff; border: 1px solid var(--dash-border); border-radius: 20px; display: flex; flex-direction: column; height: 500px; }
+.dash-chat-messages { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; background: #f8fafc; }
+.dash-msg { max-width: 75%; padding: 16px 20px; border-radius: 20px; }
+.dash-msg.received { background: #fff; align-self: flex-start; border: 1px solid var(--dash-border); }
+.dash-msg.sent { background: var(--navy); color: #fff; align-self: flex-end; }
+.dash-input { width: 100%; border: 1px solid var(--dash-border); border-radius: 12px; padding: 14px 16px; background: #f8fafc; }
+@media (max-width: 900px) {
+  .dash-layout { grid-template-columns: 1fr; }
+  .dash-sidebar { width: 100%; position: static; }
+  .dash-stats-grid { grid-template-columns: 1fr; }
+}
+body.admin-bar .dash-sidebar { top: 142px; }
+body.is-dash-page { overflow-x: clip; }
+.dash-nav-btn span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.legal-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+.legal-card h3 { color: var(--gold-deep); font-size: 18px; margin-bottom: 12px; }
+.legal-card p, .legal-card li { font-size: 14.5px; line-height: 1.8; color: var(--ink-soft); }
+.legal-card ul { padding-inline-start: 20px; list-style: disc; }
+.team-card { display: flex; gap: 16px; align-items: flex-start; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+.team-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--navy); color: var(--gold-light); display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0; }
+.team-badge { display: inline-block; background: rgba(201,154,59,0.12); color: var(--gold-deep); font-size: 12px; padding: 2px 8px; border-radius: 20px; margin-inline-start: 8px; }
+
+.auth-page .site-header, .auth-page .site-footer, .auth-page .wa-float { display: none; }
+
+.dash-nav-btn.active::before { content: ''; position: absolute; right: 0; top: 0; height: 100%; width: 4px; background: var(--dash-accent); }
+.dash-nav-btn { position: relative; }
+.dash-nav-highlight { background: linear-gradient(90deg, rgba(201,154,59,0.1), transparent); color: var(--dash-accent) !important; font-weight: 700; }
+.dash-nav-logout { color: #e74c3c !important; margin-top: 12px; border-top: 1px solid var(--dash-border); padding-top: 20px; }
+.dash-panel-title { font-size: 18px; margin: 0 0 20px; font-weight: 700; }
+.dash-table-wrap { overflow-x: auto; }
+.dash-badge.paid { background: rgba(16,185,129,0.1); color: #10b981; }
+.dash-stat-info small { font-size: 14px; font-weight: 400; color: var(--dash-muted); }
+.dash-timeline { position: relative; padding-right: 20px; }
+.dash-timeline::before { content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 2px; background: var(--dash-border); }
+.dash-timeline-item { position: relative; padding-right: 24px; margin-bottom: 24px; }
+.dash-timeline-item::before { content: ''; position: absolute; right: -25px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid var(--dash-primary); }
+.dash-timeline-item.gold::before { border-color: var(--dash-accent); }
+.dash-timeline-item.green::before { border-color: #10b981; }
+.dash-timeline-content h5 { margin: 0 0 4px; font-size: 15px; }
+.dash-timeline-content p { margin: 0; font-size: 13px; color: var(--dash-muted); }
+.dash-timeline-content span { font-size: 11px; color: var(--dash-muted); display: block; margin-top: 4px; }
+.dash-msg-time { display: block; font-size: 11px; opacity: .7; margin-top: 6px; }
+.dash-chat-input { display: flex; gap: 10px; padding: 16px; border-top: 1px solid var(--dash-border); background: #fff; }
+.dash-chat-input .dash-input, .dash-chat-input input { flex: 1; }
+.btn-attach, .btn-send { border: none; background: var(--navy); color: #fff; border-radius: 10px; padding: 10px 14px; cursor: pointer; font: inherit; }
+.btn-attach { background: transparent; color: var(--dash-muted); }
+.dash-input-group { margin-bottom: 16px; }
+.dash-input-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.dash-input { width: 100%; border: 1px solid var(--dash-border); border-radius: 12px; padding: 14px 16px; background: #f8fafc; font: inherit; }
+.dash-new-badge { font-size: 12px; background: var(--dash-accent); color: #fff; padding: 2px 8px; border-radius: 20px; }
+.dash-loading { text-align: center; padding: 40px; }
+.dash-spinner { width: 50px; height: 50px; border: 4px solid #f1f5f9; border-top-color: var(--dash-accent); border-radius: 50%; animation: dash-spin 1s linear infinite; margin: 0 auto 16px; }
+@keyframes dash-spin { to { transform: rotate(360deg); } }
+.btn-navy { background: var(--navy); color: #fff; border: none; border-radius: 12px; padding: 12px 20px; cursor: pointer; font: inherit; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }

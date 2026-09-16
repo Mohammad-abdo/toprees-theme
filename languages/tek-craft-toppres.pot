@@ -1,9 +1,0 @@
-# Tek-Craft Toppres
-msgid ""
-msgstr ""
-"Project-Id-Version: Tek-Craft Toppres 1.0.0\n"
-"Language: ar\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Domain: tek-craft-toppres\n"

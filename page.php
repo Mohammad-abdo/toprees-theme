@@ -1,29 +1,33 @@
 <?php
 /**
- * Page template — Elementor + imported HTML.
+ * Default page.
  *
- * @package Tek_Craft_Toppres
+ * @package Toppers
  */
 
 get_header();
+
+if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_location( 'single' ) ) {
+	get_footer();
+	return;
+}
 ?>
-<main id="primary" class="site-main">
+<main class="site-main">
 	<?php
 	while ( have_posts() ) :
 		the_post();
-		$is_elementor = tk_is_elementor_page();
-		?>
-		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<?php if ( ! $is_elementor ) : ?>
-				<header class="page-header container section--tight">
-					<?php the_title( '<h1 class="page-title">', '</h1>' ); ?>
-				</header>
-			<?php endif; ?>
-			<div class="entry-content<?php echo $is_elementor ? '' : ' container'; ?>">
-				<?php the_content(); ?>
-			</div>
-		</article>
-		<?php
+		if ( toppers_is_elementor_page() ) {
+			the_content();
+		} else {
+			get_template_part( 'template-parts/page-hero', null, array( 'title' => get_the_title(), 'lede' => has_excerpt() ? get_the_excerpt() : '' ) );
+			?>
+			<section class="section page-default-content">
+				<div class="container">
+					<?php the_content(); ?>
+				</div>
+			</section>
+			<?php
+		}
 	endwhile;
 	?>
 </main>
