@@ -23,10 +23,10 @@ $home_services = array(
 );
 
 $why_icons = array(
-	'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 1 0-16 0" /></svg>',
-	'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>',
-	'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>',
-	'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>',
+	'<i class="fa-solid fa-user-graduate" aria-hidden="true"></i>',
+	'<i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>',
+	'<i class="fa-solid fa-clock" aria-hidden="true"></i>',
+	'<i class="fa-solid fa-lock" aria-hidden="true"></i>',
 );
 
 $default_tests = array(
@@ -44,11 +44,13 @@ $default_tests = array(
 			$img = $slide[0];
 			?>
 			<div class="hero-slide<?php echo 0 === $i ? ' is-active' : ''; ?> slide-<?php echo esc_attr( $i + 1 ); ?>">
-				<div class="slide-bg" style="background-image: url('<?php echo esc_url( $img ); ?>');"></div>
-				<div class="slide-overlay"></div>
+				<div class="slide-bg">
+					<img src="<?php echo esc_url( $img ); ?>" alt="" decoding="async"<?php echo 0 === $i ? ' fetchpriority="high"' : ' loading="lazy"'; ?>>
+				</div>
+				<div class="slide-overlay" aria-hidden="true"></div>
 				<div class="container slide-content center-content">
 					<div class="eyebrow hero-eyebrow">
-						<svg class="star-ic" viewBox="0 0 24 24" style="fill: var(--gold)"><path d="M12 0l2.9 8.4L24 12l-9.1 3.6L12 24l-2.9-8.4L0 12l9.1-3.6L12 0z" /></svg>
+						<i class="fa-solid fa-star star-ic" aria-hidden="true" style="color: var(--gold)"></i>
 						<span><?php echo esc_html( $slide[1] ); ?></span>
 					</div>
 					<h1 class="hero-title"><?php echo esc_html( $slide[2] ); ?><br><span class="accent"><?php echo esc_html( $slide[3] ); ?></span></h1>
@@ -64,7 +66,7 @@ $default_tests = array(
 	</div>
 	<div class="slider-controls">
 		<button class="slider-btn" id="sliderPrev" type="button">
-			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+			<i class="fa-solid fa-chevron-right" aria-hidden="true" style="font-size:20px;"></i>
 		</button>
 		<div class="slider-dots" id="sliderDots">
 			<button class="slider-dot active" data-index="0" type="button"></button>
@@ -72,7 +74,7 @@ $default_tests = array(
 			<button class="slider-dot" data-index="2" type="button"></button>
 		</div>
 		<button class="slider-btn" id="sliderNext" type="button">
-			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+			<i class="fa-solid fa-chevron-left" aria-hidden="true" style="font-size:20px;"></i>
 		</button>
 	</div>
 </section>
@@ -192,7 +194,7 @@ $default_tests = array(
 					$raw_type   = get_post_meta( $pid, '_toppers_testimonial_type', true ) ?: 'voice';
 					$type       = in_array( $raw_type, array( 'image', 'whatsapp', 'photo' ), true ) ? 'image' : $raw_type;
 					$stars      = max( 1, min( 5, (int) get_post_meta( $pid, '_toppers_stars', true ) ?: 5 ) );
-					$star_str   = str_repeat( '★', $stars );
+					$star_str   = str_repeat( '<i class="fa-solid fa-star" aria-hidden="true"></i>', $stars );
 					$audio_id   = (int) get_post_meta( $pid, '_toppers_audio_id', true );
 					$audio_url  = $audio_id ? wp_get_attachment_url( $audio_id ) : '';
 					$audio_time = get_post_meta( $pid, '_toppers_audio_time', true ) ?: '0:45';
@@ -206,25 +208,25 @@ $default_tests = array(
 
 					echo '<div class="t-card" data-type="' . esc_attr( $type ) . '">';
 					if ( 'voice' === $type ) {
-						echo '<span class="media-badge">' . esc_html__( '🎙️ رسالة صوتية', 'toppers' ) . '</span>';
-						echo '<div class="t-stars">' . esc_html( $star_str ) . '</div>';
+						echo '<span class="media-badge"><i class="fa-solid fa-microphone" aria-hidden="true"></i> ' . esc_html__( 'رسالة صوتية', 'toppers' ) . '</span>';
+						echo '<div class="t-stars">' . $star_str . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						echo toppers_audio_player( $audio_url, $audio_time ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						if ( $quote ) {
 							echo '<p class="t-quote">' . esc_html( $quote ) . '</p>';
 						}
 					} elseif ( 'image' === $type && $screen_thumb ) {
-						echo '<span class="media-badge">' . esc_html__( '📸 سكرين شوت', 'toppers' ) . '</span>';
+						echo '<span class="media-badge"><i class="fa-solid fa-camera" aria-hidden="true"></i> ' . esc_html__( 'سكرين شوت', 'toppers' ) . '</span>';
 						echo '<div class="t-screenshot-wrap" data-full-image="' . esc_url( $screen_full ) . '" title="' . esc_attr__( 'انقر لتكبير السكرين شوت', 'toppers' ) . '">';
 						echo '<img src="' . esc_url( $screen_thumb ) . '" alt="' . esc_attr( $name ) . '" class="t-screenshot-img">';
-						echo '<div class="t-zoom-overlay"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg><span>' . esc_html__( 'تكبير', 'toppers' ) . '</span></div>';
+						echo '<div class="t-zoom-overlay"><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true" style="font-size:20px;"></i><span>' . esc_html__( 'تكبير', 'toppers' ) . '</span></div>';
 						echo '</div>';
-						echo '<div class="t-stars" style="margin-top:10px;">' . esc_html( $star_str ) . '</div>';
+						echo '<div class="t-stars" style="margin-top:10px;">' . $star_str . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						if ( $quote ) {
 							echo '<p class="t-quote">' . esc_html( $quote ) . '</p>';
 						}
 					} else {
-						echo '<span class="media-badge">' . esc_html__( '✍️ رأي نصي', 'toppers' ) . '</span>';
-						echo '<div class="t-stars">' . esc_html( $star_str ) . '</div>';
+						echo '<span class="media-badge"><i class="fa-solid fa-pen" aria-hidden="true"></i> ' . esc_html__( 'رأي نصي', 'toppers' ) . '</span>';
+						echo '<div class="t-stars">' . $star_str . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						echo '<p class="t-quote" style="margin-top:6px;">' . esc_html( $quote ) . '</p>';
 					}
 					echo '<div class="t-who"><div class="t-avatar">' . esc_html( toppers_first_letter( $name ) ) . '</div><div><b>' . esc_html( $name ) . '</b><span>' . esc_html( $role ) . '</span></div></div>';
@@ -234,7 +236,8 @@ $default_tests = array(
 				wp_reset_postdata();
 			} else {
 				foreach ( $default_tests as $row ) {
-					echo '<div class="t-card"><span class="media-badge">' . esc_html__( '🎙️ رسالة صوتية', 'toppers' ) . '</span><div class="t-stars">★★★★★</div>' . toppers_audio_player( '', $row[3] ) . '<p class="t-quote">' . esc_html( $row[2] ) . '</p><div class="t-who"><div class="t-avatar">' . esc_html( toppers_first_letter( $row[0] ) ) . '</div><div><b>' . esc_html( $row[0] ) . '</b><span>' . esc_html( $row[1] ) . '</span></div></div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					$default_star_str = str_repeat( '<i class="fa-solid fa-star" aria-hidden="true"></i>', 5 );
+					echo '<div class="t-card"><span class="media-badge"><i class="fa-solid fa-microphone" aria-hidden="true"></i> ' . esc_html__( 'رسالة صوتية', 'toppers' ) . '</span><div class="t-stars">' . $default_star_str . '</div>' . toppers_audio_player( '', $row[3] ) . '<p class="t-quote">' . esc_html( $row[2] ) . '</p><div class="t-who"><div class="t-avatar">' . esc_html( toppers_first_letter( $row[0] ) ) . '</div><div><b>' . esc_html( $row[0] ) . '</b><span>' . esc_html( $row[1] ) . '</span></div></div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 			}
 			?>

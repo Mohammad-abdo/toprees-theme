@@ -101,7 +101,7 @@ $steps = array(
 				<div class="reveal" style="display: flex; align-items: center; justify-content: center;">
 					<div class="card" style="width: 100%; padding: 40px; background: var(--navy); color: white; border: none;">
 						<div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(201,154,59,0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--gold-light);">
-							<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+							<i class="fa-solid fa-shield-halved" aria-hidden="true" style="font-size: 32px;"></i>
 						</div>
 						<h3 style="color: var(--gold-light); margin-bottom: 12px;"><?php esc_html_e( 'معايير اختيار صارمة', 'toppers' ); ?></h3>
 						<p style="color: rgba(255,255,255,0.8); font-size: 14.5px; line-height: 1.8; margin-bottom: 0;"><?php esc_html_e( 'نحن نفحص السير الذاتية والشهادات بدقة، ونقيم القدرة الفعلية للمتقدمين من خلال اختبارات عملية في الصياغة والتحليل المنهجي.', 'toppers' ); ?></p>

@@ -213,7 +213,7 @@ function toppers_content_menu() {
 	add_submenu_page(
 		'toppers-content',
 		'المساعد البحثي الذكي',
-		'المساعد البحثي الذكي 🤖',
+		'المساعد البحثي الذكي',
 		'edit_theme_options',
 		'toppers-ai-settings',
 		'toppers_ai_settings_render'
@@ -434,7 +434,7 @@ function toppers_ai_settings_render() {
 	?>
 	<div class="wrap toppers-ai-settings-wrap" dir="rtl">
 		<h1 style="display:flex;align-items:center;gap:10px;">
-			<span>🤖 إعدادات المساعد البحثي الذكي</span>
+			<span><i class="fa-solid fa-robot" aria-hidden="true"></i> إعدادات المساعد البحثي الذكي</span>
 			<span style="font-size:13px;background:#c99a3b;color:#fff;padding:3px 10px;border-radius:20px;font-weight:normal;">توليد 5 نواتج ذكية</span>
 		</h1>
 		<p style="color:#64748b;font-size:14px;max-width:850px;">
@@ -452,7 +452,7 @@ function toppers_ai_settings_render() {
 
 			<div class="toppers-box" style="background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:24px;margin-bottom:24px;max-width:980px;box-shadow:0 2px 6px rgba(0,0,0,0.02);">
 				<h2 style="font-size:18px;margin-top:0;color:#0f172a;border-bottom:1px solid #e2e8f0;padding-bottom:12px;">
-					🏷️ الكلمات المفتاحية السريعة (Quick Suggestion Chips)
+					<i class="fa-solid fa-tag" aria-hidden="true"></i> الكلمات المفتاحية السريعة (Quick Suggestion Chips)
 				</h2>
 				<p style="color:#64748b;font-size:13px;">تظهر هذه الكلمات للطالب كأزرار سريعة في صفحة المساعد البحثي لتسهيل الاختيار بنقرة واحدة. افصل بين كل كلمة أو عبارة بفاصلة أو سطر جديد.</p>
 				<?php
@@ -464,7 +464,7 @@ function toppers_ai_settings_render() {
 			<div class="toppers-box" style="background:#fff;border:1px solid #cbd5e1;border-radius:12px;padding:24px;margin-bottom:24px;max-width:980px;box-shadow:0 2px 6px rgba(0,0,0,0.02);">
 				<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:16px;">
 					<h2 style="font-size:18px;margin:0;color:#0f172a;">
-						💡 قوالب صياغة الأفكار والعناوين الأكاديمية
+						<i class="fa-solid fa-lightbulb" aria-hidden="true"></i> قوالب صياغة الأفكار والعناوين الأكاديمية
 					</h2>
 					<button type="button" class="button button-secondary" id="toppers-add-template">+ إضافة قالب جديد</button>
 				</div>
@@ -501,9 +501,9 @@ function toppers_ai_settings_render() {
 			</div>
 
 			<div style="display:flex;gap:14px;align-items:center;">
-				<?php submit_button( '💾 حفظ جميع إعدادات المساعد البحثي', 'primary', 'submit', false ); ?>
+				<?php submit_button( 'حفظ جميع إعدادات المساعد البحثي', 'primary', 'submit', false ); ?>
 				<button type="submit" name="toppers_ai_reset" value="1" class="button button-secondary" onclick="return confirm('هل أنت متأكد من استعادة القوالب والكلمات الأكاديمية النموذجية الأصلية؟');" style="color:#64748b;">
-					🔄 استعادة القوالب الافتراضية
+					<i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i> استعادة القوالب الافتراضية
 				</button>
 			</div>
 		</form>

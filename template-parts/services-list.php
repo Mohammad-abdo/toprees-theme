@@ -5,7 +5,7 @@
  * @package Toppers
  */
 
-$menu_arrow = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+$menu_arrow = '<i class="fa-solid fa-chevron-left" aria-hidden="true" style="font-size:16px;"></i>';
 $fallback_desc = array(
 	'الطلاب الجامعيين'     => 'دعم أكاديمي متكامل لطلاب البكالوريوس لضمان التفوق في المقررات، إعداد التقارير، والبحوث الجامعية بكفاءة عالية وبدون أي نسبة استلال.',
 	'الدراسات العليا'       => 'خدمات احترافية تلبي دقة وصرامة مرحلة الدراسات العليا، تبدأ من اقتراح العناوين وحتى المناقشة النهائية للرسالة.',

@@ -48,8 +48,8 @@ $defaults = array(
 		'quote' => 'ساعدوني في نشر بحثي العلمي في مجلة محكمة بوقت قياسي. عمل احترافي بلا شك.',
 		'type'  => 'image',
 		'chat'  => array(
-			'مبروك د. ريم 🎉 تم قبول البحث في المجلة المحكمة رسميًا.',
-			'الله يبارك فيكم، فريق محترف وسريع في كل خطوة 🌹',
+			'مبروك د. ريم، تم قبول البحث في المجلة المحكمة رسميًا.',
+			'الله يبارك فيكم، فريق محترف وسريع في كل خطوة',
 		),
 	),
 	array(
@@ -93,11 +93,11 @@ $testimonials_query = new WP_Query(
 			<div class="container">
 				<div class="t-filters" role="tablist" aria-label="<?php esc_attr_e( 'تصفية الآراء', 'toppers' ); ?>">
 					<button class="tab-btn active" type="button" data-filter="all"><?php esc_html_e( 'الكل', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['all'] ); ?></span></button>
-					<button class="tab-btn" type="button" data-filter="voice"><?php esc_html_e( '🎙️ رسائل صوتية', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['voice'] ); ?></span></button>
-					<button class="tab-btn" type="button" data-filter="image"><?php esc_html_e( '📸 لقطات وسكرينات', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['image'] ); ?></span></button>
-					<button class="tab-btn" type="button" data-filter="text"><?php esc_html_e( '✍️ آراء نصية', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['text'] ); ?></span></button>
+					<button class="tab-btn" type="button" data-filter="voice"><i class="fa-solid fa-microphone" aria-hidden="true"></i> <?php esc_html_e( 'رسائل صوتية', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['voice'] ); ?></span></button>
+					<button class="tab-btn" type="button" data-filter="image"><i class="fa-solid fa-camera" aria-hidden="true"></i> <?php esc_html_e( 'لقطات وسكرينات', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['image'] ); ?></span></button>
+					<button class="tab-btn" type="button" data-filter="text"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i> <?php esc_html_e( 'آراء نصية', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['text'] ); ?></span></button>
 					<?php if ( ! empty( $counts['video'] ) ) : ?>
-						<button class="tab-btn" type="button" data-filter="video"><?php esc_html_e( '🎬 فيديو', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['video'] ); ?></span></button>
+						<button class="tab-btn" type="button" data-filter="video"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> <?php esc_html_e( 'فيديو', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['video'] ); ?></span></button>
 					<?php endif; ?>
 				</div>
 
@@ -111,7 +111,7 @@ $testimonials_query = new WP_Query(
 							$quote      = wp_strip_all_tags( get_the_content() );
 							$role       = get_post_meta( $pid, '_toppers_role', true ) ?: 'طالب باحث';
 							$stars      = max( 1, min( 5, (int) get_post_meta( $pid, '_toppers_stars', true ) ?: 5 ) );
-							$star_str   = str_repeat( '★', $stars );
+							$star_str   = str_repeat( '<i class="fa-solid fa-star" aria-hidden="true"></i>', $stars );
 							$raw_type   = get_post_meta( $pid, '_toppers_testimonial_type', true ) ?: 'voice';
 							$type       = in_array( $raw_type, array( 'image', 'whatsapp', 'photo' ), true ) ? 'image' : $raw_type;
 							$audio_id   = (int) get_post_meta( $pid, '_toppers_audio_id', true );
@@ -132,19 +132,19 @@ $testimonials_query = new WP_Query(
 							?>
 							<div class="t-card" data-type="<?php echo esc_attr( $type ); ?>">
 								<?php if ( 'voice' === $type ) : ?>
-									<span class="media-badge"><?php esc_html_e( '🎙️ رسالة صوتية', 'toppers' ); ?></span>
-									<div class="t-stars"><?php echo esc_html( $star_str ); ?></div>
+									<span class="media-badge"><i class="fa-solid fa-microphone" aria-hidden="true"></i> <?php esc_html_e( 'رسالة صوتية', 'toppers' ); ?></span>
+									<div class="t-stars"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 									<?php echo toppers_audio_player( $audio_url, $audio_time ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 									<?php if ( $quote ) : ?>
 										<p class="t-quote"><?php echo esc_html( $quote ); ?></p>
 									<?php endif; ?>
 								<?php elseif ( 'image' === $type ) : ?>
-									<span class="media-badge"><?php esc_html_e( '📸 سكرين شوت', 'toppers' ); ?></span>
+									<span class="media-badge"><i class="fa-solid fa-camera" aria-hidden="true"></i> <?php esc_html_e( 'سكرين شوت', 'toppers' ); ?></span>
 									<?php if ( $screen_thumb ) : ?>
 										<div class="t-screenshot-wrap" data-full-image="<?php echo esc_url( $screen_full ); ?>" title="<?php esc_attr_e( 'انقر لتكبير السكرين شوت', 'toppers' ); ?>">
 											<img src="<?php echo esc_url( $screen_thumb ); ?>" alt="<?php echo esc_attr( sprintf( 'رأي %s', $name ) ); ?>" class="t-screenshot-img">
 											<div class="t-zoom-overlay">
-												<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+												<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
 												<span><?php esc_html_e( 'تكبير الصورة', 'toppers' ); ?></span>
 											</div>
 										</div>
@@ -152,31 +152,31 @@ $testimonials_query = new WP_Query(
 										<div class="chat-proof">
 											<div class="cp-head"><span class="dot"></span><span><?php echo esc_html( sprintf( 'محادثة واتساب — %s', $name ) ); ?></span></div>
 											<div class="chat-bubble in"><?php echo esc_html( $quote ?: __( 'خدمة متميزة وسريعة، شكراً توبرز.', 'toppers' ) ); ?></div>
-											<div class="chat-bubble out"><?php esc_html_e( 'سعداء جداً بخدمتك ونتمنى لك دوام التوفيق 🌹', 'toppers' ); ?><span class="tick">✓✓</span></div>
+											<div class="chat-bubble out"><?php esc_html_e( 'سعداء جداً بخدمتك ونتمنى لك دوام التوفيق', 'toppers' ); ?><span class="tick"><i class="fa-solid fa-check-double" aria-hidden="true"></i></span></div>
 										</div>
 									<?php endif; ?>
-									<div class="t-stars" style="margin-top:10px;"><?php echo esc_html( $star_str ); ?></div>
+									<div class="t-stars" style="margin-top:10px;"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 									<?php if ( $quote && $screen_thumb ) : ?>
 										<p class="t-quote"><?php echo esc_html( $quote ); ?></p>
 									<?php endif; ?>
 								<?php elseif ( 'video' === $type ) : ?>
-									<span class="media-badge"><?php esc_html_e( '🎬 فيديو', 'toppers' ); ?></span>
+									<span class="media-badge"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> <?php esc_html_e( 'فيديو', 'toppers' ); ?></span>
 									<div class="video-thumb" data-video="<?php echo esc_url( $video_url ); ?>">
 										<?php if ( has_post_thumbnail( $pid ) ) : ?>
 											<img src="<?php echo esc_url( get_the_post_thumbnail_url( $pid, 'large' ) ); ?>" alt="<?php echo esc_attr( $name ); ?>">
 										<?php else : ?>
-											<div style="width:100%;height:180px;background:#0f172a;display:flex;align-items:center;justify-content:center;color:#fff;">🎬</div>
+											<div style="width:100%;height:180px;background:#0f172a;display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i></div>
 										<?php endif; ?>
 										<div class="vt-overlay"></div>
-										<div class="vt-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg></div>
+										<div class="vt-play"><i class="fa-solid fa-play" aria-hidden="true"></i></div>
 									</div>
-									<div class="t-stars"><?php echo esc_html( $star_str ); ?></div>
+									<div class="t-stars"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 									<?php if ( $quote ) : ?>
 										<p class="t-quote"><?php echo esc_html( $quote ); ?></p>
 									<?php endif; ?>
 								<?php else : ?>
-									<span class="media-badge"><?php esc_html_e( '✍️ رأي نصي', 'toppers' ); ?></span>
-									<div class="t-stars"><?php echo esc_html( $star_str ); ?></div>
+									<span class="media-badge"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i> <?php esc_html_e( 'رأي نصي', 'toppers' ); ?></span>
+									<div class="t-stars"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 									<p class="t-quote" style="margin-top: 6px"><?php echo esc_html( $quote ); ?></p>
 								<?php endif; ?>
 								<div class="t-who">
@@ -197,32 +197,32 @@ $testimonials_query = new WP_Query(
 							?>
 							<div class="t-card" data-type="<?php echo esc_attr( $type ); ?>">
 								<?php if ( 'voice' === $type ) : ?>
-									<span class="media-badge"><?php esc_html_e( '🎙️ رسالة صوتية', 'toppers' ); ?></span>
-									<div class="t-stars">★★★★★</div>
+									<span class="media-badge"><i class="fa-solid fa-microphone" aria-hidden="true"></i> <?php esc_html_e( 'رسالة صوتية', 'toppers' ); ?></span>
+									<div class="t-stars"><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i></div>
 									<?php echo toppers_audio_player( $row['audio'] ?? '', $row['time'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 									<p class="t-quote"><?php echo esc_html( $row['quote'] ); ?></p>
 								<?php elseif ( 'video' === $type ) : ?>
-									<span class="media-badge"><?php esc_html_e( '🎬 فيديو', 'toppers' ); ?></span>
+									<span class="media-badge"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> <?php esc_html_e( 'فيديو', 'toppers' ); ?></span>
 									<div class="video-thumb" data-video="">
 										<img src="<?php echo esc_url( $row['thumb'] ?? '' ); ?>" alt="<?php echo esc_attr( $row['name'] ); ?>">
 										<div class="vt-overlay"></div>
-										<div class="vt-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg></div>
+										<div class="vt-play"><i class="fa-solid fa-play" aria-hidden="true"></i></div>
 										<span class="vt-duration"><?php echo esc_html( $row['time'] ); ?></span>
 									</div>
-									<div class="t-stars">★★★★★</div>
+									<div class="t-stars"><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i></div>
 									<p class="t-quote"><?php echo esc_html( $row['quote'] ); ?></p>
 								<?php elseif ( 'image' === $type ) : ?>
-									<span class="media-badge"><?php esc_html_e( '📸 لقطة محادثة', 'toppers' ); ?></span>
+									<span class="media-badge"><i class="fa-solid fa-camera" aria-hidden="true"></i> <?php esc_html_e( 'لقطة محادثة', 'toppers' ); ?></span>
 									<div class="chat-proof">
 										<div class="cp-head"><span class="dot"></span><span><?php echo esc_html( sprintf( 'محادثة واتساب — %s', $row['name'] ) ); ?></span></div>
 										<div class="chat-bubble in"><?php echo esc_html( $row['chat'][0] ); ?></div>
-										<div class="chat-bubble out"><?php echo esc_html( $row['chat'][1] ); ?><span class="tick">✓✓ 11:42 ص</span></div>
+										<div class="chat-bubble out"><?php echo esc_html( $row['chat'][1] ); ?><span class="tick"><i class="fa-solid fa-check-double" aria-hidden="true"></i> 11:42 ص</span></div>
 									</div>
-									<div class="t-stars">★★★★★</div>
+									<div class="t-stars"><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i></div>
 									<p class="t-quote"><?php echo esc_html( $row['quote'] ); ?></p>
 								<?php else : ?>
-									<span class="media-badge"><?php esc_html_e( '✍️ رأي نصي', 'toppers' ); ?></span>
-									<div class="t-stars">★★★★★</div>
+									<span class="media-badge"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i> <?php esc_html_e( 'رأي نصي', 'toppers' ); ?></span>
+									<div class="t-stars"><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i></div>
 									<p class="t-quote" style="margin-top: 6px"><?php echo esc_html( $row['quote'] ); ?></p>
 								<?php endif; ?>
 								<div class="t-who">
@@ -239,7 +239,7 @@ $testimonials_query = new WP_Query(
 					<div class="t-card is-hidden" data-type="__cta" style="display: block">
 						<div class="share-card">
 							<div class="sh-ic">
-								<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"></path></svg>
+								<i class="fa-solid fa-comment" aria-hidden="true"></i>
 							</div>
 							<h3><?php esc_html_e( 'هل تعاملت معنا من قبل؟', 'toppers' ); ?></h3>
 							<p><?php esc_html_e( 'شاركنا تجربتك برسالة صوتية أو نصية أو سكرين شوت عبر الواتساب.', 'toppers' ); ?></p>

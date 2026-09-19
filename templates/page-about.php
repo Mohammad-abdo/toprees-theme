@@ -84,14 +84,14 @@ get_header();
 				<div class="about-mv-grid">
 					<div class="about-mv-card">
 						<div class="about-mv-ic">
-							<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20l-8-4V8l8-4 8 4v8l-8 4z"/><path d="M4 8l8 4 8-4"/><path d="M12 12v8"/></svg>
+							<i class="fa-solid fa-bullseye" aria-hidden="true" style="font-size: 32px;"></i>
 						</div>
 						<h3><?php esc_html_e( 'رسالتنا', 'toppers' ); ?></h3>
 						<p><?php esc_html_e( 'تمكين طلبة الدراسات العليا والباحثين من تحقيق التميز الأكاديمي، عبر تقديم استشارات وحلول بحثية ومنهجية رصينة، نُسخّر لها نخبة من الكفاءات العلمية، مع الالتزام المطلق بأعلى معايير النزاهة والخصوصية والضوابط الجامعية.', 'toppers' ); ?></p>
 					</div>
 					<div class="about-mv-card">
 						<div class="about-mv-ic">
-							<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+							<i class="fa-solid fa-eye" aria-hidden="true" style="font-size: 32px;"></i>
 						</div>
 						<h3><?php esc_html_e( 'رؤيتنا', 'toppers' ); ?></h3>
 						<p><?php esc_html_e( 'أن نكون المنظومة الأكاديمية الاستشارية الأولى والأكثر ثقة في المملكة العربية السعودية والوطن العربي، والمرجع الرائد في تمكين الباحثين ورفد المكتبة العربية بنتاج علمي أصيل يُعتد به عالميًا.', 'toppers' ); ?></p>
@@ -109,13 +109,13 @@ get_header();
 				<div class="grid grid-4">
 					<?php
 					$audiences = array(
-						array( '🎓 طلبة الدراسات العليا', 'نرافقكم خطوة بخطوة؛ من اختيار العناوين والخطط البحثية، مرورًا بالإطار النظري والتحليل الإحصائي، وحتى التعديلات والمناقشة النهائية.' ),
-						array( '👨‍🏫 أعضاء هيئة التدريس', 'ندعم مسيرتكم الأكاديمية والترقية العلمية عبر إعداد ونشر الأبحاث في المجلات العلمية المحكمة (Scopus وISI).' ),
-						array( '🏛️ طلاب البكالوريوس', 'نُساندكم في خطواتكم الأولى؛ من صياغة فكرة مشروع التخرج، إلى جمع المصادر والتحليل الإحصائي وتنسيق البحث.' ),
-						array( '📊 المؤسسات والمراكز البحثية', 'نوفر الاستشارات الإحصائية وبناء أدوات الدراسة وتحليل البيانات الضخمة لدعم القرارات والدراسات المؤسسية.' ),
+						array( 'fa-graduation-cap', 'طلبة الدراسات العليا', 'نرافقكم خطوة بخطوة؛ من اختيار العناوين والخطط البحثية، مرورًا بالإطار النظري والتحليل الإحصائي، وحتى التعديلات والمناقشة النهائية.' ),
+						array( 'fa-chalkboard-user', 'أعضاء هيئة التدريس', 'ندعم مسيرتكم الأكاديمية والترقية العلمية عبر إعداد ونشر الأبحاث في المجلات العلمية المحكمة (Scopus وISI).' ),
+						array( 'fa-building-columns', 'طلاب البكالوريوس', 'نُساندكم في خطواتكم الأولى؛ من صياغة فكرة مشروع التخرج، إلى جمع المصادر والتحليل الإحصائي وتنسيق البحث.' ),
+						array( 'fa-chart-column', 'المؤسسات والمراكز البحثية', 'نوفر الاستشارات الإحصائية وبناء أدوات الدراسة وتحليل البيانات الضخمة لدعم القرارات والدراسات المؤسسية.' ),
 					);
 					foreach ( $audiences as $card ) {
-						echo '<div class="audience-card"><h3>' . esc_html( $card[0] ) . '</h3><p>' . esc_html( $card[1] ) . '</p></div>';
+						echo '<div class="audience-card"><h3><i class="fa-solid ' . esc_attr( $card[0] ) . '" aria-hidden="true"></i> ' . esc_html( $card[1] ) . '</h3><p>' . esc_html( $card[2] ) . '</p></div>';
 					}
 					?>
 				</div>
@@ -138,14 +138,14 @@ get_header();
 				<div class="why-panel">
 					<?php
 					$why = array(
-						array( '🛡️', 'النزاهة والذكاء الأكاديمي:', 'التزام بأعلى معايير الرصانة العلمية، وضمان خلو الأعمال من السرقة العلمية أو الذكاء الاصطناعي' ),
-						array( '🔒', 'السرية الحصينة للملكية الفكرية:', 'بياناتك وأفكارك ومخرجاتك في أمان تام بموجب بروتوكولات حماية صارمة' ),
-						array( '🎓', 'التخصص الدقيق:', 'يتولى دراستك مختص في نفس مجالك العلمي الدقيق لضمان الفهم الكامل لمتطلباتك' ),
-						array( '⏱️', 'الانضباط الصارم بالمواعيد:', 'نسلمك عملك في الموعد المتفق عليه تمامًا دون أي تأخير' ),
-						array( '🔍', 'ضبط الجودة المزدوج:', 'لا يُسلَّم أي عمل دون مراجعة وتدقيق لغوي ومنهجي دقيق' ),
+						array( 'fa-shield-halved', 'النزاهة والذكاء الأكاديمي:', 'التزام بأعلى معايير الرصانة العلمية، وضمان خلو الأعمال من السرقة العلمية أو الذكاء الاصطناعي' ),
+						array( 'fa-lock', 'السرية الحصينة للملكية الفكرية:', 'بياناتك وأفكارك ومخرجاتك في أمان تام بموجب بروتوكولات حماية صارمة' ),
+						array( 'fa-graduation-cap', 'التخصص الدقيق:', 'يتولى دراستك مختص في نفس مجالك العلمي الدقيق لضمان الفهم الكامل لمتطلباتك' ),
+						array( 'fa-stopwatch', 'الانضباط الصارم بالمواعيد:', 'نسلمك عملك في الموعد المتفق عليه تمامًا دون أي تأخير' ),
+						array( 'fa-magnifying-glass', 'ضبط الجودة المزدوج:', 'لا يُسلَّم أي عمل دون مراجعة وتدقيق لغوي ومنهجي دقيق' ),
 					);
 					foreach ( $why as $row ) {
-						echo '<div class="feature-row"><div class="feature-ic">' . esc_html( $row[0] ) . '</div><div><h3>' . esc_html( $row[1] ) . '</h3><p>' . esc_html( $row[2] ) . '</p></div></div>';
+						echo '<div class="feature-row"><div class="feature-ic"><i class="fa-solid ' . esc_attr( $row[0] ) . '" aria-hidden="true"></i></div><div><h3>' . esc_html( $row[1] ) . '</h3><p>' . esc_html( $row[2] ) . '</p></div></div>';
 					}
 					?>
 				</div>
@@ -157,7 +157,7 @@ get_header();
 				<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'فريق العمل', 'toppers' ); ?></span></div>
 				<h2><?php esc_html_e( 'نخبة من الأكاديميين والمتخصصين', 'toppers' ); ?></h2>
 				<p><?php esc_html_e( 'يُدار عملك في "توبرز" بإشراف مباشر من نخبة من الباحثين والمحللين الإحصائيين والمحكمين اللغويين المعتمدين، مدعومين بفريق إداري وتقني يعمل على مدار الساعة لضمان دقة التنفيذ وسلاسة التجربة.', 'toppers' ); ?></p>
-				<a href="<?php echo esc_url( toppers_page_url( 'team' ) ); ?>" class="inline-link"><?php esc_html_e( 'تعرّف على فريقنا الأكاديمي والمنظومة بالكامل', 'toppers' ); ?> <span class="arrow">←</span></a>
+				<a href="<?php echo esc_url( toppers_page_url( 'team' ) ); ?>" class="inline-link"><?php esc_html_e( 'تعرّف على فريقنا الأكاديمي والمنظومة بالكامل', 'toppers' ); ?> <span class="arrow"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span></a>
 			</div>
 		</section>
 
@@ -203,18 +203,18 @@ get_header();
 				<div class="grid grid-2">
 					<?php
 					$gs = array(
-						array( '📄', 'اتفاقية عدم الإفصاح والسرية (NDA)', 'التزام قانوني حازم بحماية فكرتك وبياناتك وعدم إعادة استخدام العمل مستقبلًا' ),
-						array( '💳', 'سياسة استرداد الأموال', 'ضمان مالي واضح يُعوض الباحث في حال عدم الالتزام بالمتطلبات المعتمدة أو التأخر غير المبرر' ),
-						array( '📜', 'شهادات فحص رسمية معتمدة', 'تسليم تقارير الأصالة Turnitin المطبوعة رسميًا كإثبات موثق لخلو العمل من الانتحال' ),
-						array( '🎓', 'ضمان المطابقة والأمانة العلمية', 'تطابق العمل بنسبة 100% مع دليل الجامعة والمراجعة الأكاديمية المجانية' ),
+						array( 'fa-file-lines', 'اتفاقية عدم الإفصاح والسرية (NDA)', 'التزام قانوني حازم بحماية فكرتك وبياناتك وعدم إعادة استخدام العمل مستقبلًا' ),
+						array( 'fa-credit-card', 'سياسة استرداد الأموال', 'ضمان مالي واضح يُعوض الباحث في حال عدم الالتزام بالمتطلبات المعتمدة أو التأخر غير المبرر' ),
+						array( 'fa-scroll', 'شهادات فحص رسمية معتمدة', 'تسليم تقارير الأصالة Turnitin المطبوعة رسميًا كإثبات موثق لخلو العمل من الانتحال' ),
+						array( 'fa-graduation-cap', 'ضمان المطابقة والأمانة العلمية', 'تطابق العمل بنسبة 100% مع دليل الجامعة والمراجعة الأكاديمية المجانية' ),
 					);
 					foreach ( $gs as $g ) {
-						echo '<div class="guarantee-card"><span class="g-ic">' . esc_html( $g[0] ) . '</span><h3>' . esc_html( $g[1] ) . '</h3><p>' . esc_html( $g[2] ) . '</p></div>';
+						echo '<div class="guarantee-card"><span class="g-ic"><i class="fa-solid ' . esc_attr( $g[0] ) . '" aria-hidden="true"></i></span><h3>' . esc_html( $g[1] ) . '</h3><p>' . esc_html( $g[2] ) . '</p></div>';
 					}
 					?>
 				</div>
 				<div class="guarantee-link-wrap">
-					<a href="<?php echo esc_url( toppers_page_url( 'guarantees' ) ); ?>" class="inline-link"><?php esc_html_e( 'الاطلاع على الشروط والأحكام وسياسة الضمان الشاملة', 'toppers' ); ?> <span class="arrow">←</span></a>
+					<a href="<?php echo esc_url( toppers_page_url( 'guarantees' ) ); ?>" class="inline-link"><?php esc_html_e( 'الاطلاع على الشروط والأحكام وسياسة الضمان الشاملة', 'toppers' ); ?> <span class="arrow"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span></a>
 				</div>
 			</div>
 		</section>
@@ -224,7 +224,7 @@ get_header();
 				<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'آراء طلابنا', 'toppers' ); ?></span></div>
 				<h2><?php esc_html_e( 'آراء نعتز بها', 'toppers' ); ?></h2>
 				<p><?php esc_html_e( 'على مدار أكثر من 10 سنوات من العطاء الأكاديمي، كانت ثقة باحثينا هي المعيار الحقيقي لتميزنا. نضع بين يديك تجارب حقيقية وواقعية لطلاب الماجستير والدكتوراه؛ تشمل رسائل صوتية واقتباسات لمحادثات فعلية تُجسّد رحلتهم معنا بكل شفافية.', 'toppers' ); ?></p>
-				<a href="<?php echo esc_url( toppers_page_url( 'testimonials' ) ); ?>" class="inline-link"><?php esc_html_e( 'اضغط هنا لمطالعة كافة آراء وتجارب العملاء', 'toppers' ); ?> <span class="arrow">←</span></a>
+				<a href="<?php echo esc_url( toppers_page_url( 'testimonials' ) ); ?>" class="inline-link"><?php esc_html_e( 'اضغط هنا لمطالعة كافة آراء وتجارب العملاء', 'toppers' ); ?> <span class="arrow"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span></a>
 			</div>
 		</section>
 
@@ -235,16 +235,16 @@ get_header();
 				<p><?php esc_html_e( 'تُقدّم شركة "توبرز" للاستشارات والحلول البحثية دعمًا استشاريًا وإرشاديًا مشروعًا يُساعد الباحث على تطوير عمله العلمي وفهم منهجية البحث بشكل أعمق، وتُعد خدماتنا رافدًا تعليميًا مساندًا وليست بديلًا عن الجهد الشخصي للباحث. كما نلتزم بالسرية التامة لجميع البيانات والأبحاث، ولا نعرض أعمال زبائننا كـ"نماذج" مطلقًا حمايةً لخصوصيتهم وأمانة أبحاثهم.', 'toppers' ); ?></p>
 				<p><?php esc_html_e( 'وتجدر الإشارة إلى أن قبول الرسالة العلمية أو اعتمادها النهائي يبقى قرارًا حصريًا يعود للمشرف الأكاديمي ولجنة المناقشة، ولا تملك أي جهة استشارية حق ضمان هذا القرار. ما تلتزم به "توبرز" هو تقديم أعلى مستوى ممكن من الدعم المنهجي والعلمي الذي يرفع من جودة البحث وفرص نجاحه.', 'toppers' ); ?></p>
 				<div class="integrity-link-wrap">
-					<a href="<?php echo esc_url( toppers_page_url( 'terms' ) ); ?>" class="inline-link"><?php esc_html_e( 'اقرأ المزيد عن سياستنا وشروط الخدمة', 'toppers' ); ?> <span class="arrow">←</span></a>
+					<a href="<?php echo esc_url( toppers_page_url( 'terms' ) ); ?>" class="inline-link"><?php esc_html_e( 'اقرأ المزيد عن سياستنا وشروط الخدمة', 'toppers' ); ?> <span class="arrow"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></span></a>
 				</div>
 			</div>
 		</section>
 
 		<div class="trust-strip">
 			<div class="container">
-				<div class="trust-strip-item"><span class="t-ic">🔒</span> <?php esc_html_e( '100% سرية تامة لبياناتك وأبحاثك', 'toppers' ); ?></div>
-				<div class="trust-strip-item"><span class="t-ic">⚡</span> <?php esc_html_e( 'استجابة ورَد سريع خلال دقائق عبر الواتساب', 'toppers' ); ?></div>
-				<div class="trust-strip-item"><span class="t-ic">📄</span> <?php esc_html_e( 'تقارير أصالة واقتباس (Turnitin) مجانية مع كل عمل', 'toppers' ); ?></div>
+				<div class="trust-strip-item"><span class="t-ic"><i class="fa-solid fa-lock" aria-hidden="true"></i></span> <?php esc_html_e( '100% سرية تامة لبياناتك وأبحاثك', 'toppers' ); ?></div>
+				<div class="trust-strip-item"><span class="t-ic"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span> <?php esc_html_e( 'استجابة ورَد سريع خلال دقائق عبر الواتساب', 'toppers' ); ?></div>
+				<div class="trust-strip-item"><span class="t-ic"><i class="fa-solid fa-file-lines" aria-hidden="true"></i></span> <?php esc_html_e( 'تقارير أصالة واقتباس (Turnitin) مجانية مع كل عمل', 'toppers' ); ?></div>
 			</div>
 		</div>
 
@@ -267,6 +267,19 @@ get_header();
 					</div>
 					<div>
 						<img src="<?php echo esc_url( toppers_content_img( 'about_gallery_4', toppers_photo( 'meeting' ) ) ); ?>" alt="<?php esc_attr_e( 'دراسات', 'toppers' ); ?>">
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container">
+				<div class="cta-band">
+					<h2><?php esc_html_e( 'جاهز تبدأ رحلتك الأكاديمية مع توبرز؟', 'toppers' ); ?></h2>
+					<p><?php esc_html_e( 'اطلب خدمتك الآن أو تواصل معنا عبر الواتساب لنبدأ معك من أول خطوة.', 'toppers' ); ?></p>
+					<div class="cta-actions">
+						<a class="btn btn-gold" href="<?php echo esc_url( toppers_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'اطلب الخدمة الآن', 'toppers' ); ?></a>
+						<a class="btn btn-outline" href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'تواصل معنا عبر الواتساب', 'toppers' ); ?></a>
 					</div>
 				</div>
 			</div>

@@ -12,13 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action( 'after_switch_theme', 'toppers_seed_demo' );
 add_action( 'init', 'toppers_seed_demo_once', 30 );
 function toppers_seed_demo_once() {
-	if ( get_option( 'toppers_demo_seeded_v3' ) ) {
+	if ( get_option( 'toppers_demo_seeded_v4' ) ) {
 		return;
 	}
 	delete_option( 'toppers_demo_seeded' );
 	delete_option( 'toppers_demo_seeded_v2' );
+	delete_option( 'toppers_demo_seeded_v3' );
 	toppers_seed_demo();
-	update_option( 'toppers_demo_seeded_v3', 1 );
+	update_option( 'toppers_demo_seeded_v4', 1 );
 }
 function toppers_get_or_create_category( $name ) {
 	$term = term_exists( $name, 'category' );
@@ -31,7 +32,7 @@ function toppers_get_or_create_category( $name ) {
 	return (int) ( is_array( $term ) ? $term['term_id'] : $term );
 }
 function toppers_seed_demo() {
-	if ( get_option( 'toppers_demo_seeded' ) && get_option( 'toppers_demo_seeded_v3' ) ) {
+	if ( get_option( 'toppers_demo_seeded' ) && get_option( 'toppers_demo_seeded_v4' ) ) {
 		return;
 	}
 
@@ -224,6 +225,7 @@ function toppers_seed_demo() {
 			array( 'من نحن', get_permalink( $ids['about'] ?? 0 ) ),
 			array( 'آراء الطلاب', get_permalink( $ids['testimonials'] ?? 0 ) ),
 			array( 'المقالات', get_permalink( $ids['blog'] ?? 0 ) ),
+			array( 'الأسئلة الشائعة', get_permalink( $ids['faq'] ?? 0 ) ),
 			array( 'تواصل معنا', get_permalink( $ids['contact'] ?? 0 ) ),
 		);
 		foreach ( $items as $item ) {
@@ -399,6 +401,59 @@ function toppers_seed_team_roster_v1() {
 	update_option( 'toppers_seeded_team_roster_v1', 1 );
 }
 
+add_action( 'init', 'toppers_align_primary_nav_v2', 47 );
+function toppers_align_primary_nav_v2() {
+	if ( get_option( 'toppers_aligned_primary_nav_v2' ) ) {
+		return;
+	}
+	$locations = get_nav_menu_locations();
+	$menu_id   = isset( $locations['primary'] ) ? (int) $locations['primary'] : 0;
+	if ( ! $menu_id ) {
+		$menu    = wp_get_nav_menu_object( 'Toppers Primary' );
+		$menu_id = $menu ? (int) $menu->term_id : 0;
+	}
+	if ( ! $menu_id ) {
+		return;
+	}
+
+	$wanted = array(
+		array( 'الرئيسية', home_url( '/' ) ),
+		array( 'الخدمات', toppers_page_url( 'services' ) ),
+		array( 'من نحن', toppers_page_url( 'about' ) ),
+		array( 'آراء الطلاب', toppers_page_url( 'testimonials' ) ),
+		array( 'المقالات', toppers_blog_url() ),
+		array( 'الأسئلة الشائعة', toppers_page_url( 'faq' ) ),
+		array( 'تواصل معنا', toppers_page_url( 'contact' ) ),
+	);
+
+	$existing = wp_get_nav_menu_items( $menu_id );
+	if ( $existing ) {
+		foreach ( $existing as $item ) {
+			wp_delete_post( $item->ID, true );
+		}
+	}
+
+	$pos = 1;
+	foreach ( $wanted as $row ) {
+		if ( empty( $row[1] ) || '#' === $row[1] ) {
+			continue;
+		}
+		wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-title'    => $row[0],
+				'menu-item-url'      => $row[1],
+				'menu-item-status'   => 'publish',
+				'menu-item-type'     => 'custom',
+				'menu-item-position' => $pos++,
+			)
+		);
+	}
+
+	update_option( 'toppers_aligned_primary_nav_v2', 1 );
+}
+
 add_action( 'init', 'toppers_align_primary_nav_v1', 47 );
 function toppers_align_primary_nav_v1() {
 	if ( get_option( 'toppers_aligned_primary_nav_v1' ) ) {
@@ -420,6 +475,7 @@ function toppers_align_primary_nav_v1() {
 		array( 'من نحن', toppers_page_url( 'about' ) ),
 		array( 'آراء الطلاب', toppers_page_url( 'testimonials' ) ),
 		array( 'المقالات', toppers_blog_url() ),
+		array( 'الأسئلة الشائعة', toppers_page_url( 'faq' ) ),
 		array( 'تواصل معنا', toppers_page_url( 'contact' ) ),
 	);
 
@@ -503,4 +559,50 @@ function toppers_purge_theme_auth_pages() {
 	}
 
 	update_option( 'toppers_purged_theme_auth_v1', 1 );
+}
+
+/**
+ * Ensure About / FAQ / Privacy pages exist with the correct templates.
+ */
+add_action( 'init', 'toppers_ensure_info_pages_v1', 35 );
+function toppers_ensure_info_pages_v1() {
+	if ( get_option( 'toppers_ensured_info_pages_v1' ) ) {
+		return;
+	}
+
+	$pages = array(
+		'about'   => array( __( 'من نحن', 'toppers' ), 'templates/page-about.php' ),
+		'faq'     => array( __( 'الأسئلة الشائعة', 'toppers' ), 'templates/page-faq.php' ),
+		'privacy' => array( __( 'سياسة الخصوصية', 'toppers' ), 'templates/page-privacy.php' ),
+		'terms'   => array( __( 'شروط الاستخدام', 'toppers' ), 'templates/page-terms.php' ),
+	);
+
+	foreach ( $pages as $slug => $data ) {
+		$existing = get_page_by_path( $slug );
+		if ( $existing ) {
+			update_post_meta( $existing->ID, '_wp_page_template', $data[1] );
+			if ( 'publish' !== $existing->post_status ) {
+				wp_update_post(
+					array(
+						'ID'          => $existing->ID,
+						'post_status' => 'publish',
+					)
+				);
+			}
+			continue;
+		}
+		wp_insert_post(
+			array(
+				'post_title'    => $data[0],
+				'post_name'     => $slug,
+				'post_status'   => 'publish',
+				'post_type'     => 'page',
+				'post_content'  => '',
+				'page_template' => $data[1],
+			)
+		);
+	}
+
+	flush_rewrite_rules( false );
+	update_option( 'toppers_ensured_info_pages_v1', 1 );
 }

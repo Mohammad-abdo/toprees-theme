@@ -94,7 +94,11 @@ class Toppers_Widget_Hero_Slider extends Toppers_Widget_Base {
 			$img = ! empty( $slide['image']['url'] ) ? $slide['image']['url'] : '';
 			$active = 0 === $i ? ' is-active' : '';
 			echo '<div class="hero-slide' . esc_attr( $active ) . ' slide-' . esc_attr( $i + 1 ) . '">';
-			echo '<div class="slide-bg" style="background-image:url(' . esc_url( $img ) . ')"></div><div class="slide-overlay"></div>';
+			echo '<div class="slide-bg">';
+			if ( $img ) {
+				echo '<img src="' . esc_url( $img ) . '" alt="" decoding="async"' . ( 0 === $i ? ' fetchpriority="high"' : ' loading="lazy"' ) . '>';
+			}
+			echo '</div><div class="slide-overlay" aria-hidden="true"></div>';
 			echo '<div class="container slide-content center-content">';
 			if ( ! empty( $slide['eyebrow'] ) ) {
 				echo '<div class="eyebrow hero-eyebrow">' . toppers_star_svg() . '<span>' . esc_html( $slide['eyebrow'] ) . '</span></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -118,11 +122,11 @@ class Toppers_Widget_Hero_Slider extends Toppers_Widget_Base {
 			}
 			echo '</div></div></div>';
 		}
-		echo '</div><div class="slider-controls"><button class="slider-btn" id="sliderPrev"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button><div class="slider-dots" id="sliderDots">';
+		echo '</div><div class="slider-controls"><button class="slider-btn" id="sliderPrev"><i class="fa-solid fa-chevron-right" style="font-size:18px;" aria-hidden="true"></i></button><div class="slider-dots" id="sliderDots">';
 		foreach ( $slides as $i => $slide ) {
 			echo '<button class="slider-dot' . ( 0 === $i ? ' active' : '' ) . '" data-index="' . esc_attr( $i ) . '"></button>';
 		}
-		echo '</div><button class="slider-btn" id="sliderNext"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button></div></section>';
+		echo '</div><button class="slider-btn" id="sliderNext"><i class="fa-solid fa-chevron-left" style="font-size:18px;" aria-hidden="true"></i></button></div></section>';
 	}
 }
 
@@ -296,7 +300,7 @@ class Toppers_Widget_Why_Us extends Toppers_Widget_Base {
 		}
 		echo '</div><div class="grid grid-4">';
 		foreach ( $s['cards'] as $card ) {
-			echo '<div class="why-card"><div class="why-card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div><h3>' . esc_html( $card['title'] ) . '</h3><p>' . esc_html( $card['desc'] ) . '</p></div>';
+			echo '<div class="why-card"><div class="why-card-ic"><i class="fa-solid fa-user" aria-hidden="true"></i></div><h3>' . esc_html( $card['title'] ) . '</h3><p>' . esc_html( $card['desc'] ) . '</p></div>';
 		}
 		echo '</div><div class="why-stats" style="margin-top:64px;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);padding:36px 20px;border-radius:24px;">';
 		foreach ( $s['stats'] as $stat ) {
@@ -345,7 +349,7 @@ class Toppers_Widget_Testimonials extends Toppers_Widget_Base {
 		echo '<div class="grid grid-3">';
 		foreach ( $items as $item ) {
 			$letter = toppers_first_letter( $item['name'] );
-			echo '<div class="t-card"><div class="t-stars">★★★★★</div><p class="t-quote">' . esc_html( $item['quote'] ) . '</p><div class="t-who">';
+			echo '<div class="t-card"><div class="t-stars">' . str_repeat( '<i class="fa-solid fa-star" aria-hidden="true"></i>', 5 ) . '</div><p class="t-quote">' . esc_html( $item['quote'] ) . '</p><div class="t-who">';
 			if ( ! empty( $item['photo']['url'] ) ) {
 				echo '<img class="t-avatar" src="' . esc_url( $item['photo']['url'] ) . '" alt="' . esc_attr( $item['name'] ) . '" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">';
 			} else {

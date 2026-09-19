@@ -85,6 +85,12 @@ function toppers_enqueue_assets() {
 		array( 'toppers-compat' ),
 		(string) filemtime( TOPPERS_DIR . '/assets/css/pages.css' )
 	);
+	wp_enqueue_style(
+		'font-awesome',
+		'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+		array(),
+		'6.5.2'
+	);
 
 	wp_enqueue_script(
 		'toppers-i18n',
@@ -122,6 +128,16 @@ function toppers_enqueue_assets() {
 				'error' => __( 'تعذر الإرسال. حاول مرة أخرى.', 'toppers' ),
 			),
 		)
+	);
+}
+
+add_action( 'admin_enqueue_scripts', 'toppers_admin_enqueue_assets' );
+function toppers_admin_enqueue_assets() {
+	wp_enqueue_style(
+		'font-awesome',
+		'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+		array(),
+		'6.5.2'
 	);
 }
 
@@ -198,9 +214,23 @@ function toppers_body_class( $classes ) {
 	if ( toppers_is_elementor_page() ) {
 		$classes[] = 'toppers-elementor-page';
 	}
-	if ( is_page_template( 'templates/page-about.php' ) ) {
+
+	// Solid readable header on light tops / content pages (avoids invisible white-on-white nav).
+	$solid_header = is_page_template( 'templates/page-about.php' )
+		|| is_home()
+		|| is_singular( 'post' )
+		|| is_category()
+		|| is_tag()
+		|| is_author()
+		|| is_date()
+		|| is_search()
+		|| is_404()
+		|| ( function_exists( 'toppers_is_elementor_page' ) && toppers_is_elementor_page() && ! is_front_page() );
+
+	if ( $solid_header ) {
 		$classes[] = 'has-light-hero';
 	}
+
 	return $classes;
 }
 

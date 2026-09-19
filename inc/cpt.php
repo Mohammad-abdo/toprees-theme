@@ -9,6 +9,41 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Bridge: when a client rates a completed order on the Toppers Platform plugin
+ * portal, mirror it here as a real (moderated) testimonial. This is what makes
+ * "آراء الطلاب" reflect real platform activity instead of only demo content.
+ * The review text is client-submitted free text, so it lands as `pending` —
+ * an editor still has to approve it before it appears on the public page.
+ */
+add_action( 'toppers/review/submitted', 'toppers_sync_platform_review_to_testimonial' );
+function toppers_sync_platform_review_to_testimonial( $data ) {
+	$comment = trim( wp_strip_all_tags( (string) ( $data['comment'] ?? '' ) ) );
+	if ( '' === $comment ) {
+		return;
+	}
+	$rating = max( 1, min( 5, (int) ( $data['rating'] ?? 5 ) ) );
+
+	$post_id = wp_insert_post(
+		array(
+			'post_type'    => 'toppers_testimonial',
+			'post_status'  => 'pending',
+			'post_title'   => __( 'عميل موثّق من منصة توبيرز', 'toppers' ),
+			'post_content' => sanitize_textarea_field( $comment ),
+		),
+		true
+	);
+
+	if ( is_wp_error( $post_id ) || ! $post_id ) {
+		return;
+	}
+
+	update_post_meta( $post_id, '_toppers_stars', $rating );
+	update_post_meta( $post_id, '_toppers_testimonial_type', 'text' );
+	update_post_meta( $post_id, '_toppers_role', __( 'عميل عبر منصة توبيرز', 'toppers' ) );
+	update_post_meta( $post_id, '_toppers_source_order_id', (int) ( $data['order_id'] ?? 0 ) );
+}
+
 add_action( 'init', 'toppers_register_cpts' );
 function toppers_register_cpts() {
 	register_post_type(
@@ -141,10 +176,10 @@ function toppers_testimonial_meta_box( $post ) {
 	echo '<p><label><strong>' . esc_html__( 'نوع الرأي:', 'toppers' ) . '</strong></label><br>';
 	echo '<select name="toppers_testimonial_type" id="toppers_testimonial_type" class="widefat" style="margin-top:4px;font-weight:600;">';
 	$type_labels = array(
-		'voice' => __( '🎙️ تسجيل صوتي (رسالة صوتية تعمل على الثيم)', 'toppers' ),
-		'image' => __( '📸 سكرين شوت (لقطة محادثة واتساب / صورة تقييم)', 'toppers' ),
-		'text'  => __( '✍️ رأي نصي (كلام وتقييم بالنجوم)', 'toppers' ),
-		'video' => __( '🎬 فيديو', 'toppers' ),
+		'voice' => __( 'تسجيل صوتي (رسالة صوتية تعمل على الثيم)', 'toppers' ),
+		'image' => __( 'سكرين شوت (لقطة محادثة واتساب / صورة تقييم)', 'toppers' ),
+		'text'  => __( 'رأي نصي (كلام وتقييم بالنجوم)', 'toppers' ),
+		'video' => __( 'فيديو', 'toppers' ),
 	);
 	foreach ( $type_labels as $key => $label ) {
 		echo '<option value="' . esc_attr( $key ) . '"' . selected( $type, $key, false ) . '>' . esc_html( $label ) . '</option>';
@@ -157,7 +192,7 @@ function toppers_testimonial_meta_box( $post ) {
 	echo '<p class="description" style="margin-top:2px;">' . esc_html__( 'يدعم جميع صيغ الصوت: MP3, M4A, OGG, WAV, AAC, OPUS (تسجيلات الواتساب والهاتف).', 'toppers' ) . '</p>';
 	echo '<input type="hidden" id="toppers_audio_id" name="toppers_audio_id" value="' . esc_attr( $audio ) . '">';
 	echo '<div style="margin-top:8px;">';
-	echo '<button type="button" class="button button-primary" id="toppers-pick-audio">' . esc_html__( '🎙️ رفع / اختيار ملف الصوت', 'toppers' ) . '</button> ';
+	echo '<button type="button" class="button button-primary" id="toppers-pick-audio"><i class="fa-solid fa-microphone" aria-hidden="true"></i> ' . esc_html__( 'رفع / اختيار ملف الصوت', 'toppers' ) . '</button> ';
 	echo '<button type="button" class="button" id="toppers-clear-audio" style="' . ( $audio ? '' : 'display:none;' ) . '">' . esc_html__( 'مسح الصوت', 'toppers' ) . '</button>';
 	echo '</div>';
 	echo '<div id="toppers-audio-preview-wrap" style="margin-top:10px;' . ( $audio ? '' : 'display:none;' ) . '">';
@@ -173,7 +208,7 @@ function toppers_testimonial_meta_box( $post ) {
 	echo '<p class="description" style="margin-top:2px;">' . esc_html__( 'ارفع لقطة الشاشة من الواتساب أو رأي العميل، وسيتم عرضها مصغرة مع إمكانية تكبيرها للزوار.', 'toppers' ) . '</p>';
 	echo '<input type="hidden" id="toppers_screenshot_id" name="toppers_screenshot_id" value="' . esc_attr( $screenshot ) . '">';
 	echo '<div style="margin-top:8px;">';
-	echo '<button type="button" class="button button-primary" id="toppers-pick-screenshot">' . esc_html__( '📸 رفع / اختيار صورة الاسكرين', 'toppers' ) . '</button> ';
+	echo '<button type="button" class="button button-primary" id="toppers-pick-screenshot"><i class="fa-solid fa-camera" aria-hidden="true"></i> ' . esc_html__( 'رفع / اختيار صورة الاسكرين', 'toppers' ) . '</button> ';
 	echo '<button type="button" class="button" id="toppers-clear-screenshot" style="' . ( $screenshot ? '' : 'display:none;' ) . '">' . esc_html__( 'مسح الصورة', 'toppers' ) . '</button>';
 	echo '</div>';
 	$screenshot_url = $screenshot ? wp_get_attachment_image_url( (int) $screenshot, 'medium' ) : '';

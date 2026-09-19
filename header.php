@@ -21,7 +21,7 @@ if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_loca
 $cta = toppers_opt( 'toppers_cta_label', 'اطلب خدمتك' );
 ?>
 
-<header class="site-header<?php echo is_page_template( 'templates/page-about.php' ) ? ' is-scrolled' : ''; ?>">
+<header class="site-header<?php echo ( is_page_template( 'templates/page-about.php' ) || is_home() || is_singular( 'post' ) || is_search() || is_404() || ( ! is_front_page() && function_exists( 'toppers_is_elementor_page' ) && toppers_is_elementor_page() ) ) ? ' is-scrolled' : ''; ?>">
 	<div class="container header-inner">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="brand">
 			<?php echo toppers_logo_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
@@ -43,6 +43,7 @@ $cta = toppers_opt( 'toppers_cta_label', 'اطلب خدمتك' );
 				echo '<a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'الرئيسية', 'toppers' ) . '</a>';
 				echo '<a href="' . esc_url( toppers_page_url( 'services' ) ) . '">' . esc_html__( 'الخدمات', 'toppers' ) . '</a>';
 				echo '<a href="' . esc_url( toppers_page_url( 'about' ) ) . '">' . esc_html__( 'من نحن', 'toppers' ) . '</a>';
+				echo '<a href="' . esc_url( toppers_page_url( 'faq' ) ) . '">' . esc_html__( 'الأسئلة الشائعة', 'toppers' ) . '</a>';
 				echo '<a href="' . esc_url( toppers_page_url( 'testimonials' ) ) . '">' . esc_html__( 'آراء الطلاب', 'toppers' ) . '</a>';
 				echo '<a href="' . esc_url( toppers_blog_url() ) . '">' . esc_html__( 'المقالات', 'toppers' ) . '</a>';
 				echo '<a href="' . esc_url( toppers_page_url( 'contact' ) ) . '">' . esc_html__( 'تواصل معنا', 'toppers' ) . '</a>';
@@ -63,10 +64,7 @@ $cta = toppers_opt( 'toppers_cta_label', 'اطلب خدمتك' );
 			?>
 			<div class="header-dropdown" id="notifDropdownToggle">
 				<button class="icon-btn" type="button" aria-label="<?php esc_attr_e( 'الإشعارات', 'toppers' ); ?>" aria-expanded="false" aria-controls="notifMenu">
-					<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-						<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-					</svg>
+					<i class="fa-solid fa-bell" aria-hidden="true" style="font-size:20px;"></i>
 					<?php if ( $toppers_unread > 0 ) : ?>
 						<span class="notif-badge"><?php echo esc_html( $toppers_unread > 9 ? '9+' : (string) $toppers_unread ); ?></span>
 					<?php endif; ?>
@@ -115,10 +113,7 @@ $cta = toppers_opt( 'toppers_cta_label', 'اطلب خدمتك' );
 				</div>
 			</div>
 			<a href="<?php echo esc_url( toppers_account_url() ); ?>" class="icon-btn user-profile-btn" aria-label="<?php echo is_user_logged_in() ? esc_attr__( 'حسابي', 'toppers' ) : esc_attr__( 'تسجيل الدخول', 'toppers' ); ?>" title="<?php echo is_user_logged_in() ? esc_attr__( 'حسابي', 'toppers' ) : esc_attr__( 'تسجيل الدخول', 'toppers' ); ?>">
-				<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-					<circle cx="12" cy="7" r="4"></circle>
-				</svg>
+				<i class="fa-solid fa-user" aria-hidden="true" style="font-size:20px;"></i>
 			</a>
 			<button class="btn btn-gold btn-sm open-order-modal" type="button" data-i18n="nav.cta"><?php echo esc_html( $cta ); ?></button>
 			<button class="burger" type="button" aria-label="<?php esc_attr_e( 'القائمة', 'toppers' ); ?>"><span></span><span></span><span></span></button>
@@ -147,6 +142,7 @@ $cta = toppers_opt( 'toppers_cta_label', 'اطلب خدمتك' );
 		echo '<a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'الرئيسية', 'toppers' ) . '</a>';
 		echo '<a href="' . esc_url( toppers_page_url( 'services' ) ) . '">' . esc_html__( 'الخدمات', 'toppers' ) . '</a>';
 		echo '<a href="' . esc_url( toppers_page_url( 'about' ) ) . '">' . esc_html__( 'من نحن', 'toppers' ) . '</a>';
+		echo '<a href="' . esc_url( toppers_page_url( 'faq' ) ) . '">' . esc_html__( 'الأسئلة الشائعة', 'toppers' ) . '</a>';
 		echo '<a href="' . esc_url( toppers_page_url( 'testimonials' ) ) . '">' . esc_html__( 'آراء الطلاب', 'toppers' ) . '</a>';
 		echo '<a href="' . esc_url( toppers_blog_url() ) . '">' . esc_html__( 'المقالات', 'toppers' ) . '</a>';
 		echo '<a href="' . esc_url( toppers_page_url( 'contact' ) ) . '">' . esc_html__( 'تواصل معنا', 'toppers' ) . '</a>';

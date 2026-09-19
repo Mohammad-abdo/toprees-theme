@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'TOPPERS_VERSION' ) ) {
-	define( 'TOPPERS_VERSION', '1.2.2' );
+	define( 'TOPPERS_VERSION', '1.2.3' );
 }
 if ( ! defined( 'TOPPERS_DIR' ) ) {
 	define( 'TOPPERS_DIR', get_template_directory() );

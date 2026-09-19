@@ -159,11 +159,11 @@ function toppers_service_image( $title_or_id = '' ) {
 
 function toppers_voice_note( $time = '0:45' ) {
 	$bars = str_repeat( '<span></span>', 15 );
-	return '<div class="voice-note"><button class="vn-play" type="button"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z" /></svg></button><div class="vn-wave">' . $bars . '</div><span class="vn-time">' . esc_html( $time ) . '</span></div>';
+	return '<div class="voice-note"><button class="vn-play" type="button"><i class="fa-solid fa-play" aria-hidden="true"></i></button><div class="vn-wave">' . $bars . '</div><span class="vn-time">' . esc_html( $time ) . '</span></div>';
 }
 
 function toppers_star_svg( $class = 'star-ic' ) {
-	return '<svg class="' . esc_attr( $class ) . '" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0l2.9 8.4L24 12l-9.1 3.6L12 24l-2.9-8.4L0 12l9.1-3.6L12 0z"/></svg>';
+	return '<i class="fa-solid fa-star ' . esc_attr( $class ) . '" aria-hidden="true"></i>';
 }
 
 function toppers_whatsapp_url() {
@@ -214,7 +214,7 @@ function toppers_logo_html( $class = '', $height = 0 ) {
 		$logo_id = (int) toppers_opt( 'toppers_logo_id', 0 );
 	}
 	if ( $logo_id ) {
-		return wp_get_attachment_image( $logo_id, 'medium', false, $attr );
+		return wp_get_attachment_image( $logo_id, 'full', false, $attr );
 	}
 
 	$logo = file_exists( TOPPERS_DIR . '/assets/images/logo.png' ) ? 'logo.png' : 'logo.svg';
@@ -261,7 +261,7 @@ class Toppers_Flat_Walker extends Walker_Nav_Menu {
 }
 
 function toppers_audio_player( $src = '', $time = '0:45' ) {
-	return '<div class="audio-player" data-audio="' . esc_attr( $src ) . '"><button class="audio-btn" type="button" aria-label="' . esc_attr__( 'تشغيل', 'toppers' ) . '"><svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg><svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg></button><div class="audio-waveform"><div class="audio-progress-bg"><div class="audio-progress-bar"></div></div></div><span class="audio-time">' . esc_html( $time ) . '</span></div>';
+	return '<div class="audio-player" data-audio="' . esc_attr( $src ) . '"><button class="audio-btn" type="button" aria-label="' . esc_attr__( 'تشغيل', 'toppers' ) . '"><i class="fa-solid fa-play icon-play" aria-hidden="true"></i><i class="fa-solid fa-pause icon-pause" aria-hidden="true"></i></button><div class="audio-waveform"><div class="audio-progress-bg"><div class="audio-progress-bar"></div></div></div><span class="audio-time">' . esc_html( $time ) . '</span></div>';
 }
 
 function toppers_testimonial_types() {

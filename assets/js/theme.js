@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function(){
   if(header){
     const lightHero = document.body.classList.contains('has-light-hero');
     const onScroll = ()=>{
-      if(lightHero || window.scrollY > 40) header.classList.add('is-scrolled');
+      if(lightHero || window.scrollY > 12) header.classList.add('is-scrolled');
       else header.classList.remove('is-scrolled');
     };
     onScroll();
@@ -22,6 +22,23 @@ document.addEventListener('DOMContentLoaded', function(){
     mobileNav.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> mobileNav.classList.remove('is-open')));
   }
 
+  /* ---------- Animated stat counters (defined early so reveal can trigger it) ---------- */
+  function runCounter(el){
+    if(el.dataset.counted) return;
+    el.dataset.counted = '1';
+    const target = parseInt(el.getAttribute('data-count'), 10);
+    const suffix = el.getAttribute('data-suffix') || '';
+    const dur = 1400;
+    const start = performance.now();
+    function tick(now){
+      const p = Math.min(1, (now-start)/dur);
+      const eased = 1 - Math.pow(1-p, 3);
+      el.textContent = Math.round(target*eased) + suffix;
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
   /* ---------- Reveal on scroll ---------- */
   const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
   if('IntersectionObserver' in window && revealEls.length){
@@ -29,13 +46,20 @@ document.addEventListener('DOMContentLoaded', function(){
       entries.forEach(entry=>{
         if(entry.isIntersecting){
           entry.target.classList.add('is-visible');
+          if(entry.target.hasAttribute('data-count')) runCounter(entry.target);
+          entry.target.querySelectorAll('[data-count]').forEach(runCounter);
           io.unobserve(entry.target);
         }
       });
     }, {threshold:.15, rootMargin:'0px 0px -60px 0px'});
     revealEls.forEach(el=> io.observe(el));
+    // Counters that aren't inside a .reveal wrapper still need their own trigger.
+    document.querySelectorAll('[data-count]').forEach(el=>{
+      if(!el.closest('.reveal, .reveal-stagger')) io.observe(el);
+    });
   } else {
     revealEls.forEach(el=> el.classList.add('is-visible'));
+    document.querySelectorAll('[data-count]').forEach(runCounter);
   }
 
   /* ---------- Hero star field ---------- */
@@ -77,30 +101,6 @@ document.addEventListener('DOMContentLoaded', function(){
         });
       });
     });
-  }
-
-  /* ---------- Animated stat counters ---------- */
-  const counters = document.querySelectorAll('[data-count]');
-  if(counters.length && 'IntersectionObserver' in window){
-    const countIo = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(!entry.isIntersecting) return;
-        const el = entry.target;
-        const target = parseInt(el.getAttribute('data-count'), 10);
-        const suffix = el.getAttribute('data-suffix') || '';
-        const dur = 1400;
-        const start = performance.now();
-        function tick(now){
-          const p = Math.min(1, (now-start)/dur);
-          const eased = 1 - Math.pow(1-p, 3);
-          el.textContent = Math.round(target*eased) + suffix;
-          if(p < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-        countIo.unobserve(el);
-      });
-    }, {threshold:.5});
-    counters.forEach(c=> countIo.observe(c));
   }
 
   /* ---------- Contact form ---------- */
@@ -153,6 +153,27 @@ document.addEventListener('DOMContentLoaded', function(){
       if(!isOpen) item.classList.add('is-open');
     });
   });
+
+  /* ---------- FAQ category TOC spy ---------- */
+  const faqCats = document.querySelectorAll('.faq-cat[id]');
+  const faqLinks = document.querySelectorAll('.faq-toc-link');
+  if(faqCats.length && faqLinks.length && 'IntersectionObserver' in window){
+    const map = new Map();
+    faqLinks.forEach(link=>{
+      const id = (link.getAttribute('href') || '').replace('#','');
+      if(id) map.set(id, link);
+    });
+    const spy = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting) return;
+        const id = entry.target.id;
+        faqLinks.forEach(l=> l.classList.remove('is-active'));
+        const active = map.get(id);
+        if(active) active.classList.add('is-active');
+      });
+    }, { rootMargin: '-20% 0px -65% 0px', threshold: 0.01 });
+    faqCats.forEach(cat=> spy.observe(cat));
+  }
 
   /* ---------- Active nav link ---------- */
   const path = location.pathname.split('/').pop() || 'index.html';
@@ -439,8 +460,8 @@ document.addEventListener('DOMContentLoaded', function(){
               <div class="order-card-info">
                 <h4>${o.service} <span style="color:#999;font-size:0.9rem;font-weight:normal;margin-right:10px">${o.id}</span></h4>
                 <div class="order-card-meta">
-                  <span><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> ${o.date}</span>
-                  <span><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> ${o.level}</span>
+                  <span><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> ${o.date}</span>
+                  <span><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> ${o.level}</span>
                 </div>
               </div>
               <div class="order-actions" style="margin:0">
@@ -849,8 +870,8 @@ document.addEventListener('DOMContentLoaded', function(){
         card.innerHTML =
           '<div class="acr-header">' +
             '<span class="acr-num-badge">الخيار 0' + (idx + 1) + '</span>' +
-            '<span class="acr-meth-badge">📊 ' + meth + '</span>' +
-            '<span class="acr-fresh-badge">★ فكرة حصرية</span>' +
+            '<span class="acr-meth-badge"><i class="fa-solid fa-chart-column" aria-hidden="true"></i> ' + meth + '</span>' +
+            '<span class="acr-fresh-badge"><i class="fa-solid fa-star" aria-hidden="true"></i> فكرة حصرية</span>' +
           '</div>' +
           '<h3 class="acr-title">' + title + '</h3>' +
           '<p class="acr-desc">' + desc + '</p>' +
@@ -860,13 +881,14 @@ document.addEventListener('DOMContentLoaded', function(){
           '<div class="acr-actions">' +
             '<a href="' + orderHref + '" class="btn btn-gold btn-sm">' +
               '<span>اطلب هذا البحث الآن</span>' +
-              '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
+              '<i class="fa-solid fa-arrow-left" aria-hidden="true"></i>' +
             '</a>' +
             '<a href="' + waHref + '" target="_blank" rel="noopener" class="btn btn-outline-wa btn-sm">' +
+              '<i class="fa-brands fa-whatsapp" aria-hidden="true"></i>' +
               '<span>واتساب</span>' +
             '</a>' +
             '<button type="button" class="btn btn-copy-title btn-sm" data-copy="' + title.replace(/"/g, '&quot;') + '">' +
-              '<span class="copy-text">📋 نسخ العنوان</span>' +
+              '<span class="copy-text"><i class="fa-regular fa-copy" aria-hidden="true"></i> نسخ العنوان</span>' +
             '</button>' +
           '</div>';
 
@@ -889,10 +911,10 @@ document.addEventListener('DOMContentLoaded', function(){
             document.execCommand('copy');
             document.body.removeChild(tempInput);
           }
-          textSpan.textContent = '✓ تم النسخ بنجاح!';
+          textSpan.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i> تم النسخ بنجاح!';
           self.classList.add('is-copied');
           setTimeout(function() {
-            textSpan.textContent = '📋 نسخ العنوان';
+            textSpan.innerHTML = '<i class="fa-regular fa-copy" aria-hidden="true"></i> نسخ العنوان';
             self.classList.remove('is-copied');
           }, 2000);
         });

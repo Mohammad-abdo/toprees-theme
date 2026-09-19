@@ -21,7 +21,7 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 		toppers_hero_args(
 			'ai',
 			array(
-				'title'   => __( 'المساعد البحثي الذكي 🤖', 'toppers' ),
+				'title'   => __( 'المساعد البحثي الذكي', 'toppers' ),
 				'eyebrow' => __( 'توليد أفكار وعناوين أبحاث حصرية', 'toppers' ),
 				'lede'    => __( 'دع نظامنا الأكاديمي الذكي يقترح لك 5 أفكار وعناوين بحثية مبتكرة وغير مستهلكة تناسب تخصصك الدقيق واهتماماتك الأكاديمية.', 'toppers' ),
 			)
@@ -47,7 +47,7 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 					<div class="ai-grid">
 						<div class="ai-field">
 							<label for="ai-major">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+								<i class="fa-solid fa-book" style="font-size:16px;" aria-hidden="true"></i>
 								<?php esc_html_e( 'التخصص الدقيق', 'toppers' ); ?> <span class="req">*</span>
 							</label>
 							<input type="text" id="ai-major" name="major" placeholder="<?php esc_attr_e( 'مثال: إدارة الأعمال، الأمن السيبراني، القانون التجاري...', 'toppers' ); ?>" required>
@@ -55,7 +55,7 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 
 						<div class="ai-field">
 							<label for="ai-degree">
-								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+								<i class="fa-solid fa-graduation-cap" style="font-size:16px;" aria-hidden="true"></i>
 								<?php esc_html_e( 'الدرجة العلمية', 'toppers' ); ?> <span class="req">*</span>
 							</label>
 							<select id="ai-degree" name="degree" required>
@@ -69,7 +69,7 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 
 					<div class="ai-field" style="margin-top: 18px;">
 						<label for="ai-interests">
-							<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+							<i class="fa-solid fa-magnifying-glass" style="font-size:16px;" aria-hidden="true"></i>
 							<?php esc_html_e( 'الاهتمامات البحثية أو الكلمات المفتاحية', 'toppers' ); ?> <span class="req">*</span>
 						</label>
 						<textarea id="ai-interests" name="interests" rows="3" placeholder="<?php esc_attr_e( 'اكتب الكلمات المفتاحية أو الموضوعات التي تود التركيز عليها (مثال: الذكاء الاصطناعي في قيادة التغيير، تحليل المخاطر، التنمية المستدامة...)' , 'toppers' ); ?>" required></textarea>
@@ -90,7 +90,7 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 
 					<div class="ai-submit-wrap">
 						<button type="submit" id="aiSubmitBtn" class="btn btn-gold btn-lg ai-btn-generate">
-							<span class="btn-sparkle">✨</span>
+							<span class="btn-sparkle"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span>
 							<span><?php esc_html_e( 'توليد 5 أفكار وعناوين بحثية الآن', 'toppers' ); ?></span>
 						</button>
 					</div>
@@ -102,7 +102,7 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 						<div class="sphere-inner"></div>
 						<div class="sphere-ring"></div>
 						<div class="sphere-ring-2"></div>
-						<div class="ai-brain-icon">🧠</div>
+						<div class="ai-brain-icon"><i class="fa-solid fa-brain" aria-hidden="true"></i></div>
 					</div>
 					<h3 id="ai-status-text"><?php esc_html_e( 'جاري تحليل الكلمات المفتاحية والتخصص الأكاديمي...', 'toppers' ); ?></h3>
 					<div class="ai-progress-track">
@@ -115,11 +115,11 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 				<div id="ai-results" class="ai-results-panel" style="display:none;">
 					<div class="results-top-bar">
 						<div>
-							<span class="res-tag"><?php esc_html_e( 'اكتمل التوليد بنجاح 🎯', 'toppers' ); ?></span>
+							<span class="res-tag"><?php esc_html_e( 'اكتمل التوليد بنجاح', 'toppers' ); ?> <i class="fa-solid fa-bullseye" aria-hidden="true"></i></span>
 							<h3 class="res-title"><?php esc_html_e( 'تم توليد 5 أفكار بحثية متميزة تناسب معاييرك:', 'toppers' ); ?></h3>
 						</div>
 						<button type="button" class="btn btn-outline btn-sm" id="aiRerollBtn">
-							🔄 <?php esc_html_e( 'توليد 5 أفكار أخرى', 'toppers' ); ?>
+							<i class="fa-solid fa-rotate" aria-hidden="true"></i> <?php esc_html_e( 'توليد 5 أفكار أخرى', 'toppers' ); ?>
 						</button>
 					</div>
 
@@ -129,15 +129,15 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 
 					<div class="results-bottom-bar">
 						<div class="res-help-note">
-							<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+							<i class="fa-solid fa-circle-info" style="font-size:20px;" aria-hidden="true"></i>
 							<span><?php esc_html_e( 'أعجبك أحد العناوين؟ يمكنك نسخه فوراً أو طلب إعداده كاملاً مع كبار الباحثين الأكاديميين في توبرز.', 'toppers' ); ?></span>
 						</div>
 						<div class="res-actions-row">
 							<button type="button" class="btn btn-gold" id="aiRerollBtnBottom">
-								✨ <?php esc_html_e( 'توليد 5 عناوين جديدة تماماً', 'toppers' ); ?>
+								<i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> <?php esc_html_e( 'توليد 5 عناوين جديدة تماماً', 'toppers' ); ?>
 							</button>
 							<button type="button" class="btn btn-outline" id="aiEditInputBtn">
-								✏️ <?php esc_html_e( 'تعديل التخصص والكلمات', 'toppers' ); ?>
+								<i class="fa-solid fa-pen" aria-hidden="true"></i> <?php esc_html_e( 'تعديل التخصص والكلمات', 'toppers' ); ?>
 							</button>
 						</div>
 					</div>
@@ -147,7 +147,7 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 
 			<!-- Additional Support Banner -->
 			<div class="ai-guarantee-card reveal" style="margin-top: 40px;">
-				<div class="gc-icon">🎓</div>
+				<div class="gc-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></div>
 				<div>
 					<h4><?php esc_html_e( 'هل تبحث عن مقترح بحثي (Proposal) متكامل أو استشارة خاصة؟', 'toppers' ); ?></h4>
 					<p><?php esc_html_e( 'فريقنا الأكاديمي المكون من حملة الدكتوراه والماجستير جاهز لمساعدتك في صياغة خطة البحث، الدراسات السابقة، والتحليل الإحصائي الكامل.', 'toppers' ); ?></p>

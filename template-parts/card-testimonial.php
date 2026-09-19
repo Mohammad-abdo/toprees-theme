@@ -29,7 +29,7 @@ $quote = wp_strip_all_tags( get_the_content() );
 		<div class="t-screenshot-wrap" data-full-image="<?php echo esc_url( get_the_post_thumbnail_url( $id, 'full' ) ?: $img ); ?>" title="<?php esc_attr_e( 'انقر لتكبير السكرين شوت', 'toppers' ); ?>">
 			<img src="<?php echo esc_url( $img ); ?>" alt="<?php echo esc_attr( get_the_title() ); ?>" class="t-screenshot-img">
 			<div class="t-zoom-overlay">
-				<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+				<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
 				<span><?php esc_html_e( 'تكبير', 'toppers' ); ?></span>
 			</div>
 		</div>
@@ -42,7 +42,7 @@ $quote = wp_strip_all_tags( get_the_content() );
 		<?php endif; ?>
 	<?php endif; ?>
 
-	<div class="t-stars"><?php echo esc_html( str_repeat( '★', $stars ) ); ?></div>
+	<div class="t-stars"><?php echo str_repeat( '<i class="fa-solid fa-star" aria-hidden="true"></i>', $stars ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 	<?php if ( $quote && 'whatsapp' !== $type ) : ?>
 		<p class="t-quote"><?php echo esc_html( $quote ); ?></p>
 	<?php endif; ?>
