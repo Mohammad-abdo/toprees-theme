@@ -141,15 +141,19 @@ function toppers_admin_enqueue_assets() {
 	);
 }
 
-add_filter( 'login_url', 'toppers_filter_login_url', 20, 1 );
-function toppers_filter_login_url( $url ) {
+add_filter( 'login_url', 'toppers_filter_login_url', 20, 3 );
+function toppers_filter_login_url( $url, $redirect = '', $force_reauth = false ) {
 	if ( is_admin() && ! wp_doing_ajax() ) {
 		return $url;
 	}
 	if ( ! toppers_platform_active() ) {
 		return $url;
 	}
-	return toppers_login_url();
+	$login = toppers_login_url();
+	if ( $redirect ) {
+		$login = add_query_arg( 'redirect_to', $redirect, $login );
+	}
+	return $login;
 }
 
 add_filter( 'register_url', 'toppers_filter_register_url', 20 );
@@ -187,7 +191,15 @@ function toppers_redirect_wp_login_to_plugin() {
 	if ( in_array( $action, $keep, true ) ) {
 		return;
 	}
-	wp_safe_redirect( home_url( '/toppers-login/' ) );
+	$target = home_url( '/toppers-login/' );
+	if ( ! empty( $_REQUEST['redirect_to'] ) ) {
+		$target = add_query_arg(
+			'redirect_to',
+			esc_url_raw( wp_unslash( (string) $_REQUEST['redirect_to'] ) ),
+			$target
+		);
+	}
+	wp_safe_redirect( $target );
 	exit;
 }
 
@@ -199,7 +211,7 @@ function toppers_redirect_theme_auth_pages() {
 
 	$path = trim( (string) parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
 	if ( 'employee' === $path || str_ends_with( $path, '/employee' ) ) {
-		wp_safe_redirect( toppers_login_url() );
+		wp_safe_redirect( is_user_logged_in() ? toppers_account_url() : toppers_login_url() );
 		exit;
 	}
 
@@ -314,6 +326,7 @@ function toppers_handle_contact() {
 	}
 
 	// Bridge to platform: create a potential customer (lead), not a full client account.
+	$lead_ok = false;
 	if ( class_exists( '\Toppers\Modules\Accounts\Repository\LeadRepository' ) ) {
 		$repo   = new \Toppers\Modules\Accounts\Repository\LeadRepository();
 		$notes  = trim(
@@ -331,18 +344,19 @@ function toppers_handle_contact() {
 		);
 		$existing = $repo->findByPhone( $phone );
 		if ( $existing ) {
-			$repo->update(
+			$result  = $repo->update(
 				(int) $existing['id'],
 				array(
-					'name'       => $name,
-					'email'      => $email,
-					'notes'      => trim( ( (string) ( $existing['notes'] ?? '' ) ) . "\n---\n" . $notes ),
-					'status'     => 'contacted',
-					'source'     => 'contact',
+					'name'   => $name,
+					'email'  => $email,
+					'notes'  => trim( ( (string) ( $existing['notes'] ?? '' ) ) . "\n---\n" . $notes ),
+					'status' => 'contacted',
+					'source' => 'contact',
 				)
 			);
+			$lead_ok = ! empty( $result['ok'] );
 		} else {
-			$repo->create(
+			$result  = $repo->create(
 				array(
 					'name'   => $name,
 					'phone'  => $phone,
@@ -352,6 +366,7 @@ function toppers_handle_contact() {
 					'notes'  => $notes,
 				)
 			);
+			$lead_ok = ! empty( $result['ok'] );
 		}
 	}
 
@@ -364,6 +379,11 @@ function toppers_handle_contact() {
 	}
 
 	wp_mail( $to, $subject, $body, $headers );
+
+	if ( class_exists( '\Toppers\Modules\Accounts\Repository\LeadRepository' ) && ! $lead_ok ) {
+		wp_send_json_error( array( 'message' => __( 'تم إرسال البريد لكن تعذر حفظ الطلب في المنصة. حاول مرة أخرى.', 'toppers' ) ) );
+	}
+
 	wp_send_json_success( array( 'message' => __( 'تم استلام طلبك بنجاح', 'toppers' ) ) );
 }
 

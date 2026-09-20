@@ -276,9 +276,21 @@ document.addEventListener('DOMContentLoaded', function(){
   const orderChoiceSystem = document.getElementById('orderChoiceSystem');
 
   function withServiceQuery(base, service){
-    if(!service) return base;
-    const join = base.indexOf('?') === -1 ? '?' : '&';
-    return base + join + 'service=' + encodeURIComponent(service);
+    if(!service || !base) return base;
+    try {
+      const u = new URL(base, window.location.origin);
+      if (u.searchParams.has('redirect_to')) {
+        const target = new URL(u.searchParams.get('redirect_to'), window.location.origin);
+        target.searchParams.set('service', service);
+        u.searchParams.set('redirect_to', target.pathname + target.search + target.hash);
+        return u.pathname + u.search + u.hash;
+      }
+      u.searchParams.set('service', service);
+      return u.pathname + u.search + u.hash;
+    } catch (e) {
+      const join = base.indexOf('?') === -1 ? '?' : '&';
+      return base + join + 'service=' + encodeURIComponent(service);
+    }
   }
 
   function withWhatsappText(base, service){
