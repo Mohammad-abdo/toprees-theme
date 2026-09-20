@@ -193,7 +193,17 @@ function toppers_redirect_wp_login_to_plugin() {
 
 add_action( 'template_redirect', 'toppers_redirect_theme_auth_pages' );
 function toppers_redirect_theme_auth_pages() {
-	if ( is_admin() || ! is_singular( 'page' ) || ! toppers_platform_active() ) {
+	if ( is_admin() || ! toppers_platform_active() ) {
+		return;
+	}
+
+	$path = trim( (string) parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
+	if ( 'employee' === $path || str_ends_with( $path, '/employee' ) ) {
+		wp_safe_redirect( toppers_login_url() );
+		exit;
+	}
+
+	if ( ! is_singular( 'page' ) ) {
 		return;
 	}
 	$slug = get_post_field( 'post_name', get_queried_object_id() );
@@ -201,7 +211,7 @@ function toppers_redirect_theme_auth_pages() {
 		wp_safe_redirect( 'register' === $slug ? toppers_register_url() : toppers_login_url() );
 		exit;
 	}
-	if ( 'profile' === $slug ) {
+	if ( 'profile' === $slug || 'employee' === $slug ) {
 		wp_safe_redirect( toppers_account_url() );
 		exit;
 	}
@@ -301,6 +311,48 @@ function toppers_handle_contact() {
 
 	if ( ! $name || ! $phone ) {
 		wp_send_json_error( array( 'message' => __( 'الاسم والجوال مطلوبان.', 'toppers' ) ) );
+	}
+
+	// Bridge to platform: create a potential customer (lead), not a full client account.
+	if ( class_exists( '\Toppers\Modules\Accounts\Repository\LeadRepository' ) ) {
+		$repo   = new \Toppers\Modules\Accounts\Repository\LeadRepository();
+		$notes  = trim(
+			implode(
+				"\n",
+				array_filter(
+					array(
+						$service ? 'الخدمة: ' . $service : '',
+						$level ? 'المرحلة: ' . $level : '',
+						$deadline ? 'الموعد: ' . $deadline : '',
+						$details,
+					)
+				)
+			)
+		);
+		$existing = $repo->findByPhone( $phone );
+		if ( $existing ) {
+			$repo->update(
+				(int) $existing['id'],
+				array(
+					'name'       => $name,
+					'email'      => $email,
+					'notes'      => trim( ( (string) ( $existing['notes'] ?? '' ) ) . "\n---\n" . $notes ),
+					'status'     => 'contacted',
+					'source'     => 'contact',
+				)
+			);
+		} else {
+			$repo->create(
+				array(
+					'name'   => $name,
+					'phone'  => $phone,
+					'email'  => $email,
+					'source' => 'contact',
+					'status' => 'new',
+					'notes'  => $notes,
+				)
+			);
+		}
 	}
 
 	$to      = toppers_email();

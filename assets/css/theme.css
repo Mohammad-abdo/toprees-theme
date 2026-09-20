@@ -3281,6 +3281,14 @@ h6 {
   z-index: 1;
   pointer-events: none;
 }
+/* Image-only banner: no overlay, no text block */
+.hero-slider-wrapper--image-only .slide-overlay,
+.hero-slider-wrapper--image-only .slide-content {
+  display: none !important;
+}
+.hero-slider-wrapper--image-only .hero-slide {
+  padding: 0;
+}
 .center-content {
   display: flex;
   flex-direction: column;

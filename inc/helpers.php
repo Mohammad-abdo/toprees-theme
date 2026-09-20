@@ -411,11 +411,16 @@ function toppers_account_url( $tab = '' ) {
 	}
 
 	$path = '/toppers-client/';
+	$role = '';
 	if ( class_exists( '\Toppers\Portal\PortalService' ) ) {
 		$role = \Toppers\Portal\PortalService::getUserRole( get_current_user_id() );
-		$map  = array(
+		if ( 'notifications' === $tab && method_exists( '\Toppers\Portal\PortalService', 'getNotificationsUrl' ) ) {
+			return \Toppers\Portal\PortalService::getNotificationsUrl( $role );
+		}
+		$map = array(
 			'administrator'      => '/toppers-portal/',
 			'toppers_manager'    => '/toppers-portal/',
+			'toppers_finance'    => '/toppers-portal/',
 			'toppers_sales'      => '/toppers-sales/',
 			'toppers_specialist' => '/toppers-specialist/',
 			'toppers_qc'         => '/toppers-qc/',
@@ -425,6 +430,10 @@ function toppers_account_url( $tab = '' ) {
 		}
 	} elseif ( current_user_can( 'manage_options' ) ) {
 		$path = '/toppers-portal/';
+	}
+
+	if ( ! $tab && 'toppers_finance' === $role ) {
+		$tab = 'finance';
 	}
 
 	$url = home_url( $path );
@@ -445,14 +454,19 @@ function toppers_user_notifications( $limit = 8 ) {
 		return array();
 	}
 
-	$items = \Toppers\Portal\PortalService::getClientNotifications( get_current_user_id() );
-	if ( ! is_array( $items ) ) {
-		return array();
+	$user_id = get_current_user_id();
+	if ( method_exists( '\Toppers\Portal\PortalService', 'getRecentNotificationsForTopbar' ) ) {
+		$items = \Toppers\Portal\PortalService::getRecentNotificationsForTopbar( $user_id, $limit > 0 ? $limit : 20 );
+	} else {
+		$items = \Toppers\Portal\PortalService::getClientNotifications( $user_id );
+		if ( ! is_array( $items ) ) {
+			$items = array();
+		}
+		if ( $limit > 0 ) {
+			$items = array_slice( $items, 0, $limit );
+		}
 	}
-	if ( $limit > 0 ) {
-		return array_slice( $items, 0, $limit );
-	}
-	return $items;
+	return is_array( $items ) ? $items : array();
 }
 
 function toppers_notification_unread( $row ) {

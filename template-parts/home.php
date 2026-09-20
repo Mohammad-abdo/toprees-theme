@@ -6,9 +6,9 @@
  */
 
 $hero_slides = array(
-	array( toppers_photo( 'hero-1' ), toppers_content( 'home_slide_1_eyebrow', 'توبرز للاستشارات والحلول البحثية' ), toppers_content( 'home_slide_1_title', 'من فكرة البحث' ), toppers_content( 'home_slide_1_accent', 'إلى التسليم النهائي' ), toppers_content( 'home_slide_1_lede', 'نرافق طلاب البكالوريوس والماجستير والدكتوراه والباحثين في كل محطة من رحلتهم الأكاديمية؛ بدقة علمية، ومواعيد تُحترم.' ), array( array( toppers_page_url( 'contact' ), 'اطلب خدمتك الآن', 'btn btn-gold' ), array( toppers_page_url( 'services' ), 'تصفح الخدمات', 'btn btn-outline' ) ) ),
-	array( toppers_photo( 'hero-2' ), toppers_content( 'home_slide_2_eyebrow', 'أعلى معايير الجودة' ), toppers_content( 'home_slide_2_title', 'رسائل الماجستير' ), toppers_content( 'home_slide_2_accent', 'بمنهجية دقيقة' ), toppers_content( 'home_slide_2_lede', 'دعم شامل للباحثين من اقتراح العنوان وحتى المناقشة، مع ضمان الجودة والسرية التامة لجميع البيانات.' ), array( array( toppers_page_url( 'services' ), 'عرض الخدمة', 'btn btn-gold' ) ) ),
-	array( toppers_photo( 'hero-3' ), toppers_content( 'home_slide_3_eyebrow', 'دعم إحصائي ولغوي' ), toppers_content( 'home_slide_3_title', 'التحليل الإحصائي' ), toppers_content( 'home_slide_3_accent', 'والترجمة الاحترافية' ), toppers_content( 'home_slide_3_lede', 'نستخدم أحدث البرامج الإحصائية لتحليل بيانات بحثك، ونقدم ترجمة أكاديمية معتمدة تدعم وصول بحثك للعالمية.' ), array( array( toppers_page_url( 'contact' ), 'تواصل معنا', 'btn btn-gold' ) ) ),
+	toppers_photo( 'hero-1' ),
+	toppers_photo( 'hero-2' ),
+	toppers_photo( 'hero-3' ),
 );
 
 $home_services = array(
@@ -38,34 +38,18 @@ $default_tests = array(
 	array( 'ياسر المطيري', 'باحث دكتوراه', 'التدقيق اللغوي كان ممتازاً، لم أجد أي خطأ بعد استلام الملف. شكراً توبرز.', '0:40' ),
 );
 ?>
-<section class="hero-slider-wrapper">
+<section class="hero-slider-wrapper hero-slider-wrapper--image-only">
 	<div class="hero-slider" id="heroSlider">
-		<?php foreach ( $hero_slides as $i => $slide ) :
-			$img = $slide[0];
-			?>
+		<?php foreach ( $hero_slides as $i => $img ) : ?>
 			<div class="hero-slide<?php echo 0 === $i ? ' is-active' : ''; ?> slide-<?php echo esc_attr( $i + 1 ); ?>">
 				<div class="slide-bg">
 					<img src="<?php echo esc_url( $img ); ?>" alt="" decoding="async"<?php echo 0 === $i ? ' fetchpriority="high"' : ' loading="lazy"'; ?>>
-				</div>
-				<div class="slide-overlay" aria-hidden="true"></div>
-				<div class="container slide-content center-content">
-					<div class="eyebrow hero-eyebrow">
-						<i class="fa-solid fa-star star-ic" aria-hidden="true" style="color: var(--gold)"></i>
-						<span><?php echo esc_html( $slide[1] ); ?></span>
-					</div>
-					<h1 class="hero-title"><?php echo esc_html( $slide[2] ); ?><br><span class="accent"><?php echo esc_html( $slide[3] ); ?></span></h1>
-					<p class="hero-lede"><?php echo esc_html( $slide[4] ); ?></p>
-					<div class="hero-cta center-flex">
-						<?php foreach ( $slide[5] as $btn ) : ?>
-							<a href="<?php echo esc_url( $btn[0] ); ?>" class="<?php echo esc_attr( $btn[2] ); ?>"<?php echo false !== strpos( $btn[2], 'outline' ) ? ' style="border-color: rgba(255,255,255,0.3); color: #fff;"' : ''; ?>><?php echo esc_html( $btn[1] ); ?></a>
-						<?php endforeach; ?>
-					</div>
 				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>
 	<div class="slider-controls">
-		<button class="slider-btn" id="sliderPrev" type="button">
+		<button class="slider-btn" id="sliderPrev" type="button" aria-label="<?php esc_attr_e( 'السابق', 'toppers' ); ?>">
 			<i class="fa-solid fa-chevron-right" aria-hidden="true" style="font-size:20px;"></i>
 		</button>
 		<div class="slider-dots" id="sliderDots">
@@ -73,7 +57,7 @@ $default_tests = array(
 			<button class="slider-dot" data-index="1" type="button"></button>
 			<button class="slider-dot" data-index="2" type="button"></button>
 		</div>
-		<button class="slider-btn" id="sliderNext" type="button">
+		<button class="slider-btn" id="sliderNext" type="button" aria-label="<?php esc_attr_e( 'التالي', 'toppers' ); ?>">
 			<i class="fa-solid fa-chevron-left" aria-hidden="true" style="font-size:20px;"></i>
 		</button>
 	</div>

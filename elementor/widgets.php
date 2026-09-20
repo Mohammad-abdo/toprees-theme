@@ -56,28 +56,20 @@ class Toppers_Widget_Hero_Slider extends Toppers_Widget_Base {
 	public function get_icon() { return 'eicon-slider-push'; }
 
 	protected function register_controls() {
-		$this->start_controls_section( 'section_slides', array( 'label' => __( 'الشرائح (صورة + نص)', 'toppers' ) ) );
+		$this->start_controls_section( 'section_slides', array( 'label' => __( 'الشرائح (صور فقط)', 'toppers' ) ) );
 		$repeater = new Repeater();
-		$repeater->add_control( 'image', array( 'label' => __( 'صورة الخلفية', 'toppers' ), 'type' => Controls_Manager::MEDIA, 'default' => array( 'url' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1920' ) ) );
-		$repeater->add_control( 'eyebrow', array( 'label' => __( 'التسمية', 'toppers' ), 'type' => Controls_Manager::TEXT, 'default' => 'توبرز للاستشارات والحلول البحثية' ) );
-		$repeater->add_control( 'title', array( 'label' => __( 'العنوان', 'toppers' ), 'type' => Controls_Manager::TEXTAREA, 'default' => 'من فكرة البحث' ) );
-		$repeater->add_control( 'accent', array( 'label' => __( 'السطر الذهبي', 'toppers' ), 'type' => Controls_Manager::TEXT, 'default' => 'إلى التسليم النهائي' ) );
-		$repeater->add_control( 'lede', array( 'label' => __( 'الوصف', 'toppers' ), 'type' => Controls_Manager::TEXTAREA, 'default' => 'نرافق طلاب البكالوريوس والماجستير والدكتوراه والباحثين في كل محطة من رحلتهم الأكاديمية.' ) );
-		$repeater->add_control( 'btn1_text', array( 'label' => __( 'زر 1', 'toppers' ), 'type' => Controls_Manager::TEXT, 'default' => 'اطلب خدمتك الآن' ) );
-		$repeater->add_control( 'btn1_link', array( 'label' => __( 'رابط الزر 1', 'toppers' ), 'type' => Controls_Manager::URL, 'default' => array( 'url' => toppers_page_url( 'contact', '#' ) ) ) );
-		$repeater->add_control( 'btn2_text', array( 'label' => __( 'زر 2', 'toppers' ), 'type' => Controls_Manager::TEXT, 'default' => 'تصفح الخدمات' ) );
-		$repeater->add_control( 'btn2_link', array( 'label' => __( 'رابط الزر 2', 'toppers' ), 'type' => Controls_Manager::URL, 'default' => array( 'url' => toppers_page_url( 'services', '#' ) ) ) );
+		$repeater->add_control( 'image', array( 'label' => __( 'صورة البانر', 'toppers' ), 'type' => Controls_Manager::MEDIA, 'default' => array( 'url' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1920' ) ) );
 		$this->add_control(
 			'slides',
 			array(
 				'label'       => __( 'الشرائح', 'toppers' ),
 				'type'        => Controls_Manager::REPEATER,
 				'fields'      => $repeater->get_controls(),
-				'title_field' => '{{{ title }}}',
+				'title_field' => __( 'صورة', 'toppers' ),
 				'default'     => array(
-					array( 'title' => 'من فكرة البحث', 'accent' => 'إلى التسليم النهائي', 'eyebrow' => 'توبرز للاستشارات والحلول البحثية', 'lede' => 'نرافق طلاب البكالوريوس والماجستير والدكتوراه والباحثين في كل محطة من رحلتهم الأكاديمية؛ بدقة علمية، ومواعيد تُحترم.', 'image' => array( 'url' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1920' ) ),
-					array( 'title' => 'رسائل الماجستير', 'accent' => 'بمنهجية دقيقة', 'eyebrow' => 'أعلى معايير الجودة', 'lede' => 'دعم شامل للباحثين من اقتراح العنوان وحتى المناقشة، مع ضمان الجودة والسرية التامة.', 'image' => array( 'url' => 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1920' ) ),
-					array( 'title' => 'التحليل الإحصائي', 'accent' => 'والترجمة الاحترافية', 'eyebrow' => 'دعم إحصائي ولغوي', 'lede' => 'نستخدم أحدث البرامج الإحصائية لتحليل بيانات بحثك، ونقدم ترجمة أكاديمية معتمدة.', 'image' => array( 'url' => 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1920' ) ),
+					array( 'image' => array( 'url' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1920' ) ),
+					array( 'image' => array( 'url' => 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1920' ) ),
+					array( 'image' => array( 'url' => 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1920' ) ),
 				),
 			)
 		);
@@ -89,7 +81,7 @@ class Toppers_Widget_Hero_Slider extends Toppers_Widget_Base {
 		if ( empty( $slides ) ) {
 			return;
 		}
-		echo '<section class="hero-slider-wrapper"><div class="hero-slider" id="heroSlider">';
+		echo '<section class="hero-slider-wrapper hero-slider-wrapper--image-only"><div class="hero-slider" id="heroSlider">';
 		foreach ( $slides as $i => $slide ) {
 			$img = ! empty( $slide['image']['url'] ) ? $slide['image']['url'] : '';
 			$active = 0 === $i ? ' is-active' : '';
@@ -98,35 +90,13 @@ class Toppers_Widget_Hero_Slider extends Toppers_Widget_Base {
 			if ( $img ) {
 				echo '<img src="' . esc_url( $img ) . '" alt="" decoding="async"' . ( 0 === $i ? ' fetchpriority="high"' : ' loading="lazy"' ) . '>';
 			}
-			echo '</div><div class="slide-overlay" aria-hidden="true"></div>';
-			echo '<div class="container slide-content center-content">';
-			if ( ! empty( $slide['eyebrow'] ) ) {
-				echo '<div class="eyebrow hero-eyebrow">' . toppers_star_svg() . '<span>' . esc_html( $slide['eyebrow'] ) . '</span></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			}
-			echo '<h1 class="hero-title">' . esc_html( $slide['title'] );
-			if ( ! empty( $slide['accent'] ) ) {
-				echo '<br><span class="accent">' . esc_html( $slide['accent'] ) . '</span>';
-			}
-			echo '</h1>';
-			if ( ! empty( $slide['lede'] ) ) {
-				echo '<p class="hero-lede">' . esc_html( $slide['lede'] ) . '</p>';
-			}
-			echo '<div class="hero-cta center-flex">';
-			if ( ! empty( $slide['btn1_text'] ) ) {
-				$url = ! empty( $slide['btn1_link']['url'] ) ? $slide['btn1_link']['url'] : '#';
-				echo '<a href="' . esc_url( $url ) . '" class="btn btn-gold">' . esc_html( $slide['btn1_text'] ) . '</a>';
-			}
-			if ( ! empty( $slide['btn2_text'] ) ) {
-				$url = ! empty( $slide['btn2_link']['url'] ) ? $slide['btn2_link']['url'] : '#';
-				echo '<a href="' . esc_url( $url ) . '" class="btn btn-outline" style="border-color:rgba(255,255,255,0.3);color:#fff;">' . esc_html( $slide['btn2_text'] ) . '</a>';
-			}
-			echo '</div></div></div>';
+			echo '</div></div>';
 		}
-		echo '</div><div class="slider-controls"><button class="slider-btn" id="sliderPrev"><i class="fa-solid fa-chevron-right" style="font-size:18px;" aria-hidden="true"></i></button><div class="slider-dots" id="sliderDots">';
+		echo '</div><div class="slider-controls"><button class="slider-btn" id="sliderPrev" type="button" aria-label="' . esc_attr__( 'السابق', 'toppers' ) . '"><i class="fa-solid fa-chevron-right" style="font-size:18px;" aria-hidden="true"></i></button><div class="slider-dots" id="sliderDots">';
 		foreach ( $slides as $i => $slide ) {
-			echo '<button class="slider-dot' . ( 0 === $i ? ' active' : '' ) . '" data-index="' . esc_attr( $i ) . '"></button>';
+			echo '<button class="slider-dot' . ( 0 === $i ? ' active' : '' ) . '" data-index="' . esc_attr( $i ) . '" type="button"></button>';
 		}
-		echo '</div><button class="slider-btn" id="sliderNext"><i class="fa-solid fa-chevron-left" style="font-size:18px;" aria-hidden="true"></i></button></div></section>';
+		echo '</div><button class="slider-btn" id="sliderNext" type="button" aria-label="' . esc_attr__( 'التالي', 'toppers' ) . '"><i class="fa-solid fa-chevron-left" style="font-size:18px;" aria-hidden="true"></i></button></div></section>';
 	}
 }
 
