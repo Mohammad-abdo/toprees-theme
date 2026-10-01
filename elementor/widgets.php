@@ -410,7 +410,10 @@ class Toppers_Widget_Faq extends Toppers_Widget_Base {
 		echo '<section class="section section--alt"><div class="container" style="max-width:820px">';
 		$this->render_section_head( $s );
 		foreach ( $items as $i => $item ) {
-			echo '<div class="faq-item' . ( 0 === $i ? ' is-open' : '' ) . '"><div class="faq-q"><span>' . esc_html( $item['q'] ) . '</span><span class="plus"></span></div><div class="faq-a"><p>' . esc_html( $item['a'] ) . '</p></div></div>';
+			echo '<div class="faq-item' . ( 0 === $i ? ' is-open' : '' ) . '">';
+			echo '<button type="button" class="faq-q" aria-expanded="' . ( 0 === $i ? 'true' : 'false' ) . '"><span>' . esc_html( $item['q'] ) . '</span><span class="plus" aria-hidden="true"></span></button>';
+			echo '<div class="faq-a"><div class="faq-a-inner"><p>' . esc_html( $item['a'] ) . '</p></div></div>';
+			echo '</div>';
 		}
 		echo '</div></section>';
 	}
@@ -436,7 +439,7 @@ class Toppers_Widget_Cta extends Toppers_Widget_Base {
 		$url = ! empty( $s['btn1_link']['url'] ) ? $s['btn1_link']['url'] : toppers_page_url( 'contact', '#' );
 		echo '<section class="section--tight"><div class="container"><div class="cta-band"><h2>' . esc_html( $s['title'] ) . '</h2><p>' . esc_html( $s['lede'] ) . '</p><div class="cta-actions">';
 		echo '<a href="' . esc_url( $url ) . '" class="btn btn-gold">' . esc_html( $s['btn1'] ) . '</a>';
-		echo '<a href="' . esc_url( toppers_whatsapp_url() ) . '" target="_blank" rel="noopener" class="btn btn-outline">' . esc_html( $s['btn2'] ) . '</a>';
+		echo '<a href="' . esc_url( toppers_whatsapp_url() ) . '" target="_blank" rel="noopener" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> ' . esc_html( $s['btn2'] ) . '</a>';
 		echo '</div></div></div></section>';
 	}
 }
@@ -516,7 +519,7 @@ class Toppers_Widget_Blog_Grid extends Toppers_Widget_Base {
 			}
 			wp_reset_postdata();
 		}
-		echo '</div><div style="text-align:center;margin-top:40px;"><a href="' . esc_url( toppers_blog_url() ) . '" class="btn btn-outline">' . esc_html__( 'عرض كل المقالات', 'toppers' ) . '</a></div></div></section>';
+		echo '</div><div style="text-align:center;margin-top:40px;"><a href="' . esc_url( toppers_blog_url() ) . '" class="btn btn-outline-dark">' . esc_html__( 'عرض كل المقالات', 'toppers' ) . '</a></div></div></section>';
 	}
 }
 

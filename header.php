@@ -19,6 +19,45 @@ if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_loca
 	return;
 }
 $cta = toppers_opt( 'toppers_cta_label', 'اطلب خدمتك' );
+
+$nav_fallback = static function () {
+	$items = array(
+		array( __( 'الرئيسية', 'toppers' ), home_url( '/' ) ),
+		array( __( 'الخدمات', 'toppers' ), toppers_page_url( 'services' ) ),
+		array( __( 'المساعد البحثي', 'toppers' ), toppers_page_url( 'ai-assistant' ) ),
+		array(
+			__( 'عن توبرز', 'toppers' ),
+			toppers_page_url( 'about' ),
+			array(
+				array( __( 'من نحن', 'toppers' ), toppers_page_url( 'about' ) ),
+				array( __( 'الضمانات', 'toppers' ), toppers_page_url( 'guarantees' ) ),
+				array( __( 'انضم لتوبرز', 'toppers' ), toppers_page_url( 'team' ) ),
+				array( __( 'الأسئلة الشائعة', 'toppers' ), toppers_page_url( 'faq' ) ),
+			),
+		),
+		array( __( 'آراء العملاء', 'toppers' ), toppers_page_url( 'testimonials' ) ),
+		array( __( 'المدونة', 'toppers' ), toppers_blog_url() ),
+		array( __( 'تواصل معنا', 'toppers' ), toppers_page_url( 'contact' ) ),
+	);
+	foreach ( $items as $row ) {
+		$has_kids = ! empty( $row[2] ) && is_array( $row[2] );
+		echo '<li class="menu-item' . ( $has_kids ? ' menu-item-has-children' : '' ) . '">';
+		echo '<a href="' . esc_url( $row[1] ) . '">' . esc_html( $row[0] );
+		if ( $has_kids ) {
+			echo ' <i class="fa-solid fa-chevron-down nav-caret" aria-hidden="true"></i>';
+		}
+		echo '</a>';
+		if ( $has_kids ) {
+			echo '<button type="button" class="nav-submenu-toggle" aria-expanded="false" aria-label="' . esc_attr__( 'فتح القائمة الفرعية', 'toppers' ) . '"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>';
+			echo '<ul class="sub-menu">';
+			foreach ( $row[2] as $child ) {
+				echo '<li class="menu-item"><a href="' . esc_url( $child[1] ) . '">' . esc_html( $child[0] ) . '</a></li>';
+			}
+			echo '</ul>';
+		}
+		echo '</li>';
+	}
+};
 ?>
 
 <header class="site-header<?php echo ( is_page_template( 'templates/page-about.php' ) || is_home() || is_singular( 'post' ) || is_search() || is_404() || ( ! is_front_page() && function_exists( 'toppers_is_elementor_page' ) && toppers_is_elementor_page() ) ) ? ' is-scrolled' : ''; ?>">
@@ -33,26 +72,22 @@ $cta = toppers_opt( 'toppers_cta_label', 'اطلب خدمتك' );
 					array(
 						'theme_location' => 'primary',
 						'container'      => false,
-						'items_wrap'     => '%3$s',
+						'items_wrap'     => '<ul class="nav-menu-list">%3$s</ul>',
 						'fallback_cb'    => false,
-						'depth'          => 1,
+						'depth'          => 2,
 						'walker'         => new Toppers_Flat_Walker(),
 					)
 				);
 			} else {
-				echo '<a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'الرئيسية', 'toppers' ) . '</a>';
-				echo '<a href="' . esc_url( toppers_page_url( 'services' ) ) . '">' . esc_html__( 'الخدمات', 'toppers' ) . '</a>';
-				echo '<a href="' . esc_url( toppers_page_url( 'about' ) ) . '">' . esc_html__( 'من نحن', 'toppers' ) . '</a>';
-				echo '<a href="' . esc_url( toppers_page_url( 'faq' ) ) . '">' . esc_html__( 'الأسئلة الشائعة', 'toppers' ) . '</a>';
-				echo '<a href="' . esc_url( toppers_page_url( 'testimonials' ) ) . '">' . esc_html__( 'آراء الطلاب', 'toppers' ) . '</a>';
-				echo '<a href="' . esc_url( toppers_blog_url() ) . '">' . esc_html__( 'المقالات', 'toppers' ) . '</a>';
-				echo '<a href="' . esc_url( toppers_page_url( 'contact' ) ) . '">' . esc_html__( 'تواصل معنا', 'toppers' ) . '</a>';
+				echo '<ul class="nav-menu-list">';
+				$nav_fallback();
+				echo '</ul>';
 			}
 			?>
 		</nav>
 		<div class="header-actions">
 			<?php
-			$toppers_logged_in = is_user_logged_in();
+			$toppers_logged_in  = is_user_logged_in();
 			$toppers_all_notifs = $toppers_logged_in ? toppers_user_notifications( 0 ) : array();
 			$toppers_unread     = 0;
 			foreach ( $toppers_all_notifs as $n ) {
@@ -116,44 +151,51 @@ $cta = toppers_opt( 'toppers_cta_label', 'اطلب خدمتك' );
 				<i class="fa-solid fa-user" aria-hidden="true" style="font-size:20px;"></i>
 			</a>
 			<button class="btn btn-gold btn-sm open-order-modal" type="button" data-i18n="nav.cta"><?php echo esc_html( $cta ); ?></button>
-			<button class="burger" type="button" aria-label="<?php esc_attr_e( 'القائمة', 'toppers' ); ?>"><span></span><span></span><span></span></button>
+			<button class="burger" type="button" aria-label="<?php esc_attr_e( 'القائمة', 'toppers' ); ?>" aria-expanded="false"><span></span><span></span><span></span></button>
 		</div>
 	</div>
 </header>
 
-<div class="mobile-nav">
-	<div class="mobile-nav-top">
-		<?php echo toppers_logo_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		<button class="mobile-close" type="button" aria-label="<?php esc_attr_e( 'إغلاق', 'toppers' ); ?>">&times;</button>
+<div class="mobile-nav" id="toppersMobileNav" hidden>
+	<div class="mobile-nav-panel">
+		<div class="mobile-nav-top">
+			<?php echo toppers_logo_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<button class="mobile-close" type="button" aria-label="<?php esc_attr_e( 'إغلاق', 'toppers' ); ?>">&times;</button>
+		</div>
+		<nav class="mobile-nav-links" aria-label="<?php esc_attr_e( 'قائمة الموبايل', 'toppers' ); ?>">
+			<?php
+			if ( has_nav_menu( 'mobile' ) || has_nav_menu( 'primary' ) ) {
+				wp_nav_menu(
+					array(
+						'theme_location' => has_nav_menu( 'mobile' ) ? 'mobile' : 'primary',
+						'container'      => false,
+						'items_wrap'     => '<ul class="nav-menu-list">%3$s</ul>',
+						'fallback_cb'    => false,
+						'depth'          => 2,
+						'walker'         => new Toppers_Flat_Walker(),
+					)
+				);
+			} else {
+				echo '<ul class="nav-menu-list">';
+				$nav_fallback();
+				echo '</ul>';
+			}
+			?>
+			<ul class="nav-menu-list nav-menu-list--account">
+			<?php
+			if ( is_user_logged_in() ) {
+				echo '<li class="menu-item"><a href="' . esc_url( toppers_account_url() ) . '">' . esc_html__( 'حسابي', 'toppers' ) . '</a></li>';
+				echo '<li class="menu-item"><a href="' . esc_url( toppers_logout_url() ) . '">' . esc_html__( 'تسجيل الخروج', 'toppers' ) . '</a></li>';
+			} else {
+				echo '<li class="menu-item"><a href="' . esc_url( toppers_login_url() ) . '">' . esc_html__( 'تسجيل الدخول', 'toppers' ) . '</a></li>';
+				echo '<li class="menu-item"><a href="' . esc_url( toppers_register_url() ) . '">' . esc_html__( 'إنشاء حساب', 'toppers' ) . '</a></li>';
+			}
+			?>
+			</ul>
+		</nav>
+		<div class="mobile-nav-cta">
+			<button class="btn btn-gold btn-block open-order-modal" type="button"><?php echo esc_html( $cta ); ?></button>
+			<button class="btn btn-outline-dark btn-block" type="button" data-lang-toggle style="margin-top:10px"><span data-lang-label>EN</span></button>
+		</div>
 	</div>
-	<?php
-	if ( has_nav_menu( 'mobile' ) || has_nav_menu( 'primary' ) ) {
-		wp_nav_menu(
-			array(
-				'theme_location' => has_nav_menu( 'mobile' ) ? 'mobile' : 'primary',
-				'container'      => false,
-				'items_wrap'     => '%3$s',
-				'fallback_cb'    => false,
-				'depth'          => 1,
-				'walker'         => new Toppers_Flat_Walker(),
-			)
-		);
-	} else {
-		echo '<a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'الرئيسية', 'toppers' ) . '</a>';
-		echo '<a href="' . esc_url( toppers_page_url( 'services' ) ) . '">' . esc_html__( 'الخدمات', 'toppers' ) . '</a>';
-		echo '<a href="' . esc_url( toppers_page_url( 'about' ) ) . '">' . esc_html__( 'من نحن', 'toppers' ) . '</a>';
-		echo '<a href="' . esc_url( toppers_page_url( 'faq' ) ) . '">' . esc_html__( 'الأسئلة الشائعة', 'toppers' ) . '</a>';
-		echo '<a href="' . esc_url( toppers_page_url( 'testimonials' ) ) . '">' . esc_html__( 'آراء الطلاب', 'toppers' ) . '</a>';
-		echo '<a href="' . esc_url( toppers_blog_url() ) . '">' . esc_html__( 'المقالات', 'toppers' ) . '</a>';
-		echo '<a href="' . esc_url( toppers_page_url( 'contact' ) ) . '">' . esc_html__( 'تواصل معنا', 'toppers' ) . '</a>';
-	}
-	if ( is_user_logged_in() ) {
-		echo '<a href="' . esc_url( toppers_account_url() ) . '">' . esc_html__( 'حسابي', 'toppers' ) . '</a>';
-		echo '<a href="' . esc_url( toppers_logout_url() ) . '">' . esc_html__( 'تسجيل الخروج', 'toppers' ) . '</a>';
-	} else {
-		echo '<a href="' . esc_url( toppers_login_url() ) . '">' . esc_html__( 'تسجيل الدخول', 'toppers' ) . '</a>';
-		echo '<a href="' . esc_url( toppers_register_url() ) . '">' . esc_html__( 'إنشاء حساب', 'toppers' ) . '</a>';
-	}
-	?>
-	<button class="btn btn-gold btn-block" type="button" data-lang-toggle style="margin-top:22px"><span data-lang-label>EN</span></button>
 </div>

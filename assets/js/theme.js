@@ -16,24 +16,88 @@ document.addEventListener('DOMContentLoaded', function(){
   const burger = document.querySelector('.burger');
   const mobileNav = document.querySelector('.mobile-nav');
   const mobileClose = document.querySelector('.mobile-close');
-  if(burger && mobileNav){
-    burger.addEventListener('click', ()=> mobileNav.classList.add('is-open'));
-    mobileClose && mobileClose.addEventListener('click', ()=> mobileNav.classList.remove('is-open'));
-    mobileNav.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> mobileNav.classList.remove('is-open')));
+
+  function setMobileNavOpen(open) {
+    if (!mobileNav) return;
+    mobileNav.classList.toggle('is-open', open);
+    if (open) {
+      mobileNav.removeAttribute('hidden');
+    } else {
+      mobileNav.setAttribute('hidden', '');
+    }
+    document.body.classList.toggle('is-mobile-nav-open', open);
+    if (burger) burger.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
+
+  if (burger && mobileNav) {
+    burger.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      setMobileNavOpen(!mobileNav.classList.contains('is-open'));
+    });
+    if (mobileClose) {
+      mobileClose.addEventListener('click', function(e){
+        e.preventDefault();
+        setMobileNavOpen(false);
+      });
+    }
+    mobileNav.addEventListener('click', function(e){
+      if (e.target === mobileNav) setMobileNavOpen(false);
+    });
+    mobileNav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){
+        // Don't close when tapping parent with children (optional) — close on leaf links
+        const li = a.closest('.menu-item-has-children');
+        if (li && a.parentElement === li && li.querySelector(':scope > .sub-menu')) {
+          return;
+        }
+        setMobileNavOpen(false);
+      });
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') setMobileNavOpen(false);
+    });
+  }
+
+  /* ---------- Submenu toggles (mobile accordion + desktop click) ---------- */
+  document.querySelectorAll('.nav-submenu-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      const li = btn.closest('.menu-item-has-children');
+      if (!li) return;
+      const open = !li.classList.contains('is-open');
+      // Close siblings in same list
+      const parentList = li.parentElement;
+      if (parentList) {
+        parentList.querySelectorAll(':scope > .menu-item-has-children.is-open').forEach(function(sib){
+          if (sib !== li) {
+            sib.classList.remove('is-open');
+            const t = sib.querySelector(':scope > .nav-submenu-toggle');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      li.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
 
   /* ---------- Animated stat counters (defined early so reveal can trigger it) ---------- */
   function runCounter(el){
     if(el.dataset.counted) return;
     el.dataset.counted = '1';
-    const target = parseInt(el.getAttribute('data-count'), 10);
+    const rawTarget = el.getAttribute('data-count') || '0';
+    const isFloat = rawTarget.indexOf('.') !== -1;
+    const target = parseFloat(rawTarget);
     const suffix = el.getAttribute('data-suffix') || '';
     const dur = 1400;
     const start = performance.now();
     function tick(now){
       const p = Math.min(1, (now-start)/dur);
       const eased = 1 - Math.pow(1-p, 3);
-      el.textContent = Math.round(target*eased) + suffix;
+      const val = isFloat ? (target * eased).toFixed(1) : Math.round(target * eased);
+      el.textContent = val + suffix;
       if(p < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
@@ -147,10 +211,44 @@ document.addEventListener('DOMContentLoaded', function(){
   /* ---------- FAQ accordion ---------- */
   document.querySelectorAll('.faq-item').forEach(item=>{
     const q = item.querySelector('.faq-q');
-    q && q.addEventListener('click', ()=>{
+    if(!q) return;
+    // Wrap legacy answers (no .faq-a-inner) so collapse CSS works
+    const a = item.querySelector('.faq-a');
+    if(a && !a.querySelector('.faq-a-inner')){
+      const wrap = document.createElement('div');
+      wrap.className = 'faq-a-inner';
+      while(a.firstChild) wrap.appendChild(a.firstChild);
+      a.appendChild(wrap);
+    }
+    q.addEventListener('click', ()=>{
       const isOpen = item.classList.contains('is-open');
-      document.querySelectorAll('.faq-item').forEach(i=> i.classList.remove('is-open'));
-      if(!isOpen) item.classList.add('is-open');
+      document.querySelectorAll('.faq-item').forEach(i=>{
+        i.classList.remove('is-open');
+        const btn = i.querySelector('.faq-q');
+        if(btn) btn.setAttribute('aria-expanded', 'false');
+      });
+      if(!isOpen){
+        item.classList.add('is-open');
+        q.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  /* ---------- Methodology Phase Accordion (About Page) ---------- */
+  document.querySelectorAll('.phase-accordion').forEach(card => {
+    const toggle = card.querySelector('.phase-accordion-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', () => {
+      const isOpen = card.classList.contains('is-open');
+      document.querySelectorAll('.phase-accordion').forEach(other => {
+        other.classList.remove('is-open');
+        const btn = other.querySelector('.phase-accordion-toggle');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        card.classList.add('is-open');
+        toggle.setAttribute('aria-expanded', 'true');
+      }
     });
   });
 
@@ -176,10 +274,12 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   /* ---------- Active nav link ---------- */
-  const path = location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-desktop a, .mobile-nav a').forEach(a=>{
-    const href = a.getAttribute('href');
-    if(href === path) a.classList.add('active');
+  document.querySelectorAll('.nav-desktop a, .mobile-nav a').forEach(function(a){
+    try {
+      const linkPath = new URL(a.href, window.location.origin).pathname.replace(/\/$/, '');
+      const pagePath = window.location.pathname.replace(/\/$/, '');
+      if (linkPath && linkPath === pagePath) a.classList.add('active');
+    } catch (err) {}
   });
 
   /* ---------- Notifications Dropdown ---------- */
@@ -275,21 +375,33 @@ document.addEventListener('DOMContentLoaded', function(){
   const orderChoiceWhatsapp = document.getElementById('orderChoiceWhatsapp');
   const orderChoiceSystem = document.getElementById('orderChoiceSystem');
 
-  function withServiceQuery(base, service){
-    if(!service || !base) return base;
+  function withServiceQuery(base, service, serviceId){
+    if((!service && !serviceId) || !base) return base;
     try {
       const u = new URL(base, window.location.origin);
+      const apply = (target) => {
+        if (service) target.searchParams.set('service', service);
+        if (serviceId) target.searchParams.set('service_id', String(serviceId));
+        return target;
+      };
       if (u.searchParams.has('redirect_to')) {
-        const target = new URL(u.searchParams.get('redirect_to'), window.location.origin);
-        target.searchParams.set('service', service);
+        const target = apply(new URL(u.searchParams.get('redirect_to'), window.location.origin));
         u.searchParams.set('redirect_to', target.pathname + target.search + target.hash);
         return u.pathname + u.search + u.hash;
       }
-      u.searchParams.set('service', service);
+      apply(u);
       return u.pathname + u.search + u.hash;
     } catch (e) {
-      const join = base.indexOf('?') === -1 ? '?' : '&';
-      return base + join + 'service=' + encodeURIComponent(service);
+      let out = base;
+      if (service) {
+        const join = out.indexOf('?') === -1 ? '?' : '&';
+        out += join + 'service=' + encodeURIComponent(service);
+      }
+      if (serviceId) {
+        const join = out.indexOf('?') === -1 ? '?' : '&';
+        out += join + 'service_id=' + encodeURIComponent(String(serviceId));
+      }
+      return out;
     }
   }
 
@@ -304,6 +416,7 @@ document.addEventListener('DOMContentLoaded', function(){
       e.preventDefault();
       const card = btn.closest('.card') || btn.closest('.service-card') || btn.closest('.svc-order');
       let sName = '';
+      let sId = btn.getAttribute('data-service-id') || '';
       if(card){
         const h3 = card.querySelector('h3');
         if(h3) sName = h3.textContent.trim();
@@ -315,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function(){
         orderChoiceWhatsapp.href = withWhatsappText(cfg.whatsapp || '#', sName);
       }
       if(orderChoiceSystem){
-        orderChoiceSystem.href = withServiceQuery(cfg.requestUrl || '/toppers-client/?tab=new', sName);
+        orderChoiceSystem.href = withServiceQuery(cfg.requestUrl || '/toppers-client/?tab=new', sName, sId);
       }
       orderModalOverlay.classList.add('is-open');
     });
@@ -380,6 +493,10 @@ document.addEventListener('DOMContentLoaded', function(){
       applyBlogFilter(btn.getAttribute('data-cat') || 'all');
     });
   });
+  var activeBlogBtn = document.querySelector('.js-blog-filter.active');
+  if(activeBlogBtn && activeBlogBtn.getAttribute('data-cat') !== 'all'){
+    applyBlogFilter(activeBlogBtn.getAttribute('data-cat'));
+  }
 
   document.querySelectorAll('.t-filter').forEach(function(btn){
     btn.addEventListener('click', function(){
@@ -594,26 +711,57 @@ document.addEventListener('DOMContentLoaded', function(){
   /* ---------- Testimonials filters + media ---------- */
   var tTabs = document.querySelectorAll('.t-filters .tab-btn');
   var tCards = document.querySelectorAll('.t-masonry .t-card');
+  var tEmpty = document.getElementById('testimonialsEmpty');
   if(tTabs.length && tCards.length){
     function applyTFilter(filter){
+      var visible = 0;
       tCards.forEach(function(card){
         var type = card.getAttribute('data-type');
         var isCta = type === '__cta';
+        var show;
         if(filter === 'all'){
-          card.classList.toggle('is-hidden', isCta);
+          show = !isCta || true; // show all including CTA on "all"
+          if(isCta) show = true;
         } else {
-          card.classList.toggle('is-hidden', type !== filter);
+          show = type === filter;
         }
+        card.classList.toggle('is-hidden', !show);
+        if(show && !isCta) visible++;
       });
+      if(tEmpty){
+        tEmpty.classList.toggle('is-hidden', visible > 0);
+      }
     }
     tTabs.forEach(function(btn){
       btn.addEventListener('click', function(){
-        tTabs.forEach(function(b){ b.classList.remove('active'); });
+        tTabs.forEach(function(b){
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
         btn.classList.add('active');
-        applyTFilter(btn.getAttribute('data-filter'));
+        btn.setAttribute('aria-selected', 'true');
+        applyTFilter(btn.getAttribute('data-filter') || 'all');
       });
     });
+    applyTFilter('all');
   }
+
+  // Legacy .t-filter buttons (if present elsewhere)
+  document.querySelectorAll('.t-filter').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.t-filter').forEach(function(b){ b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      var type = btn.getAttribute('data-filter');
+      document.querySelectorAll('.t-card[data-type]').forEach(function(card){
+        var ctype = card.getAttribute('data-type');
+        if(ctype === '__cta'){
+          card.hidden = type !== 'all';
+          return;
+        }
+        card.hidden = type !== 'all' && ctype !== type;
+      });
+    });
+  });
 
   var videoModal = document.getElementById('videoModal');
   var videoModalPlayer = document.getElementById('videoModalPlayer');
@@ -683,16 +831,92 @@ document.addEventListener('DOMContentLoaded', function(){
   setupImageModal('imageModal', 'imageModalClose', 'imageModalImg');
   setupImageModal('homeImageModal', 'homeImageModalClose', 'homeImageModalImg');
 
-  /* ---------- Audio Player Logic (Working HTML5 Playback) ---------- */
+  /* ---------- Audio Player Logic (Full HTML5 & Simulated Voice Playback) ---------- */
   const audioPlayers = document.querySelectorAll('.audio-player');
   var activeAudio = null;
   var activePlayer = null;
+  var activeSimInterval = null;
+  var sharedAudioCtx = null;
+  var activeOscillator = null;
+  var activeGain = null;
+
+  function getAudioContext() {
+    if (!sharedAudioCtx && (window.AudioContext || window.webkitAudioContext)) {
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      sharedAudioCtx = new AudioCtx();
+    }
+    if (sharedAudioCtx && sharedAudioCtx.state === 'suspended') {
+      sharedAudioCtx.resume();
+    }
+    return sharedAudioCtx;
+  }
+
+  function startVoiceTone() {
+    try {
+      var ctx = getAudioContext();
+      if (!ctx) return;
+      stopVoiceTone();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(260, ctx.currentTime);
+      gain.gain.setValueAtTime(0.015, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.04, ctx.currentTime + 0.1);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      activeOscillator = osc;
+      activeGain = gain;
+    } catch (e) {}
+  }
+
+  function stopVoiceTone() {
+    try {
+      if (activeGain && sharedAudioCtx) {
+        activeGain.gain.linearRampToValueAtTime(0.0001, sharedAudioCtx.currentTime + 0.05);
+      }
+      if (activeOscillator) {
+        setTimeout(function() {
+          try { activeOscillator.stop(); } catch(err){}
+          activeOscillator = null;
+          activeGain = null;
+        }, 60);
+      }
+    } catch(e) {}
+  }
+
+  function parseDurationText(str) {
+    if (!str) return 45;
+    var parts = str.split(':');
+    if (parts.length === 2) {
+      var m = parseInt(parts[0], 10) || 0;
+      var s = parseInt(parts[1], 10) || 0;
+      return (m * 60) + s || 45;
+    }
+    return 45;
+  }
 
   function formatAudioTime(sec) {
     if (!isFinite(sec) || isNaN(sec) || sec < 0) return '0:00';
     var m = Math.floor(sec / 60);
     var s = Math.floor(sec % 60);
     return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function stopAllAudio() {
+    if (activeAudio) {
+      try { activeAudio.pause(); } catch(e){}
+      activeAudio = null;
+    }
+    if (activeSimInterval) {
+      clearInterval(activeSimInterval);
+      activeSimInterval = null;
+    }
+    stopVoiceTone();
+    if (activePlayer) {
+      activePlayer.classList.remove('is-playing');
+      activePlayer = null;
+    }
   }
 
   audioPlayers.forEach(function(player) {
@@ -702,8 +926,10 @@ document.addEventListener('DOMContentLoaded', function(){
     const waveform = player.querySelector('.audio-waveform');
     const src = player.getAttribute('data-audio');
     const defaultTimeText = timeDisplay ? timeDisplay.textContent.trim() : '0:45';
+    const totalSimDuration = parseDurationText(defaultTimeText);
+    var simCurrentTime = 0;
 
-    var audio = src ? new Audio(src) : null;
+    var audio = (src && src.trim() !== '') ? new Audio(src) : null;
 
     if (audio) {
       audio.preload = 'metadata';
@@ -743,38 +969,60 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     }
 
+    function stepSim() {
+      simCurrentTime += 0.2;
+      if (simCurrentTime >= totalSimDuration) {
+        simCurrentTime = 0;
+        stopAllAudio();
+        if (progressBar) progressBar.style.width = '0%';
+        if (timeDisplay) timeDisplay.textContent = defaultTimeText;
+        return;
+      }
+      var p = (simCurrentTime / totalSimDuration) * 100;
+      if (progressBar) progressBar.style.width = p + '%';
+      if (timeDisplay) {
+        var remain = Math.max(0, totalSimDuration - simCurrentTime);
+        timeDisplay.textContent = formatAudioTime(remain);
+      }
+    }
+
     if (btn) {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
-        if (!audio || !src) {
-          player.classList.toggle('is-playing');
+
+        // If this player is currently playing, pause it
+        if (activePlayer === player) {
+          stopAllAudio();
           return;
         }
 
-        // If another audio is currently playing, pause and reset it
-        if (activeAudio && activeAudio !== audio) {
-          activeAudio.pause();
-          if (activePlayer) activePlayer.classList.remove('is-playing');
-        }
+        // Stop any currently playing audio
+        stopAllAudio();
 
-        if (audio.paused) {
+        if (audio) {
           audio.play().then(function() {
             player.classList.add('is-playing');
             activeAudio = audio;
             activePlayer = player;
           }).catch(function(err) {
-            console.log('Audio playback prevented or error:', err);
+            // Fallback to simulated playback if file is missing/cors error
+            player.classList.add('is-playing');
+            activePlayer = player;
+            startVoiceTone();
+            activeSimInterval = setInterval(stepSim, 200);
           });
         } else {
-          audio.pause();
-          player.classList.remove('is-playing');
+          // Simulated voice note playback
+          player.classList.add('is-playing');
+          activePlayer = player;
+          startVoiceTone();
+          activeSimInterval = setInterval(stepSim, 200);
         }
       });
     }
 
-    if (waveform && audio) {
+    if (waveform) {
       waveform.addEventListener('click', function(e) {
-        if (!audio.duration) return;
         var rect = waveform.getBoundingClientRect();
         var clickX = e.clientX - rect.left;
         var ratio = clickX / rect.width;
@@ -782,7 +1030,14 @@ document.addEventListener('DOMContentLoaded', function(){
           ratio = 1 - ratio;
         }
         ratio = Math.max(0, Math.min(1, ratio));
-        audio.currentTime = ratio * audio.duration;
+
+        if (audio && audio.duration) {
+          audio.currentTime = ratio * audio.duration;
+        } else {
+          simCurrentTime = ratio * totalSimDuration;
+          if (progressBar) progressBar.style.width = (ratio * 100) + '%';
+          if (timeDisplay) timeDisplay.textContent = formatAudioTime(Math.max(0, totalSimDuration - simCurrentTime));
+        }
       });
     }
   });
@@ -793,7 +1048,9 @@ document.addEventListener('DOMContentLoaded', function(){
     var aiData = window.ToppersAIData || {};
     var templates = aiData.templates || [];
     var contactUrl = aiData.contactUrl || '/contact';
+    var requestUrl = aiData.requestUrl || '/toppers-client/?tab=new';
     var whatsappNum = aiData.whatsappNum || '966549093465';
+    var isLoggedIn = !!aiData.loggedIn;
 
     var majorInput = document.getElementById('ai-major');
     var degreeSelect = document.getElementById('ai-degree');
@@ -873,9 +1130,39 @@ document.addEventListener('DOMContentLoaded', function(){
         var meth = item.methodology || methodologyTypes[idx % methodologyTypes.length];
         var impact = item.impact || 'تقديم نموذج استرشادي قابل للتطبيق الميداني';
 
-        var orderHref = contactUrl + (contactUrl.indexOf('?') === -1 ? '?' : '&') + 'topic=' + encodeURIComponent(title) + '&major=' + encodeURIComponent(major) + '&degree=' + encodeURIComponent(degree);
         var waMessage = encodeURIComponent('السلام عليكم توبرز، أرغب في الاستفسار وطلب مساعدة في إعداد فكرة البحث التالية:\n' + title + '\n(التخصص: ' + major + ' - المرحلة: ' + degree + ')');
         var waHref = 'https://wa.me/' + whatsappNum + '?text=' + waMessage;
+
+        // Convert liked idea → custom service order inside the platform plugin
+        var systemHref = requestUrl;
+        try {
+          var u = new URL(requestUrl, window.location.origin);
+          var applyArgs = function(target) {
+            target.searchParams.set('tab', 'new');
+            target.searchParams.set('custom', '1');
+            target.searchParams.set('service', 'خدمة مخصصة');
+            target.searchParams.set('title', title);
+            target.searchParams.set('idea', title);
+            target.searchParams.set('major', major);
+            target.searchParams.set('degree', degree);
+            target.searchParams.set('description', desc);
+            return target;
+          };
+          if (u.searchParams.has('redirect_to')) {
+            var dest = applyArgs(new URL(u.searchParams.get('redirect_to'), window.location.origin));
+            u.searchParams.set('redirect_to', dest.pathname + dest.search + dest.hash);
+            systemHref = u.pathname + u.search + u.hash;
+          } else {
+            u = applyArgs(u);
+            systemHref = u.pathname + u.search + u.hash;
+          }
+        } catch (err) {
+          systemHref = requestUrl + (requestUrl.indexOf('?') === -1 ? '?' : '&') +
+            'tab=new&custom=1&service=' + encodeURIComponent('خدمة مخصصة') +
+            '&title=' + encodeURIComponent(title) +
+            '&major=' + encodeURIComponent(major) +
+            '&degree=' + encodeURIComponent(degree);
+        }
 
         var card = document.createElement('div');
         card.className = 'ai-card-result';
@@ -891,8 +1178,8 @@ document.addEventListener('DOMContentLoaded', function(){
             '<span><strong>المساهمة الأكاديمية:</strong> ' + impact + '</span>' +
           '</div>' +
           '<div class="acr-actions">' +
-            '<a href="' + orderHref + '" class="btn btn-gold btn-sm">' +
-              '<span>اطلب هذا البحث الآن</span>' +
+            '<a href="' + systemHref + '" class="btn btn-gold btn-sm">' +
+              '<span>' + (isLoggedIn ? 'حوّلها لخدمة مخصصة في حسابك' : 'سجّل وادخل لتحويلها لخدمة') + '</span>' +
               '<i class="fa-solid fa-arrow-left" aria-hidden="true"></i>' +
             '</a>' +
             '<a href="' + waHref + '" target="_blank" rel="noopener" class="btn btn-outline-wa btn-sm">' +

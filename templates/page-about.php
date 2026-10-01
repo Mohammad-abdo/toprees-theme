@@ -20,29 +20,42 @@ get_header();
 			<div class="container about-hero-wrap">
 				<div class="about-hero-text">
 					<div class="breadcrumb"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'الرئيسية', 'toppers' ); ?></a><span>/</span><span><?php esc_html_e( 'من نحن', 'toppers' ); ?></span></div>
-					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo esc_html( toppers_content( 'about_eyebrow', __( 'شريكك الأكاديمي الموثوق', 'toppers' ) ) ); ?></div>
+					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php echo esc_html( toppers_content( 'about_eyebrow', __( 'شريكك الأكاديمي الموثوق', 'toppers' ) ) ); ?></span></div>
 					<h1><?php echo esc_html( toppers_content( 'about_title', __( 'منظومتك المتكاملة لخدمات البحث العلمي؛ نُخب متخصصة تقود مشروعك خطوة بخطوة إلى الاعتماد', 'toppers' ) ) ); ?></h1>
 					<p class="about-hero-lede"><?php echo esc_html( toppers_content( 'about_lede', __( 'نحن منظومة أكاديمية رائدة ومتخصصة في تقديم خدمات البحث العلمي لطلبة الدراسات العليا والباحثين في المملكة العربية السعودية والوطن العربي. نُسخّر نخبة من الكفاءات الأكاديمية لتذليل عقبات البحث العلمي، وصياغة نتاج معرفي أصيل يلتزم بأعلى معايير النزاهة والضوابط الجامعية؛ لنكون سندك الموثوق في كل مرحلة من رحلتك الأكاديمية، ونرتقي معًا نحو قمة البحث العلمي.', 'toppers' ) ) ); ?></p>
 					<div class="about-hero-actions">
-						<a href="<?php echo esc_url( toppers_page_url( 'services' ) ); ?>" class="btn btn-navy"><?php esc_html_e( 'استكشف خدماتنا', 'toppers' ); ?></a>
+						<a href="<?php echo esc_url( toppers_page_url( 'services' ) ); ?>" class="btn btn-gold"><?php esc_html_e( 'استكشف خدماتنا', 'toppers' ); ?></a>
 						<a href="<?php echo esc_url( toppers_page_url( 'contact' ) ); ?>" class="btn btn-outline-dark"><?php esc_html_e( 'تواصل معنا', 'toppers' ); ?></a>
 					</div>
 				</div>
 				<div class="about-hero-img-wrap">
-					<div class="about-hero-img-bg"></div>
+					<div class="about-hero-img-bg" aria-hidden="true"></div>
 					<img src="<?php echo esc_url( toppers_content_img( 'about_image', toppers_photo( 'about-hero' ) ) ); ?>" alt="<?php esc_attr_e( 'طلاب في الجامعة', 'toppers' ); ?>">
+					<div class="about-hero-float" aria-hidden="true">
+						<span class="about-hero-float-num">+10</span>
+						<span class="about-hero-float-label"><?php esc_html_e( 'سنوات خبرة', 'toppers' ); ?></span>
+					</div>
 				</div>
 			</div>
 		</section>
 
 		<section class="about-story-sec">
-			<div class="about-story-bg"><div class="about-story-overlay"></div></div>
+			<div class="about-story-bg" aria-hidden="true"></div>
 			<div class="container about-story-inner">
 				<div class="about-story-box">
 					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'قصتنا', 'toppers' ); ?></span></div>
 					<h2><?php echo esc_html( toppers_content( 'about_story_title', __( 'من فكرة إلى منظومة أكاديمية', 'toppers' ) ) ); ?></h2>
-					<p><?php echo esc_html( toppers_content( 'about_story_p1', __( 'بدأت رحلة شركة توبرز للاستشارات والحلول البحثية عام 2016 من فهم عميق لواقع البيئة الأكاديمية؛ حيث يمتلك الباحثون وطلاب الدراسات العليا أفكارًا علمية نيرة، لكنهم يصطدمون بعقبات التنفيذ المنهجي ودقة التحليل والالتزام الصارم بالأدلة الجامعية. انطلقنا حينها بفريق شغوف من الأكاديميين لجسر هذه الفجوة وتذليل تلك التحديات، لتتوج هذه الجهود بالانطلاق الحقيقي والمؤسسي للشركة عام 2019؛ حيث تحولت "توبرز" إلى منظومة استشارية وبحثية متكاملة تضم نخبة من الباحثين والمحللين والمدققين اللغويين في مختلف التخصصات العلمية والإنسانية.', 'toppers' ) ) ); ?></p>
-					<p><?php echo esc_html( toppers_content( 'about_story_p2', __( 'واليوم، نفخر بشراكتنا الممتدة مع الباحثين وأعضاء هيئة التدريس في كافة الجامعات السعودية والعربية، والتي أثمرت عن إلمام عميق بكافة ضوابط الرسائل العلمية واشتراطات النشر المحكّم، لنواصل مسيرتنا بثبات نحو قمة البحث العلمي.', 'toppers' ) ) ); ?></p>
+					<div class="about-story-body">
+						<p><?php echo esc_html( toppers_content( 'about_story_p1', __( 'بدأت رحلة شركة توبرز للاستشارات والحلول البحثية عام 2016 من فهم عميق لواقع البيئة الأكاديمية؛ حيث يمتلك الباحثون وطلاب الدراسات العليا أفكارًا علمية نيرة، لكنهم يصطدمون بعقبات التنفيذ المنهجي ودقة التحليل والالتزام الصارم بالأدلة الجامعية. انطلقنا حينها بفريق شغوف من الأكاديميين لجسر هذه الفجوة وتذليل تلك التحديات، لتتوج هذه الجهود بالانطلاق الحقيقي والمؤسسي للشركة عام 2019؛ حيث تحولت "توبرز" إلى منظومة استشارية وبحثية متكاملة تضم نخبة من الباحثين والمحللين والمدققين اللغويين في مختلف التخصصات العلمية والإنسانية.', 'toppers' ) ) ); ?></p>
+						<p><?php echo esc_html( toppers_content( 'about_story_p2', __( 'واليوم، نفخر بشراكتنا الممتدة مع الباحثين وأعضاء هيئة التدريس في كافة الجامعات السعودية والعربية، والتي أثمرت عن إلمام عميق بكافة ضوابط الرسائل العلمية واشتراطات النشر المحكّم، لنواصل مسيرتنا بثبات نحو قمة البحث العلمي.', 'toppers' ) ) ); ?></p>
+					</div>
+					<div class="about-story-years">
+						<span class="about-story-year"><strong>2016</strong><em><?php esc_html_e( 'الانطلاقة', 'toppers' ); ?></em></span>
+						<span class="about-story-year-line" aria-hidden="true"></span>
+						<span class="about-story-year"><strong>2019</strong><em><?php esc_html_e( 'التأسيس المؤسسي', 'toppers' ); ?></em></span>
+						<span class="about-story-year-line" aria-hidden="true"></span>
+						<span class="about-story-year"><strong><?php echo esc_html( (string) gmdate( 'Y' ) ); ?></strong><em><?php esc_html_e( 'اليوم', 'toppers' ); ?></em></span>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -51,19 +64,20 @@ get_header();
 			<div class="container">
 				<div class="section-head center">
 					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'كلمة المؤسس', 'toppers' ); ?></span></div>
-					<h2><?php echo esc_html( toppers_content( 'about_founder_title', __( 'شريكك حتى لحظة المناقشة', 'toppers' ) ) ); ?></h2>
+					<h2><?php echo esc_html( toppers_content( 'about_founder_title', __( 'كلمة المؤسس', 'toppers' ) ) ); ?></h2>
 				</div>
-				<div class="founder-box">
-					<span class="founder-quote-mark">”</span>
+				<blockquote class="founder-box">
+					<span class="founder-quote-mark" aria-hidden="true">”</span>
 					<p class="founder-text"><?php echo esc_html( toppers_content( 'about_founder_text', __( 'أدرك تمامًا حجم الضغط الذي يواجهه كل باحث في مراحل إعداد رسالته العلمية، فقد كانت هذه المعاناة نفسها هي الدافع وراء تأسيس "توبرز". لم نُرِد أن نكون مجرد جهة تقدّم خدمة، بل شريكًا حقيقيًا يفهم قلق الباحث ويقف بجانبه في كل خطوة، من اختيار العنوان وحتى لحظة المناقشة. نلتزم أمامكم بتقديم دعم منهجي حقيقي، لا وعودًا تسويقية فارغة.', 'toppers' ) ) ); ?></p>
-					<p class="founder-sign"><?php echo esc_html( toppers_content( 'about_founder_sign', __( '— د. عمرو، مؤسس شركة توبرز للاستشارات والحلول البحثية', 'toppers' ) ) ); ?></p>
-				</div>
+					<footer class="founder-sign"><?php echo esc_html( toppers_content( 'about_founder_sign', __( '— د. عمرو، مؤسس شركة توبرز للاستشارات والحلول البحثية', 'toppers' ) ) ); ?></footer>
+				</blockquote>
 			</div>
 		</section>
 
 		<section class="about-stats-sec">
 			<div class="container">
 				<div class="section-head center">
+					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'بالأرقام', 'toppers' ); ?></span></div>
 					<h2><?php esc_html_e( 'إنجازات بالأرقام.. ثقة تُجسّدها المسيرة', 'toppers' ); ?></h2>
 				</div>
 				<div class="about-stats-grid">
@@ -79,19 +93,20 @@ get_header();
 		<section class="about-mv-sec">
 			<div class="container">
 				<div class="section-head center about-mv-head">
+					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'البوصلة', 'toppers' ); ?></span></div>
 					<h2><?php esc_html_e( 'رسالتنا ورؤيتنا', 'toppers' ); ?></h2>
 				</div>
 				<div class="about-mv-grid">
 					<div class="about-mv-card">
-						<div class="about-mv-ic">
-							<i class="fa-solid fa-bullseye" aria-hidden="true" style="font-size: 32px;"></i>
+						<div class="about-mv-ic" aria-hidden="true">
+							<i class="fa-solid fa-bullseye"></i>
 						</div>
 						<h3><?php esc_html_e( 'رسالتنا', 'toppers' ); ?></h3>
 						<p><?php esc_html_e( 'تمكين طلبة الدراسات العليا والباحثين من تحقيق التميز الأكاديمي، عبر تقديم استشارات وحلول بحثية ومنهجية رصينة، نُسخّر لها نخبة من الكفاءات العلمية، مع الالتزام المطلق بأعلى معايير النزاهة والخصوصية والضوابط الجامعية.', 'toppers' ); ?></p>
 					</div>
 					<div class="about-mv-card">
-						<div class="about-mv-ic">
-							<i class="fa-solid fa-eye" aria-hidden="true" style="font-size: 32px;"></i>
+						<div class="about-mv-ic" aria-hidden="true">
+							<i class="fa-solid fa-eye"></i>
 						</div>
 						<h3><?php esc_html_e( 'رؤيتنا', 'toppers' ); ?></h3>
 						<p><?php esc_html_e( 'أن نكون المنظومة الأكاديمية الاستشارية الأولى والأكثر ثقة في المملكة العربية السعودية والوطن العربي، والمرجع الرائد في تمكين الباحثين ورفد المكتبة العربية بنتاج علمي أصيل يُعتد به عالميًا.', 'toppers' ); ?></p>
@@ -106,7 +121,7 @@ get_header();
 					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'لمن نعمل', 'toppers' ); ?></span></div>
 					<h2><?php esc_html_e( 'من هم المستفيدون من خدماتنا؟', 'toppers' ); ?></h2>
 				</div>
-				<div class="grid grid-4">
+				<div class="audience-grid">
 					<?php
 					$audiences = array(
 						array( 'fa-graduation-cap', 'طلبة الدراسات العليا', 'نرافقكم خطوة بخطوة؛ من اختيار العناوين والخطط البحثية، مرورًا بالإطار النظري والتحليل الإحصائي، وحتى التعديلات والمناقشة النهائية.' ),
@@ -115,7 +130,11 @@ get_header();
 						array( 'fa-chart-column', 'المؤسسات والمراكز البحثية', 'نوفر الاستشارات الإحصائية وبناء أدوات الدراسة وتحليل البيانات الضخمة لدعم القرارات والدراسات المؤسسية.' ),
 					);
 					foreach ( $audiences as $card ) {
-						echo '<div class="audience-card"><h3><i class="fa-solid ' . esc_attr( $card[0] ) . '" aria-hidden="true"></i> ' . esc_html( $card[1] ) . '</h3><p>' . esc_html( $card[2] ) . '</p></div>';
+						echo '<article class="audience-card">';
+						echo '<span class="audience-ic" aria-hidden="true"><i class="fa-solid ' . esc_attr( $card[0] ) . '"></i></span>';
+						echo '<h3>' . esc_html( $card[1] ) . '</h3>';
+						echo '<p>' . esc_html( $card[2] ) . '</p>';
+						echo '</article>';
 					}
 					?>
 				</div>
@@ -133,6 +152,7 @@ get_header();
 		<section class="why-sec">
 			<div class="container">
 				<div class="section-head center">
+					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'لماذا توبرز', 'toppers' ); ?></span></div>
 					<h2><?php esc_html_e( 'لماذا تختار "توبرز"؟ (ضمانات التميز والأمان)', 'toppers' ); ?></h2>
 				</div>
 				<div class="why-panel">
@@ -145,7 +165,7 @@ get_header();
 						array( 'fa-magnifying-glass', 'ضبط الجودة المزدوج:', 'لا يُسلَّم أي عمل دون مراجعة وتدقيق لغوي ومنهجي دقيق' ),
 					);
 					foreach ( $why as $row ) {
-						echo '<div class="feature-row"><div class="feature-ic"><i class="fa-solid ' . esc_attr( $row[0] ) . '" aria-hidden="true"></i></div><div><h3>' . esc_html( $row[1] ) . '</h3><p>' . esc_html( $row[2] ) . '</p></div></div>';
+						echo '<div class="feature-row"><div class="feature-ic" aria-hidden="true"><i class="fa-solid ' . esc_attr( $row[0] ) . '"></i></div><div><h3>' . esc_html( $row[1] ) . '</h3><p>' . esc_html( $row[2] ) . '</p></div></div>';
 					}
 					?>
 				</div>
@@ -164,9 +184,9 @@ get_header();
 		<section class="process-sec">
 			<div class="container">
 				<div class="process-intro">
-					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'منهجية العمل', 'toppers' ); ?></span></div>
-					<h2><?php esc_html_e( 'كيف نُدير مشروعك الأكاديمي؟', 'toppers' ); ?></h2>
-					<p><?php esc_html_e( 'نتبع في "توبرز" منظومة عمل متسلسلة تبدأ من فهم متطلباتك، مرورًا بالبناء المنهجي والتدقيق، وصولًا إلى فحص الأصالة وتسليمك تقارير Turnitin المعتمدة، مع استمرار الدعم حتى اعتماد بحثك بالكامل.', 'toppers' ); ?></p>
+					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php echo esc_html( toppers_content( 'about_process_eyebrow', __( 'منهجية العمل', 'toppers' ) ) ); ?></span></div>
+					<h2><?php echo esc_html( toppers_content( 'about_process_title', __( 'كيف نُدير مشروعك الأكاديمي؟', 'toppers' ) ) ); ?></h2>
+					<p><?php echo esc_html( toppers_content( 'about_process_lede', __( 'نتبع في "توبرز" منظومة عمل متسلسلة تبدأ من فهم متطلباتك، مرورًا بالبناء المنهجي والتدقيق، وصولًا إلى فحص الأصالة وتسليمك تقارير Turnitin المعتمدة، مع استمرار الدعم حتى اعتماد بحثك بالكامل.', 'toppers' ) ) ); ?></p>
 				</div>
 				<?php
 				$phases = array(
@@ -179,15 +199,24 @@ get_header();
 				echo '<div class="phase-list">';
 				$last = count( $phases ) - 1;
 				foreach ( $phases as $i => $phase ) {
-					echo '<div class="phase-item"><div class="phase-num-col"><div class="phase-num">' . esc_html( $i + 1 ) . '</div>';
+					$open = 0 === $i;
+					echo '<div class="phase-item"><div class="phase-num-col"><div class="phase-num">' . esc_html( (string) ( $i + 1 ) ) . '</div>';
 					if ( $i !== $last ) {
 						echo '<div class="phase-line"></div>';
 					}
-					echo '</div><div class="phase-card"><h3>' . esc_html( $phase[0] ) . '</h3><ul>';
+					echo '</div><div class="phase-card phase-accordion' . ( $open ? ' is-open' : '' ) . '">';
+					echo '<button type="button" class="phase-accordion-toggle" aria-expanded="' . ( $open ? 'true' : 'false' ) . '">';
+					echo '<h3 class="phase-title">' . esc_html( $phase[0] ) . '</h3>';
+					echo '<span class="phase-accordion-icon" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>';
+					echo '</button>';
+					echo '<div class="phase-accordion-content"><div class="phase-accordion-inner">';
+					echo '<ul>';
 					foreach ( $phase[1] as $li ) {
 						echo '<li>' . esc_html( $li ) . '</li>';
 					}
-					echo '</ul></div></div>';
+					echo '</ul>';
+					echo '</div></div>';
+					echo '</div></div>';
 				}
 				echo '</div>';
 				?>
@@ -200,7 +229,7 @@ get_header();
 					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'ضماناتنا', 'toppers' ); ?></span></div>
 					<h2><?php esc_html_e( 'ضماناتنا — حقوقك محفوظة.. ضمانات حقيقية لا مجرد وعود', 'toppers' ); ?></h2>
 				</div>
-				<div class="grid grid-2">
+				<div class="guarantee-grid">
 					<?php
 					$gs = array(
 						array( 'fa-file-lines', 'اتفاقية عدم الإفصاح والسرية (NDA)', 'التزام قانوني حازم بحماية فكرتك وبياناتك وعدم إعادة استخدام العمل مستقبلًا' ),
@@ -209,7 +238,7 @@ get_header();
 						array( 'fa-graduation-cap', 'ضمان المطابقة والأمانة العلمية', 'تطابق العمل بنسبة 100% مع دليل الجامعة والمراجعة الأكاديمية المجانية' ),
 					);
 					foreach ( $gs as $g ) {
-						echo '<div class="guarantee-card"><span class="g-ic"><i class="fa-solid ' . esc_attr( $g[0] ) . '" aria-hidden="true"></i></span><h3>' . esc_html( $g[1] ) . '</h3><p>' . esc_html( $g[2] ) . '</p></div>';
+						echo '<article class="guarantee-card"><span class="g-ic" aria-hidden="true"><i class="fa-solid ' . esc_attr( $g[0] ) . '"></i></span><h3>' . esc_html( $g[1] ) . '</h3><p>' . esc_html( $g[2] ) . '</p></article>';
 					}
 					?>
 				</div>
@@ -248,29 +277,6 @@ get_header();
 			</div>
 		</div>
 
-		<section class="about-gallery-sec">
-			<div class="container">
-				<div class="section-head center">
-					<div class="eyebrow"><?php echo toppers_star_svg(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php esc_html_e( 'بيئة العمل', 'toppers' ); ?></span></div>
-					<h2><?php esc_html_e( 'التفوق ينبع من بيئة محفزة', 'toppers' ); ?></h2>
-					<p><?php esc_html_e( 'نعمل كفريق متناغم يتبادل الخبرات للوصول لأفضل النتائج.', 'toppers' ); ?></p>
-				</div>
-				<div class="about-gallery">
-					<div class="large-img">
-						<img src="<?php echo esc_url( toppers_content_img( 'about_gallery_1', toppers_photo( 'team' ) ) ); ?>" alt="<?php esc_attr_e( 'فريق توبرز', 'toppers' ); ?>">
-					</div>
-					<div class="wide-img">
-						<img src="<?php echo esc_url( toppers_content_img( 'about_gallery_2', toppers_photo( 'office' ) ) ); ?>" alt="<?php esc_attr_e( 'مكتب توبرز', 'toppers' ); ?>">
-					</div>
-					<div>
-						<img src="<?php echo esc_url( toppers_content_img( 'about_gallery_3', toppers_photo( 'masters' ) ) ); ?>" alt="<?php esc_attr_e( 'بحث علمي', 'toppers' ); ?>">
-					</div>
-					<div>
-						<img src="<?php echo esc_url( toppers_content_img( 'about_gallery_4', toppers_photo( 'meeting' ) ) ); ?>" alt="<?php esc_attr_e( 'دراسات', 'toppers' ); ?>">
-					</div>
-				</div>
-			</div>
-		</section>
 
 		<section class="section">
 			<div class="container">
@@ -279,7 +285,10 @@ get_header();
 					<p><?php esc_html_e( 'اطلب خدمتك الآن أو تواصل معنا عبر الواتساب لنبدأ معك من أول خطوة.', 'toppers' ); ?></p>
 					<div class="cta-actions">
 						<a class="btn btn-gold" href="<?php echo esc_url( toppers_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'اطلب الخدمة الآن', 'toppers' ); ?></a>
-						<a class="btn btn-outline" href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'تواصل معنا عبر الواتساب', 'toppers' ); ?></a>
+						<a class="btn btn-whatsapp" href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener">
+							<i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+							<?php esc_html_e( 'تواصل معنا عبر الواتساب', 'toppers' ); ?>
+						</a>
 					</div>
 				</div>
 			</div>

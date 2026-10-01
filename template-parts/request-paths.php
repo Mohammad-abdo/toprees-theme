@@ -5,12 +5,13 @@
  * @package Toppers
  */
 
-$service = isset( $args['service'] ) ? (string) $args['service'] : '';
-$wa      = toppers_whatsapp_url();
+$service    = isset( $args['service'] ) ? (string) $args['service'] : '';
+$service_id = isset( $args['service_id'] ) ? (int) $args['service_id'] : 0;
+$wa         = toppers_whatsapp_url();
 if ( $service ) {
 	$wa = add_query_arg( 'text', rawurlencode( 'أرغب في طلب خدمة: ' . $service ), $wa );
 }
-$system = toppers_system_request_url( $service );
+$system = toppers_system_request_url( $service, $service_id );
 ?>
 <div class="request-paths">
 	<p class="request-paths-lede"><?php esc_html_e( 'تقدر تطلب الخدمة بطريقتين: واتساب، أو من حسابك على المنصة بعد تسجيل الدخول.', 'toppers' ); ?></p>

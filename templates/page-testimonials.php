@@ -7,56 +7,55 @@
 
 get_header();
 
-$counts = toppers_get_testimonials_counts();
-
 $defaults = array(
 	array(
-		'name'  => 'سارة العتيبي',
-		'role'  => 'طالبة ماجستير — إدارة أعمال',
-		'quote' => 'تعاملت مع توبرز في رسالة الماجستير، والفريق كان دقيقًا جدًا في المنهجية والتحليل الإحصائي. التزموا بالموعد تمامًا.',
-		'type'  => 'voice',
-		'time'  => '0:45',
-		'audio' => '',
+		'role'       => 'طالبة ماجستير — إدارة أعمال',
+		'quote'      => 'رسالة صوتية عن تجربتي مع توبرز في الإطار النظري والتحليل الإحصائي.',
+		'type'       => 'voice',
+		'audio_url'  => '',
+		'audio_time' => '0:48',
+		'stars'      => 5,
 	),
 	array(
-		'name'  => 'محمد الحربي',
-		'role'  => 'باحث دكتوراه — علوم حاسب',
-		'quote' => 'خدمة الترجمة الأكاديمية كانت احترافية، والمصطلحات العلمية دقيقة جدًا مقارنة بمكاتب أخرى تعاملت معها سابقًا.',
-		'type'  => 'voice',
-		'time'  => '1:12',
-		'audio' => '',
+		'role'       => 'باحث دكتوراه — مناهج وطرق تدريس',
+		'quote'      => 'تسجيل صوتي عن احترافية الفريق وسرعة الاستجابة.',
+		'type'       => 'voice',
+		'audio_url'  => '',
+		'audio_time' => '1:05',
+		'stars'      => 5,
 	),
 	array(
-		'name'  => 'أحمد الدوسري',
-		'role'  => 'باحث ماجستير',
-		'quote' => 'دعم مستمر وإجابة على جميع الاستفسارات بصدر رحب. تجربة ممتازة ولن تكون الأخيرة.',
-		'type'  => 'video',
-		'time'  => '1:34',
-		'thumb' => 'https://images.unsplash.com/photo-1596496181848-3091d4878b24?auto=format&fit=crop&q=80&w=700&h=440',
+		'role'      => 'باحث دكتوراه — علوم تربوية',
+		'quote'     => 'فريق عمل احترافي ساعدني في تحكيم أدوات الدراسة ومطابقته مع دليل الجامعة المعتمد.',
+		'type'      => 'video',
+		'video_url' => 'https://youtu.be/dujo3xmx0ME',
+		'stars'     => 5,
 	),
 	array(
-		'name'  => 'نورة القحطاني',
-		'role'  => 'طالبة بكالوريوس',
-		'quote' => 'التواصل عبر واتساب سهّل عليّ متابعة بحث التخرج، وفريق الدعم كان متجاوبًا في كل مرحلة.',
-		'type'  => 'voice',
-		'time'  => '0:30',
-		'audio' => '',
-	),
-	array(
-		'name'  => 'د. ريم الخالدي',
-		'role'  => 'أستاذ مساعد',
-		'quote' => 'ساعدوني في نشر بحثي العلمي في مجلة محكمة بوقت قياسي. عمل احترافي بلا شك.',
+		'role'  => 'أستاذ مساعد — دراسات إسلامية',
+		'quote' => 'قبول ونشر البحث العلمي في مجلة محكمة ومصنفة دولياً خلال فترة قياسية.',
 		'type'  => 'image',
 		'chat'  => array(
-			'مبروك د. ريم، تم قبول البحث في المجلة المحكمة رسميًا.',
-			'الله يبارك فيكم، فريق محترف وسريع في كل خطوة',
+			'مبروك دكتور، تم قبول البحث ونشره في المجلة المحكمة رسمياً.',
+			'ما شاء الله تبارك الله، ألف شكر لفريق توبرز على الدقة والاحترافية.',
 		),
+		'stars' => 5,
 	),
 	array(
-		'name'  => 'ياسر المطيري',
-		'role'  => 'باحث دكتوراه',
-		'quote' => 'التدقيق اللغوي كان ممتازاً، لم أجد أي خطأ بعد استلام الملف. شكراً توبرز.',
+		'role'  => 'طالبة بكالوريوس — علوم حاسب',
+		'quote' => 'تقرير فحص نسبة الاقتباس بنسبة 3% فقط بعد التدقيق والصياغة.',
+		'type'  => 'image',
+		'chat'  => array(
+			'مرحباً، تم الانتهاء من فحص الاقتباس والتقرير معتمد بنسبة 3% فقط.',
+			'جزاكم الله خيراً، الشغل ممتاز والدكتور اعتمد البحث مباشرة.',
+		),
+		'stars' => 5,
+	),
+	array(
+		'role'  => 'باحث ماجستير — قانون عام',
+		'quote' => 'التدقيق اللغوي والمراجعة المنهجية كانت على أعلى مستوى من الرصانة.',
 		'type'  => 'text',
+		'stars' => 5,
 	),
 );
 
@@ -67,6 +66,194 @@ $testimonials_query = new WP_Query(
 		'post_status'    => 'publish',
 	)
 );
+
+/**
+ * Render a testimonial card.
+ *
+ * @param array $item Normalized item.
+ */
+$render_testimonial_card = static function ( $item ) {
+	$type         = $item['type'];
+	$display_name = $item['name'];
+	$role         = $item['role'];
+	$quote        = $item['quote'];
+	$stars        = (int) $item['stars'];
+	$star_str     = str_repeat( '<i class="fa-solid fa-star" aria-hidden="true"></i>', $stars );
+	$badge_map    = array(
+		'voice' => array( 'fa-solid fa-microphone-lines', __( 'رسالة صوتية', 'toppers' ), 'is-voice' ),
+		'video' => array( 'fa-brands fa-youtube', __( 'فيديو تجربة', 'toppers' ), 'is-video' ),
+		'image' => array( 'fa-solid fa-camera', __( 'سكرين شوت معتمد', 'toppers' ), 'is-image' ),
+		'text'  => array( 'fa-solid fa-pen-nib', __( 'رأي أكاديمي موثق', 'toppers' ), 'is-text' ),
+	);
+	$badge        = $badge_map[ $type ] ?? $badge_map['text'];
+	?>
+	<article class="t-card t-card--<?php echo esc_attr( $type ); ?>" data-type="<?php echo esc_attr( $type ); ?>">
+		<span class="media-badge <?php echo esc_attr( $badge[2] ); ?>">
+			<i class="<?php echo esc_attr( $badge[0] ); ?>" aria-hidden="true"></i>
+			<?php echo esc_html( $badge[1] ); ?>
+		</span>
+
+		<?php if ( 'voice' === $type ) : ?>
+			<div class="t-voice-wrap">
+				<?php
+				echo toppers_audio_player( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					$item['audio_url'] ?? '',
+					$item['audio_time'] ?? '0:45'
+				);
+				?>
+			</div>
+		<?php elseif ( 'video' === $type && ! empty( $item['video_url'] ) ) : ?>
+			<div class="t-video-wrap">
+				<iframe
+					src="<?php echo esc_url( toppers_youtube_embed_url( $item['video_url'] ) ); ?>"
+					title="<?php echo esc_attr( $display_name ); ?>"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+					allowfullscreen
+					loading="lazy"></iframe>
+			</div>
+		<?php elseif ( 'image' === $type && ! empty( $item['screen_thumb'] ) ) : ?>
+			<div class="t-screenshot-wrap" data-full-image="<?php echo esc_url( $item['screen_full'] ); ?>" title="<?php esc_attr_e( 'انقر لتكبير السكرين شوت', 'toppers' ); ?>">
+				<img src="<?php echo esc_url( $item['screen_thumb'] ); ?>" alt="<?php echo esc_attr( sprintf( /* translators: %s: client label */ __( 'رأي %s', 'toppers' ), $display_name ) ); ?>" class="t-screenshot-img">
+				<div class="t-zoom-overlay">
+					<i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i>
+					<span><?php esc_html_e( 'تكبير الصورة', 'toppers' ); ?></span>
+				</div>
+			</div>
+		<?php elseif ( 'image' === $type ) : ?>
+			<div class="chat-proof">
+				<div class="cp-head">
+					<span class="dot" aria-hidden="true"></span>
+					<span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> <?php echo esc_html( sprintf( /* translators: %s: client label */ __( 'محادثة واتساب — %s', 'toppers' ), $display_name ) ); ?></span>
+				</div>
+				<?php if ( ! empty( $item['chat'][0] ) ) : ?>
+					<div class="chat-bubble in"><?php echo esc_html( $item['chat'][0] ); ?></div>
+				<?php else : ?>
+					<div class="chat-bubble in"><?php echo esc_html( $quote ?: __( 'خدمة متميزة وسريعة، شكراً توبرز.', 'toppers' ) ); ?></div>
+				<?php endif; ?>
+				<div class="chat-bubble out">
+					<?php echo esc_html( ! empty( $item['chat'][1] ) ? $item['chat'][1] : __( 'سعداء جداً بخدمتك ونتمنى لك دوام التوفيق', 'toppers' ) ); ?>
+					<span class="tick">✓✓</span>
+				</div>
+			</div>
+		<?php endif; ?>
+
+		<div class="t-stars"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+
+		<?php if ( $quote && 'voice' !== $type ) : ?>
+			<p class="t-quote"><?php echo esc_html( $quote ); ?></p>
+		<?php elseif ( $quote && 'voice' === $type ) : ?>
+			<p class="t-quote t-quote--voice"><?php echo esc_html( $quote ); ?></p>
+		<?php endif; ?>
+
+		<div class="t-who">
+			<div class="t-avatar" aria-hidden="true"><i class="fa-solid fa-user-graduate"></i></div>
+			<div>
+				<strong><?php echo esc_html( $display_name ); ?></strong>
+				<small><?php echo esc_html( $role ); ?></small>
+			</div>
+		</div>
+	</article>
+	<?php
+};
+
+$items   = array();
+$counts  = array(
+	'all'   => 0,
+	'voice' => 0,
+	'video' => 0,
+	'image' => 0,
+	'text'  => 0,
+);
+$counter = 1;
+
+if ( $testimonials_query->have_posts() ) {
+	$voices = array();
+	$vids   = array();
+	$imgs   = array();
+	$txts   = array();
+
+	foreach ( $testimonials_query->posts as $p ) {
+		$rtype    = get_post_meta( $p->ID, '_toppers_testimonial_type', true ) ?: 'text';
+		$audio_id = (int) get_post_meta( $p->ID, '_toppers_audio_id', true );
+		if ( 'voice' === $rtype || $audio_id ) {
+			$voices[] = $p;
+		} elseif ( 'video' === $rtype || get_post_meta( $p->ID, '_toppers_video_url', true ) || get_post_meta( $p->ID, '_toppers_youtube_url', true ) ) {
+			$vids[] = $p;
+		} elseif ( in_array( $rtype, array( 'image', 'whatsapp', 'photo' ), true ) || get_post_meta( $p->ID, '_toppers_screenshot_id', true ) || has_post_thumbnail( $p->ID ) ) {
+			$imgs[] = $p;
+		} else {
+			$txts[] = $p;
+		}
+	}
+
+	foreach ( array_merge( $voices, $vids, $imgs, $txts ) as $post ) {
+		$pid        = $post->ID;
+		$role       = get_post_meta( $pid, '_toppers_role', true ) ?: __( 'باحث أكاديمي', 'toppers' );
+		$quote      = wp_strip_all_tags( $post->post_content );
+		$stars      = max( 1, min( 5, (int) ( get_post_meta( $pid, '_toppers_stars', true ) ?: 5 ) ) );
+		$raw_type   = get_post_meta( $pid, '_toppers_testimonial_type', true ) ?: 'text';
+		$video_url  = get_post_meta( $pid, '_toppers_youtube_url', true ) ?: get_post_meta( $pid, '_toppers_video_url', true ) ?: '';
+		$audio_id   = (int) get_post_meta( $pid, '_toppers_audio_id', true );
+		$audio_url  = $audio_id ? wp_get_attachment_url( $audio_id ) : '';
+		$audio_time = get_post_meta( $pid, '_toppers_audio_time', true ) ?: '0:45';
+		$screen_id  = (int) get_post_meta( $pid, '_toppers_screenshot_id', true );
+		if ( ! $screen_id ) {
+			$screen_id = get_post_thumbnail_id( $pid );
+		}
+		$screen_thumb = $screen_id ? wp_get_attachment_image_url( $screen_id, 'large' ) : '';
+		$screen_full  = $screen_id ? wp_get_attachment_image_url( $screen_id, 'full' ) : $screen_thumb;
+
+		if ( ! $video_url && 'video' === $raw_type ) {
+			$video_url = 'https://youtu.be/dujo3xmx0ME';
+		}
+
+		if ( 'voice' === $raw_type || $audio_url ) {
+			$type = 'voice';
+		} elseif ( 'video' === $raw_type || $video_url ) {
+			$type = 'video';
+		} elseif ( in_array( $raw_type, array( 'image', 'whatsapp', 'photo' ), true ) || $screen_thumb ) {
+			$type = 'image';
+		} else {
+			$type = 'text';
+		}
+
+		$items[] = array(
+			'type'         => $type,
+			'name'         => sprintf( /* translators: %d: client number */ __( 'عميل %d', 'toppers' ), $counter ),
+			'role'         => $role,
+			'quote'        => $quote,
+			'stars'        => $stars,
+			'video_url'    => $video_url,
+			'audio_url'    => $audio_url,
+			'audio_time'   => $audio_time,
+			'screen_thumb' => $screen_thumb,
+			'screen_full'  => $screen_full,
+			'chat'         => array(),
+		);
+		++$counts[ $type ];
+		++$counts['all'];
+		++$counter;
+	}
+} else {
+	foreach ( $defaults as $row ) {
+		$items[] = array(
+			'type'         => $row['type'],
+			'name'         => sprintf( /* translators: %d: client number */ __( 'عميل %d', 'toppers' ), $counter ),
+			'role'         => $row['role'],
+			'quote'        => $row['quote'],
+			'stars'        => (int) ( $row['stars'] ?? 5 ),
+			'video_url'    => $row['video_url'] ?? '',
+			'audio_url'    => $row['audio_url'] ?? '',
+			'audio_time'   => $row['audio_time'] ?? '0:45',
+			'screen_thumb' => '',
+			'screen_full'  => '',
+			'chat'         => $row['chat'] ?? array(),
+		);
+		++$counts[ $row['type'] ];
+		++$counts['all'];
+		++$counter;
+	}
+}
 ?>
 <main class="site-main">
 	<?php
@@ -82,187 +269,71 @@ $testimonials_query = new WP_Query(
 			toppers_hero_args(
 				'testimonials',
 				array(
-					'title'   => __( 'طلاب وباحثون وثقوا بنا في محطة مهمة من مسيرتهم', 'toppers' ),
-					'eyebrow' => __( 'آراء عملائنا', 'toppers' ),
-					'lede'    => __( 'نفخر بكوننا جزءاً من نجاح آلاف الطلاب والباحثين، اقرأ واستمع وشاهد بعضاً من تجاربهم في التعامل معنا.', 'toppers' ),
+					'title'   => __( 'آراء نعتز بها', 'toppers' ),
+					'eyebrow' => __( 'تجارب الباحثين والطلاب', 'toppers' ),
+					'lede'    => __( 'على مدار أكثر من 10 سنوات من العطاء الأكاديمي، كانت ثقة باحثينا هي المعيار الحقيقي لتميزنا. نضع بين يديك تجارب حقيقية وواقعية لطلاب الماجستير والدكتوراه تُجسّد رحلتهم معنا بكل شفافية.', 'toppers' ),
+					'crumb'   => __( 'آراء العملاء', 'toppers' ),
+					'center'  => true,
+					'orbs'    => true,
 				)
 			)
 		);
 		?>
-		<section class="section">
+		<section class="section t-page-sec">
 			<div class="container">
 				<div class="t-filters" role="tablist" aria-label="<?php esc_attr_e( 'تصفية الآراء', 'toppers' ); ?>">
-					<button class="tab-btn active" type="button" data-filter="all"><?php esc_html_e( 'الكل', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['all'] ); ?></span></button>
-					<button class="tab-btn" type="button" data-filter="voice"><i class="fa-solid fa-microphone" aria-hidden="true"></i> <?php esc_html_e( 'رسائل صوتية', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['voice'] ); ?></span></button>
-					<button class="tab-btn" type="button" data-filter="image"><i class="fa-solid fa-camera" aria-hidden="true"></i> <?php esc_html_e( 'لقطات وسكرينات', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['image'] ); ?></span></button>
-					<button class="tab-btn" type="button" data-filter="text"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i> <?php esc_html_e( 'آراء نصية', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['text'] ); ?></span></button>
-					<?php if ( ! empty( $counts['video'] ) ) : ?>
-						<button class="tab-btn" type="button" data-filter="video"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> <?php esc_html_e( 'فيديو', 'toppers' ); ?> <span class="cnt"><?php echo esc_html( (string) $counts['video'] ); ?></span></button>
-					<?php endif; ?>
+					<button type="button" class="tab-btn active" data-filter="all" role="tab" aria-selected="true">
+						<?php esc_html_e( 'الكل', 'toppers' ); ?>
+						<span class="cnt"><?php echo esc_html( (string) $counts['all'] ); ?></span>
+					</button>
+					<button type="button" class="tab-btn" data-filter="voice" role="tab" aria-selected="false">
+						<i class="fa-solid fa-microphone-lines" aria-hidden="true"></i>
+						<?php esc_html_e( 'صوتيات', 'toppers' ); ?>
+						<span class="cnt"><?php echo esc_html( (string) $counts['voice'] ); ?></span>
+					</button>
+					<button type="button" class="tab-btn" data-filter="video" role="tab" aria-selected="false">
+						<i class="fa-brands fa-youtube" aria-hidden="true"></i>
+						<?php esc_html_e( 'فيديوهات', 'toppers' ); ?>
+						<span class="cnt"><?php echo esc_html( (string) $counts['video'] ); ?></span>
+					</button>
+					<button type="button" class="tab-btn" data-filter="image" role="tab" aria-selected="false">
+						<i class="fa-solid fa-camera" aria-hidden="true"></i>
+						<?php esc_html_e( 'سكرين شوت', 'toppers' ); ?>
+						<span class="cnt"><?php echo esc_html( (string) $counts['image'] ); ?></span>
+					</button>
+					<button type="button" class="tab-btn" data-filter="text" role="tab" aria-selected="false">
+						<i class="fa-solid fa-pen-nib" aria-hidden="true"></i>
+						<?php esc_html_e( 'آراء نصية', 'toppers' ); ?>
+						<span class="cnt"><?php echo esc_html( (string) $counts['text'] ); ?></span>
+					</button>
 				</div>
 
-				<div class="t-masonry reveal">
+				<div class="t-masonry" id="testimonialsGrid">
 					<?php
-					if ( $testimonials_query->have_posts() ) :
-						while ( $testimonials_query->have_posts() ) :
-							$testimonials_query->the_post();
-							$pid        = get_the_ID();
-							$name       = get_the_title();
-							$quote      = wp_strip_all_tags( get_the_content() );
-							$role       = get_post_meta( $pid, '_toppers_role', true ) ?: 'طالب باحث';
-							$stars      = max( 1, min( 5, (int) get_post_meta( $pid, '_toppers_stars', true ) ?: 5 ) );
-							$star_str   = str_repeat( '<i class="fa-solid fa-star" aria-hidden="true"></i>', $stars );
-							$raw_type   = get_post_meta( $pid, '_toppers_testimonial_type', true ) ?: 'voice';
-							$type       = in_array( $raw_type, array( 'image', 'whatsapp', 'photo' ), true ) ? 'image' : $raw_type;
-							$audio_id   = (int) get_post_meta( $pid, '_toppers_audio_id', true );
-							$audio_url  = $audio_id ? wp_get_attachment_url( $audio_id ) : '';
-							$audio_time = get_post_meta( $pid, '_toppers_audio_time', true ) ?: '0:45';
+					foreach ( $items as $item ) {
+						$render_testimonial_card( $item );
+					}
+					?>
 
-							// Screenshot image
-							$screen_id  = (int) get_post_meta( $pid, '_toppers_screenshot_id', true );
-							if ( ! $screen_id ) {
-								$screen_id = get_post_thumbnail_id( $pid );
-							}
-							$screen_thumb = $screen_id ? wp_get_attachment_image_url( $screen_id, 'large' ) : '';
-							$screen_full  = $screen_id ? wp_get_attachment_image_url( $screen_id, 'full' ) : $screen_thumb;
-
-							// Video
-							$video_id  = (int) get_post_meta( $pid, '_toppers_video_id', true );
-							$video_url = $video_id ? wp_get_attachment_url( $video_id ) : '';
-							?>
-							<div class="t-card" data-type="<?php echo esc_attr( $type ); ?>">
-								<?php if ( 'voice' === $type ) : ?>
-									<span class="media-badge"><i class="fa-solid fa-microphone" aria-hidden="true"></i> <?php esc_html_e( 'رسالة صوتية', 'toppers' ); ?></span>
-									<div class="t-stars"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
-									<?php echo toppers_audio_player( $audio_url, $audio_time ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-									<?php if ( $quote ) : ?>
-										<p class="t-quote"><?php echo esc_html( $quote ); ?></p>
-									<?php endif; ?>
-								<?php elseif ( 'image' === $type ) : ?>
-									<span class="media-badge"><i class="fa-solid fa-camera" aria-hidden="true"></i> <?php esc_html_e( 'سكرين شوت', 'toppers' ); ?></span>
-									<?php if ( $screen_thumb ) : ?>
-										<div class="t-screenshot-wrap" data-full-image="<?php echo esc_url( $screen_full ); ?>" title="<?php esc_attr_e( 'انقر لتكبير السكرين شوت', 'toppers' ); ?>">
-											<img src="<?php echo esc_url( $screen_thumb ); ?>" alt="<?php echo esc_attr( sprintf( 'رأي %s', $name ) ); ?>" class="t-screenshot-img">
-											<div class="t-zoom-overlay">
-												<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-												<span><?php esc_html_e( 'تكبير الصورة', 'toppers' ); ?></span>
-											</div>
-										</div>
-									<?php else : ?>
-										<div class="chat-proof">
-											<div class="cp-head"><span class="dot"></span><span><?php echo esc_html( sprintf( 'محادثة واتساب — %s', $name ) ); ?></span></div>
-											<div class="chat-bubble in"><?php echo esc_html( $quote ?: __( 'خدمة متميزة وسريعة، شكراً توبرز.', 'toppers' ) ); ?></div>
-											<div class="chat-bubble out"><?php esc_html_e( 'سعداء جداً بخدمتك ونتمنى لك دوام التوفيق', 'toppers' ); ?><span class="tick"><i class="fa-solid fa-check-double" aria-hidden="true"></i></span></div>
-										</div>
-									<?php endif; ?>
-									<div class="t-stars" style="margin-top:10px;"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
-									<?php if ( $quote && $screen_thumb ) : ?>
-										<p class="t-quote"><?php echo esc_html( $quote ); ?></p>
-									<?php endif; ?>
-								<?php elseif ( 'video' === $type ) : ?>
-									<span class="media-badge"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> <?php esc_html_e( 'فيديو', 'toppers' ); ?></span>
-									<div class="video-thumb" data-video="<?php echo esc_url( $video_url ); ?>">
-										<?php if ( has_post_thumbnail( $pid ) ) : ?>
-											<img src="<?php echo esc_url( get_the_post_thumbnail_url( $pid, 'large' ) ); ?>" alt="<?php echo esc_attr( $name ); ?>">
-										<?php else : ?>
-											<div style="width:100%;height:180px;background:#0f172a;display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i></div>
-										<?php endif; ?>
-										<div class="vt-overlay"></div>
-										<div class="vt-play"><i class="fa-solid fa-play" aria-hidden="true"></i></div>
-									</div>
-									<div class="t-stars"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
-									<?php if ( $quote ) : ?>
-										<p class="t-quote"><?php echo esc_html( $quote ); ?></p>
-									<?php endif; ?>
-								<?php else : ?>
-									<span class="media-badge"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i> <?php esc_html_e( 'رأي نصي', 'toppers' ); ?></span>
-									<div class="t-stars"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
-									<p class="t-quote" style="margin-top: 6px"><?php echo esc_html( $quote ); ?></p>
-								<?php endif; ?>
-								<div class="t-who">
-									<div class="t-avatar"><?php echo esc_html( toppers_first_letter( $name ) ); ?></div>
-									<div>
-										<b><?php echo esc_html( $name ); ?></b>
-										<span><?php echo esc_html( $role ); ?></span>
-									</div>
-								</div>
-							</div>
-							<?php
-						endwhile;
-						wp_reset_postdata();
-					else :
-						// Fallback defaults
-						foreach ( $defaults as $row ) :
-							$type = $row['type'];
-							?>
-							<div class="t-card" data-type="<?php echo esc_attr( $type ); ?>">
-								<?php if ( 'voice' === $type ) : ?>
-									<span class="media-badge"><i class="fa-solid fa-microphone" aria-hidden="true"></i> <?php esc_html_e( 'رسالة صوتية', 'toppers' ); ?></span>
-									<div class="t-stars"><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i></div>
-									<?php echo toppers_audio_player( $row['audio'] ?? '', $row['time'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-									<p class="t-quote"><?php echo esc_html( $row['quote'] ); ?></p>
-								<?php elseif ( 'video' === $type ) : ?>
-									<span class="media-badge"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i> <?php esc_html_e( 'فيديو', 'toppers' ); ?></span>
-									<div class="video-thumb" data-video="">
-										<img src="<?php echo esc_url( $row['thumb'] ?? '' ); ?>" alt="<?php echo esc_attr( $row['name'] ); ?>">
-										<div class="vt-overlay"></div>
-										<div class="vt-play"><i class="fa-solid fa-play" aria-hidden="true"></i></div>
-										<span class="vt-duration"><?php echo esc_html( $row['time'] ); ?></span>
-									</div>
-									<div class="t-stars"><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i></div>
-									<p class="t-quote"><?php echo esc_html( $row['quote'] ); ?></p>
-								<?php elseif ( 'image' === $type ) : ?>
-									<span class="media-badge"><i class="fa-solid fa-camera" aria-hidden="true"></i> <?php esc_html_e( 'لقطة محادثة', 'toppers' ); ?></span>
-									<div class="chat-proof">
-										<div class="cp-head"><span class="dot"></span><span><?php echo esc_html( sprintf( 'محادثة واتساب — %s', $row['name'] ) ); ?></span></div>
-										<div class="chat-bubble in"><?php echo esc_html( $row['chat'][0] ); ?></div>
-										<div class="chat-bubble out"><?php echo esc_html( $row['chat'][1] ); ?><span class="tick"><i class="fa-solid fa-check-double" aria-hidden="true"></i> 11:42 ص</span></div>
-									</div>
-									<div class="t-stars"><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i></div>
-									<p class="t-quote"><?php echo esc_html( $row['quote'] ); ?></p>
-								<?php else : ?>
-									<span class="media-badge"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i> <?php esc_html_e( 'رأي نصي', 'toppers' ); ?></span>
-									<div class="t-stars"><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i><i class="fa-solid fa-star" aria-hidden="true"></i></div>
-									<p class="t-quote" style="margin-top: 6px"><?php echo esc_html( $row['quote'] ); ?></p>
-								<?php endif; ?>
-								<div class="t-who">
-									<div class="t-avatar"><?php echo esc_html( toppers_first_letter( $row['name'] ) ); ?></div>
-									<div>
-										<b><?php echo esc_html( $row['name'] ); ?></b>
-										<span><?php echo esc_html( $row['role'] ); ?></span>
-									</div>
-								</div>
-							</div>
-						<?php endforeach; ?>
-					<?php endif; ?>
-
-					<div class="t-card is-hidden" data-type="__cta" style="display: block">
-						<div class="share-card">
-							<div class="sh-ic">
-								<i class="fa-solid fa-comment" aria-hidden="true"></i>
-							</div>
-							<h3><?php esc_html_e( 'هل تعاملت معنا من قبل؟', 'toppers' ); ?></h3>
-							<p><?php esc_html_e( 'شاركنا تجربتك برسالة صوتية أو نصية أو سكرين شوت عبر الواتساب.', 'toppers' ); ?></p>
-							<a href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener" class="btn btn-gold btn-sm"><?php esc_html_e( 'شاركنا رأيك', 'toppers' ); ?></a>
-						</div>
-					</div>
+					<article class="t-card t-card--cta share-card" data-type="__cta">
+						<div class="sh-ic" aria-hidden="true"><i class="fa-solid fa-comment-dots"></i></div>
+						<h3><?php esc_html_e( 'هل تعاملت معنا من قبل؟', 'toppers' ); ?></h3>
+						<p><?php esc_html_e( 'نعتز بثقتكم وسعداء بمشاركتكم تجربتكم عبر رسالة صوتية أو فيديو أو سكرين شوت عبر واتساب.', 'toppers' ); ?></p>
+						<a href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener" class="btn btn-gold btn-sm">
+							<i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+							<?php esc_html_e( 'شاركنا تجربتك', 'toppers' ); ?>
+						</a>
+					</article>
 				</div>
+
+				<p class="t-empty is-hidden" id="testimonialsEmpty"><?php esc_html_e( 'لا توجد آراء ضمن هذا التصنيف حالياً.', 'toppers' ); ?></p>
 			</div>
 		</section>
 
-		<!-- Screenshot Lightbox Modal -->
 		<div class="image-modal-overlay" id="imageModal">
 			<div class="image-modal-box">
 				<button class="image-modal-close" id="imageModalClose" type="button" aria-label="<?php esc_attr_e( 'إغلاق', 'toppers' ); ?>">&times;</button>
 				<img id="imageModalImg" src="" alt="<?php esc_attr_e( 'معاينة سكرين شوت', 'toppers' ); ?>">
-			</div>
-		</div>
-
-		<!-- Video Modal -->
-		<div class="video-modal-overlay" id="videoModal">
-			<div class="video-modal-box">
-				<button class="video-modal-close" id="videoModalClose" type="button" aria-label="<?php esc_attr_e( 'إغلاق', 'toppers' ); ?>">&times;</button>
-				<video id="videoModalPlayer" controls playsinline></video>
 			</div>
 		</div>
 
@@ -273,7 +344,10 @@ $testimonials_query = new WP_Query(
 					<p><?php esc_html_e( 'أرسل تفاصيل مشروعك الآن واحصل على استشارة أولية وعرض سعر مجاني خلال ساعات.', 'toppers' ); ?></p>
 					<div class="cta-actions">
 						<a href="<?php echo esc_url( toppers_page_url( 'contact' ) ); ?>" class="btn btn-gold"><?php esc_html_e( 'اطلب خدمتك', 'toppers' ); ?></a>
-						<a href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener" class="btn btn-outline"><?php esc_html_e( 'تواصل عبر واتساب', 'toppers' ); ?></a>
+						<a href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener" class="btn btn-whatsapp">
+							<i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+							<?php esc_html_e( 'تواصل عبر واتساب', 'toppers' ); ?>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -284,4 +358,3 @@ $testimonials_query = new WP_Query(
 </main>
 <?php
 get_footer();
-

@@ -22,6 +22,7 @@ if ( ! defined( 'TOPPERS_URI' ) ) {
 require_once TOPPERS_DIR . '/inc/helpers.php';
 require_once TOPPERS_DIR . '/inc/setup.php';
 require_once TOPPERS_DIR . '/inc/cpt.php';
+require_once TOPPERS_DIR . '/inc/services-catalog.php';
 require_once TOPPERS_DIR . '/inc/customizer.php';
 require_once TOPPERS_DIR . '/inc/admin-content.php';
 require_once TOPPERS_DIR . '/inc/demo-content.php';
