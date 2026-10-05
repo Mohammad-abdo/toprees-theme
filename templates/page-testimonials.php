@@ -117,20 +117,40 @@ $render_testimonial_card = static function ( $item ) {
 			<div class="t-designed-image-wrap" style="margin-bottom: 16px; text-align: center;">
 				<img src="<?php echo esc_url( $item['screen_full'] ); ?>" alt="<?php echo esc_attr( $display_name ); ?>" style="max-width: 100%; height: auto; border-radius: 12px; margin: 0 auto; display: block;">
 			</div>
+		<?php elseif ( 'image' === $type && ! empty( $item['screen_thumb'] ) ) : ?>
+			<div class="t-screenshot-wrap" data-full-image="<?php echo esc_url( $item['screen_full'] ); ?>" title="<?php esc_attr_e( 'انقر لتكبير السكرين شوت', 'toppers' ); ?>">
+				<img src="<?php echo esc_url( $item['screen_thumb'] ); ?>" alt="<?php echo esc_attr( sprintf( /* translators: %s: client label */ __( 'رأي %s', 'toppers' ), $display_name ) ); ?>" class="t-screenshot-img">
+				<div class="t-zoom-overlay">
+					<i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i>
+					<span><?php esc_html_e( 'تكبير الصورة', 'toppers' ); ?></span>
+				</div>
+			</div>
 		<?php elseif ( 'image' === $type ) : ?>
-			<!-- لا توجد صورة مرفوعة -->
+			<div class="chat-proof">
+				<div class="cp-head">
+					<span class="dot" aria-hidden="true"></span>
+					<span><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> <?php echo esc_html( sprintf( /* translators: %s: client label */ __( 'محادثة واتساب — %s', 'toppers' ), $display_name ) ); ?></span>
+				</div>
+				<div class="cp-body">
+					<?php foreach ( $item['chat'] as $msg ) : ?>
+						<div class="cp-bubble cp-in"><?php echo esc_html( $msg ); ?></div>
+					<?php endforeach; ?>
+				</div>
+			</div>
 		<?php endif; ?>
 
-		<div class="t-stars"><?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+		<div class="t-stars" aria-label="<?php echo esc_attr( sprintf( /* translators: %d: stars */ __( '%d نجوم', 'toppers' ), $stars ) ); ?>">
+			<?php echo $star_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
 
-		<?php if ( $quote && 'voice' !== $type ) : ?>
-			<p class="t-quote"><?php echo esc_html( $quote ); ?></p>
-		<?php elseif ( $quote && 'voice' === $type ) : ?>
-			<p class="t-quote t-quote--voice"><?php echo esc_html( $quote ); ?></p>
+		<?php if ( ! empty( $quote ) ) : ?>
+			<blockquote class="t-quote">“<?php echo esc_html( $quote ); ?>”</blockquote>
 		<?php endif; ?>
 
 		<div class="t-who">
-			<div class="t-avatar" aria-hidden="true"><i class="fa-solid fa-user-graduate"></i></div>
+			<div class="t-avatar" aria-hidden="true">
+				<i class="fa-solid fa-user-graduate"></i>
+			</div>
 			<div>
 				<strong><?php echo esc_html( $display_name ); ?></strong>
 				<small><?php echo esc_html( $role ); ?></small>
@@ -297,7 +317,6 @@ if ( $testimonials_query->have_posts() ) {
 		);
 		?>
 
-
 		<?php
 		$sec_index = 0;
 		foreach ( $categories_meta as $cat_key => $cat ) :
@@ -328,105 +347,105 @@ if ( $testimonials_query->have_posts() ) {
 			</section>
 		<?php endforeach; ?>
 
-<style>
-.t-category-sec .section-head {
-	text-align: center !important;
-	max-width: 780px !important;
-	margin: 0 auto 38px !important;
-}
-.t-category-sec .section-head .eyebrow {
-	display: none !important;
-}
-.t-category-sec .section-head h2 {
-	text-align: center !important;
-	font-weight: 800 !important;
-	margin: 0 0 12px !important;
-}
-.t-category-sec .section-head .section-desc {
-	text-align: center !important;
-	margin: 0 auto !important;
-	max-width: 680px !important;
-}
-.t-masonry,
-.t-grid-3 {
-	display: grid !important;
-	grid-template-columns: repeat(3, 1fr) !important;
-	gap: 24px !important;
-}
-.t-card {
-	text-align: center !important;
-	display: flex !important;
-	flex-direction: column !important;
-	justify-content: space-between !important;
-	align-items: center !important;
-	padding: 24px !important;
-	border-radius: 18px !important;
-}
-.t-card .media-badge {
-	margin: 0 auto 12px !important;
-	display: inline-flex !important;
-	align-items: center !important;
-	justify-content: center !important;
-}
-.t-card .t-stars {
-	display: flex !important;
-	justify-content: center !important;
-	align-items: center !important;
-	gap: 4px !important;
-	margin: 0 auto 12px !important;
-	color: var(--gold) !important;
-	font-size: 14px !important;
-}
-.t-card .t-quote {
-	text-align: center !important;
-	margin: 0 auto 16px !important;
-	max-width: 95% !important;
-	line-height: 1.8 !important;
-	color: var(--ink-soft) !important;
-}
-.t-card .t-who {
-	display: flex !important;
-	flex-direction: column !important;
-	align-items: center !important;
-	justify-content: center !important;
-	text-align: center !important;
-	gap: 8px !important;
-	margin-top: auto !important;
-	padding-top: 14px !important;
-	border-top: 1px solid var(--line) !important;
-	width: 100% !important;
-}
-.t-card .t-avatar {
-	margin: 0 auto !important;
-}
-.t-designed-image-wrap {
-	text-align: center !important;
-	margin: 0 auto 16px !important;
-	width: 100% !important;
-}
-.t-designed-image-wrap img {
-	margin: 0 auto !important;
-	display: block !important;
-	max-width: 100% !important;
-}
-.t-voice-wrap,
-.t-video-wrap {
-	margin-inline: auto !important;
-	width: 100% !important;
-}
-@media (max-width: 980px) {
-	.t-masonry,
-	.t-grid-3 {
-		grid-template-columns: repeat(2, 1fr) !important;
-	}
-}
-@media (max-width: 640px) {
-	.t-masonry,
-	.t-grid-3 {
-		grid-template-columns: 1fr !important;
-	}
-}
-</style>
+		<style>
+		.t-category-sec .section-head {
+			text-align: center !important;
+			max-width: 780px !important;
+			margin: 0 auto 38px !important;
+		}
+		.t-category-sec .section-head .eyebrow {
+			display: none !important;
+		}
+		.t-category-sec .section-head h2 {
+			text-align: center !important;
+			font-weight: 800 !important;
+			margin: 0 0 12px !important;
+		}
+		.t-category-sec .section-head .section-desc {
+			text-align: center !important;
+			margin: 0 auto !important;
+			max-width: 680px !important;
+		}
+		.t-masonry,
+		.t-grid-3 {
+			display: grid !important;
+			grid-template-columns: repeat(3, 1fr) !important;
+			gap: 24px !important;
+		}
+		.t-card {
+			text-align: center !important;
+			display: flex !important;
+			flex-direction: column !important;
+			justify-content: space-between !important;
+			align-items: center !important;
+			padding: 24px !important;
+			border-radius: 18px !important;
+		}
+		.t-card .media-badge {
+			margin: 0 auto 12px !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+		}
+		.t-card .t-stars {
+			display: flex !important;
+			justify-content: center !important;
+			align-items: center !important;
+			gap: 4px !important;
+			margin: 0 auto 12px !important;
+			color: var(--gold) !important;
+			font-size: 14px !important;
+		}
+		.t-card .t-quote {
+			text-align: center !important;
+			margin: 0 auto 16px !important;
+			max-width: 95% !important;
+			line-height: 1.8 !important;
+			color: var(--ink-soft) !important;
+		}
+		.t-card .t-who {
+			display: flex !important;
+			flex-direction: column !important;
+			align-items: center !important;
+			justify-content: center !important;
+			text-align: center !important;
+			gap: 8px !important;
+			margin-top: auto !important;
+			padding-top: 14px !important;
+			border-top: 1px solid var(--line) !important;
+			width: 100% !important;
+		}
+		.t-card .t-avatar {
+			margin: 0 auto !important;
+		}
+		.t-designed-image-wrap {
+			text-align: center !important;
+			margin: 0 auto 16px !important;
+			width: 100% !important;
+		}
+		.t-designed-image-wrap img {
+			margin: 0 auto !important;
+			display: block !important;
+			max-width: 100% !important;
+		}
+		.t-voice-wrap,
+		.t-video-wrap {
+			margin-inline: auto !important;
+			width: 100% !important;
+		}
+		@media (max-width: 980px) {
+			.t-masonry,
+			.t-grid-3 {
+				grid-template-columns: repeat(2, 1fr) !important;
+			}
+		}
+		@media (max-width: 640px) {
+			.t-masonry,
+			.t-grid-3 {
+				grid-template-columns: 1fr !important;
+			}
+		}
+		</style>
 
 		<!-- Share Experience Section -->
 		<section class="section t-share-experience-sec">
@@ -447,7 +466,6 @@ if ( $testimonials_query->have_posts() ) {
 			</div>
 		</section>
 
-		<!-- Screenshot Lightbox Modal -->
 		<div class="image-modal-overlay" id="imageModal">
 			<div class="image-modal-box">
 				<button class="image-modal-close" id="imageModalClose" type="button" aria-label="<?php esc_attr_e( 'إغلاق', 'toppers' ); ?>">&times;</button>

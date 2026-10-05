@@ -140,8 +140,12 @@ if ( ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_
 					<div class="footer-social-wrap" style="margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08);">
 						<div style="font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 600; margin-bottom: 12px;"><?php esc_html_e( 'تابعنا على منصات التواصل', 'toppers' ); ?></div>
 						<div class="footer-social" style="display: flex; gap: 8px; flex-wrap: wrap;">
+							<a href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
 							<?php if ( toppers_opt( 'toppers_facebook', 'https://facebook.com' ) ) : ?>
 								<a href="<?php echo esc_url( toppers_opt( 'toppers_facebook', 'https://facebook.com' ) ); ?>" aria-label="Facebook" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
+							<?php endif; ?>
+							<?php if ( toppers_opt( 'toppers_twitter', 'https://twitter.com' ) ) : ?>
+								<a href="<?php echo esc_url( toppers_opt( 'toppers_twitter', 'https://twitter.com' ) ); ?>" aria-label="X (Twitter)" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
 							<?php endif; ?>
 							<?php if ( toppers_opt( 'toppers_instagram', 'https://instagram.com' ) ) : ?>
 								<a href="<?php echo esc_url( toppers_opt( 'toppers_instagram', 'https://instagram.com' ) ); ?>" aria-label="Instagram" target="_blank" rel="noopener"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
@@ -151,9 +155,6 @@ if ( ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_
 							<?php endif; ?>
 							<?php if ( toppers_opt( 'toppers_snapchat', 'https://snapchat.com' ) ) : ?>
 								<a href="<?php echo esc_url( toppers_opt( 'toppers_snapchat', 'https://snapchat.com' ) ); ?>" aria-label="Snapchat" target="_blank" rel="noopener"><i class="fa-brands fa-snapchat" aria-hidden="true"></i></a>
-							<?php endif; ?>
-							<?php if ( toppers_opt( 'toppers_twitter', 'https://twitter.com' ) ) : ?>
-								<a href="<?php echo esc_url( toppers_opt( 'toppers_twitter', 'https://twitter.com' ) ); ?>" aria-label="X (Twitter)" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
 							<?php endif; ?>
 							<?php if ( toppers_opt( 'toppers_youtube' ) ) : ?>
 								<a href="<?php echo esc_url( toppers_opt( 'toppers_youtube' ) ); ?>" aria-label="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube" aria-hidden="true"></i></a>

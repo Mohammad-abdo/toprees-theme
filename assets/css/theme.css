@@ -409,7 +409,7 @@ body.admin-bar .site-header {
   background: rgba(251, 248, 241, 0.98);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  padding: 10px 0;
+  padding: 12px 0;
   box-shadow: 0 10px 30px -18px rgba(14, 23, 48, 0.35);
   border-bottom: 1px solid var(--line);
 }
@@ -535,6 +535,13 @@ html[lang="ar"] .brand-name {
   transition:
     background 0.3s,
     color 0.3s;
+}
+.nav-desktop .nav-caret {
+  font-size: 9px;
+  opacity: 0.8;
+}
+.nav-desktop .nav-submenu-toggle {
+  display: none;
 }
 .nav-desktop .nav-caret {
   font-size: 9px;
