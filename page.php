@@ -19,7 +19,7 @@ if ( function_exists( 'elementor_theme_do_location' ) && elementor_theme_do_loca
 		if ( toppers_is_elementor_page() ) {
 			the_content();
 		} else {
-			get_template_part( 'template-parts/page-hero', null, array( 'title' => get_the_title(), 'lede' => has_excerpt() ? get_the_excerpt() : '' ) );
+			get_template_part( 'template-parts/page-hero', null, array( 'title' => get_the_title(), 'lede' => has_excerpt() ? get_the_excerpt() : '', 'center' => true, 'orbs' => true ) );
 			?>
 			<section class="section page-default-content">
 				<div class="container">

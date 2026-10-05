@@ -5,22 +5,29 @@
  * @package Toppers
  */
 
-$current = is_category() ? get_queried_object() : null;
-$cats    = get_categories(
+$current  = is_category() ? get_queried_object() : null;
+$all_cats = get_categories(
 	array(
-		'hide_empty' => true,
+		'hide_empty' => false,
 		'orderby'    => 'name',
 		'order'      => 'ASC',
-		'exclude'    => (int) get_option( 'default_category' ),
 	)
 );
-$q       = new WP_Query(
+$cats     = array_filter(
+	$all_cats,
+	static function ( $term ) {
+		if ( ( 'uncategorized' === $term->slug || 'uncategorised' === $term->slug ) && 0 === (int) $term->count ) {
+			return false;
+		}
+		return true;
+	}
+);
+$q        = new WP_Query(
 	array(
 		'post_type'           => 'post',
 		'posts_per_page'      => -1,
 		'ignore_sticky_posts' => true,
 		'post_status'         => 'publish',
-		'category__not_in'    => array( (int) get_option( 'default_category' ) ),
 	)
 );
 ?>

@@ -136,21 +136,40 @@ function toppers_service_image( $title_or_id = '' ) {
 	}
 	$map = array(
 		'البحوث الجامعية'              => 'research',
+		'إعداد الأبحاث الجامعية'       => 'research',
 		'البحوث الجامعية المتقدمة'     => 'research',
 		'دعم مشاريع التخرج'           => 'meeting',
+		'إعداد مشروع بحث التخرج'      => 'meeting',
 		'رسائل الماجستير'             => 'masters',
 		'إعداد رسائل الماجستير'       => 'masters',
 		'أطروحات الدكتوراه'           => 'phd',
+		'إعداد رسائل الدكتوراه'       => 'phd',
 		'خطة البحث والمقترح'          => 'proposal',
 		'خطة البحث (Proposal)'        => 'proposal',
+		'إعداد خطة البحث (المقترح البحثي – Proposal)' => 'proposal',
+		'اقتراح عناوين رسائل الماجستير والدكتوراه' => 'proposal',
+		'إعداد الإطار النظري'         => 'library',
+		'إعداد الدراسات السابقة'      => 'library',
 		'التحليل الإحصائي'            => 'stats',
+		'التحليل الإحصائي وتفسير النتائج' => 'stats',
 		'التحليل الإحصائي ببرنامج SPSS' => 'stats',
+		'تصميم أدوات الدراسة (الاستبيانات، المقابلات، بطاقات الملاحظة)' => 'stats',
 		'الترجمة الأكاديمية'          => 'translate',
+		'الترجمة الأكاديمية المعتمدة' => 'translate',
 		'التدقيق اللغوي'              => 'proof',
 		'التدقيق اللغوي والنحوي'      => 'proof',
+		'إعادة الصياغة العلمية وتقليل الاقتباس' => 'proof',
 		'فحص نسبة الاقتباس'           => 'similarity',
+		'فحص السرقة الأدبية ونسبة الاقتباس (Plagiarism)' => 'similarity',
 		'جمع الدراسات السابقة'        => 'library',
 		'النشر في المجلات المحكمة'    => 'publish',
+		'نشر الأبحاث في المجلات العلمية المحكّمة' => 'publish',
+		'إعداد أبحاث الترقية العلمية' => 'publish',
+		'إعداد الأوراق العلمية والبحوث للنشر' => 'publish',
+		'كتابة سيرة ذاتية ATS'        => 'meeting',
+		'الاستشارات والحلول البحثية'  => 'proposal',
+		'تنفيذ ملاحظات وتعديلات على بحث جاهز' => 'meeting',
+		'إعداد العروض التقديمية (PowerPoint)' => 'laptop',
 	);
 	$key = $map[ $title_or_id ] ?? 'research';
 	$remote = toppers_photo( $key );
@@ -177,6 +196,13 @@ function toppers_phone() {
 }
 
 function toppers_email() {
+	if ( function_exists( 'toppers_notification_email' ) ) {
+		return toppers_notification_email();
+	}
+	$custom = get_option( 'toppers_site_notification_email' );
+	if ( ! empty( $custom ) && is_email( $custom ) ) {
+		return sanitize_email( $custom );
+	}
 	return toppers_opt( 'toppers_email', 'info@toppers-edu.com' );
 }
 
@@ -199,6 +225,66 @@ function toppers_page_url( $slug, $fallback = '#' ) {
 	$page = get_page_by_path( $slug );
 	return $page ? get_permalink( $page ) : $fallback;
 }
+
+function toppers_footer_logo_html( $class = '', $height = 54 ) {
+	$attr = array(
+		'class' => trim( 'footer-custom-logo custom-logo ' . $class ),
+		'alt'   => get_bloginfo( 'name' ),
+	);
+	if ( $height ) {
+		$attr['style'] = 'height:' . absint( $height ) . 'px;width:auto;';
+	}
+
+	$logo_id = (int) toppers_opt( 'toppers_footer_logo_id', 0 );
+	if ( $logo_id ) {
+		return wp_get_attachment_image( $logo_id, 'full', false, $attr );
+	}
+
+	$logo = 'logo-white.png';
+	if ( ! file_exists( TOPPERS_DIR . '/assets/images/' . $logo ) ) {
+		$logo = file_exists( TOPPERS_DIR . '/assets/images/logo.png' ) ? 'logo.png' : 'logo.svg';
+	}
+	$style = $height ? ' style="' . esc_attr( $attr['style'] ) . '"' : '';
+	return '<img class="' . esc_attr( $attr['class'] ) . '" src="' . esc_url( TOPPERS_URI . '/assets/images/' . $logo ) . '" alt="' . esc_attr( $attr['alt'] ) . '"' . $style . '>';
+}
+
+function toppers_payment_methods_html() {
+	ob_start();
+	?>
+	<div class="footer-payments-bar">
+		<div class="payments-title">
+			<i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+			<span><?php esc_html_e( 'طرق دفع آمنة ومعتمدة 100%', 'toppers' ); ?></span>
+		</div>
+		<div class="payments-list">
+			<div class="payment-badge payment-badge--mada" title="مدى mada">
+				<span class="pay-brand mada-brand">mada | <b>مدى</b></span>
+			</div>
+			<div class="payment-badge payment-badge--apple" title="Apple Pay">
+				<i class="fa-brands fa-apple-pay" aria-hidden="true"></i>
+			</div>
+			<div class="payment-badge payment-badge--visa" title="Visa">
+				<i class="fa-brands fa-cc-visa" aria-hidden="true"></i>
+			</div>
+			<div class="payment-badge payment-badge--mc" title="Mastercard">
+				<i class="fa-brands fa-cc-mastercard" aria-hidden="true"></i>
+			</div>
+			<div class="payment-badge payment-badge--tamara" title="تمارا Tamara">
+				<span class="pay-brand tamara-brand">tamara</span>
+			</div>
+			<div class="payment-badge payment-badge--tabby" title="تابي Tabby">
+				<span class="pay-brand tabby-brand">tabby</span>
+			</div>
+			<div class="payment-badge payment-badge--bank" title="<?php esc_attr_e( 'تحويل بنكي', 'toppers' ); ?>">
+				<i class="fa-solid fa-building-columns" aria-hidden="true"></i>
+				<span class="pay-brand"><?php esc_html_e( 'تحويل بنكي', 'toppers' ); ?></span>
+			</div>
+		</div>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
 
 function toppers_logo_html( $class = '', $height = 0 ) {
 	$attr = array(
@@ -250,14 +336,53 @@ function toppers_blog_url() {
 }
 
 class Toppers_Flat_Walker extends Walker_Nav_Menu {
-	public function start_lvl( &$output, $depth = 0, $args = null ) {}
-	public function end_lvl( &$output, $depth = 0, $args = null ) {}
+	public function start_lvl( &$output, $depth = 0, $args = null ) {
+		$indent  = str_repeat( "\t", $depth );
+		$output .= "\n$indent<ul class=\"sub-menu\">\n";
+	}
+
+	public function end_lvl( &$output, $depth = 0, $args = null ) {
+		$indent  = str_repeat( "\t", $depth );
+		$output .= "$indent</ul>\n";
+	}
+
 	public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
 		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
-		$active  = ( in_array( 'current-menu-item', $classes, true ) || in_array( 'current_page_item', $classes, true ) ) ? 'active' : '';
-		$output .= '<a href="' . esc_url( $item->url ) . '"' . ( $active ? ' class="active"' : '' ) . '>' . esc_html( $item->title ) . '</a>';
+		$active  = ( in_array( 'current-menu-item', $classes, true )
+			|| in_array( 'current_page_item', $classes, true )
+			|| in_array( 'current-menu-ancestor', $classes, true )
+			|| in_array( 'current-menu-parent', $classes, true ) );
+		$has_children = in_array( 'menu-item-has-children', $classes, true );
+
+		$li_classes = array( 'menu-item' );
+		if ( $has_children ) {
+			$li_classes[] = 'menu-item-has-children';
+		}
+		if ( $active ) {
+			$li_classes[] = 'is-active';
+		}
+		if ( $depth > 0 ) {
+			$li_classes[] = 'menu-item-depth-' . (int) $depth;
+		}
+
+		$output .= '<li class="' . esc_attr( implode( ' ', $li_classes ) ) . '">';
+
+		$link_class = $active ? 'active' : '';
+		$output    .= '<a href="' . esc_url( $item->url ) . '"' . ( $link_class ? ' class="' . esc_attr( $link_class ) . '"' : '' ) . '>';
+		$output    .= esc_html( $item->title );
+		if ( $has_children && 0 === (int) $depth ) {
+			$output .= ' <i class="fa-solid fa-chevron-down nav-caret" aria-hidden="true"></i>';
+		}
+		$output .= '</a>';
+
+		if ( $has_children && 0 === (int) $depth ) {
+			$output .= '<button type="button" class="nav-submenu-toggle" aria-expanded="false" aria-label="' . esc_attr__( 'فتح القائمة الفرعية', 'toppers' ) . '"><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>';
+		}
 	}
-	public function end_el( &$output, $item, $depth = 0, $args = null ) {}
+
+	public function end_el( &$output, $item, $depth = 0, $args = null ) {
+		$output .= "</li>\n";
+	}
 }
 
 function toppers_audio_player( $src = '', $time = '0:45' ) {
@@ -388,10 +513,21 @@ function toppers_logout_url() {
 	return wp_logout_url( home_url( '/' ) );
 }
 
-function toppers_system_request_url( $service = '' ) {
+function toppers_system_request_url( $service = '', $service_id = 0, $extra = array() ) {
 	$args = array( 'tab' => 'new' );
 	if ( $service ) {
 		$args['service'] = $service;
+	}
+	if ( $service_id > 0 ) {
+		$args['service_id'] = (int) $service_id;
+	}
+	if ( is_array( $extra ) ) {
+		foreach ( $extra as $ek => $ev ) {
+			if ( '' === $ev || null === $ev ) {
+				continue;
+			}
+			$args[ sanitize_key( (string) $ek ) ] = is_scalar( $ev ) ? (string) $ev : wp_json_encode( $ev );
+		}
 	}
 	$target = add_query_arg( $args, home_url( '/toppers-client/' ) );
 	if ( is_user_logged_in() ) {
@@ -548,15 +684,18 @@ function toppers_get_testimonials_counts() {
 
 	foreach ( $posts as $pid ) {
 		$raw_type = get_post_meta( $pid, '_toppers_testimonial_type', true );
-		if ( in_array( $raw_type, array( 'image', 'whatsapp', 'photo' ), true ) ) {
+		$audio_id = (int) get_post_meta( $pid, '_toppers_audio_id', true );
+		if ( 'voice' === $raw_type || $audio_id ) {
+			$type = 'voice';
+		} elseif ( in_array( $raw_type, array( 'image', 'whatsapp', 'photo' ), true ) ) {
 			$type = 'image';
-		} elseif ( in_array( $raw_type, array( 'voice', 'video', 'text' ), true ) ) {
+		} elseif ( in_array( $raw_type, array( 'video', 'text' ), true ) ) {
 			$type = $raw_type;
 		} else {
 			$type = 'text';
 		}
 		if ( isset( $counts[ $type ] ) ) {
-			$counts[ $type ]++;
+			++$counts[ $type ];
 		}
 	}
 
@@ -671,5 +810,26 @@ function toppers_get_ai_settings() {
 		$saved = array();
 	}
 	return wp_parse_args( $saved, $defaults );
+}
+
+/**
+ * Convert any YouTube URL or video ID into a privacy-enhanced, clean embed URL.
+ *
+ * @param string $url_or_id YouTube watch URL, short URL, or video ID.
+ * @return string Clean embed URL.
+ */
+function toppers_youtube_embed_url( $url_or_id = '' ) {
+	if ( empty( $url_or_id ) ) {
+		$url_or_id = 'dujo3xmx0ME';
+	}
+	$video_id = '';
+	if ( preg_match( '/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([a-zA-Z0-9_-]{11})/i', $url_or_id, $matches ) ) {
+		$video_id = $matches[1];
+	} elseif ( preg_match( '/^[a-zA-Z0-9_-]{11}$/', trim( $url_or_id ) ) ) {
+		$video_id = trim( $url_or_id );
+	} else {
+		$video_id = 'dujo3xmx0ME';
+	}
+	return 'https://www.youtube-nocookie.com/embed/' . $video_id . '?rel=0&modestbranding=1';
 }
 

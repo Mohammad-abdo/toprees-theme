@@ -8,7 +8,7 @@
 get_header();
 ?>
 <main class="site-main">
-	<?php get_template_part( 'template-parts/page-hero', null, array( 'title' => get_the_archive_title(), 'lede' => get_the_archive_description() ) ); ?>
+	<?php get_template_part( 'template-parts/page-hero', null, array( 'title' => get_the_archive_title(), 'lede' => get_the_archive_description(), 'center' => true, 'orbs' => true ) ); ?>
 	<?php if ( is_category() || is_tag() || is_home() || is_date() ) : ?>
 		<?php get_template_part( 'template-parts/blog-list' ); ?>
 	<?php else : ?>

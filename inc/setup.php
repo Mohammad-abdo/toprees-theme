@@ -370,9 +370,36 @@ function toppers_handle_contact() {
 		}
 	}
 
+	// Record contact inquiry in Dashboard (toppers_contact_req)
+	$req_id = wp_insert_post(
+		array(
+			'post_type'    => 'toppers_contact_req',
+			'post_title'   => $name . ( $service ? ' — ' . $service : '' ),
+			'post_status'  => 'publish',
+			'post_content' => $details,
+		)
+	);
+	if ( $req_id && ! is_wp_error( $req_id ) ) {
+		update_post_meta( $req_id, '_inquiry_name', $name );
+		update_post_meta( $req_id, '_inquiry_phone', $phone );
+		update_post_meta( $req_id, '_inquiry_email', $email );
+		update_post_meta( $req_id, '_inquiry_service', $service );
+		update_post_meta( $req_id, '_inquiry_level', $level );
+		update_post_meta( $req_id, '_inquiry_deadline', $deadline );
+		update_post_meta( $req_id, '_inquiry_details', $details );
+	}
+
 	$to      = toppers_email();
-	$subject = sprintf( '[Toppers] طلب جديد من %s', $name );
-	$body    = "الاسم: {$name}\nالجوال: {$phone}\nالبريد: {$email}\nالمرحلة: {$level}\nالخدمة: {$service}\nالموعد المطلوب: {$deadline}\n\nالتفاصيل:\n{$details}";
+	$subject = sprintf( '[Toppers] طلب خدمة جديد من: %s', $name );
+	$body    = "وصلك طلب خدمة وتواصل جديد عبر موقع توبرز:\n\n"
+		. "الاسم: {$name}\n"
+		. "الجوال: {$phone}\n"
+		. "البريد الإلكتروني: {$email}\n"
+		. "المرحلة الدراسية: {$level}\n"
+		. "الخدمة المطلوبة: {$service}\n"
+		. "الموعد المطلوب: {$deadline}\n\n"
+		. "تفاصيل الطلب:\n{$details}\n\n"
+		. "---\nيمكنك أيضاً مراجعة الطلب والرد على العميل عبر لوحة التحكم (الداش بورد) > طلبات الخدمات.";
 	$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
 	if ( $email ) {
 		$headers[] = 'Reply-To: ' . $email;
@@ -381,10 +408,145 @@ function toppers_handle_contact() {
 	wp_mail( $to, $subject, $body, $headers );
 
 	if ( class_exists( '\Toppers\Modules\Accounts\Repository\LeadRepository' ) && ! $lead_ok ) {
-		wp_send_json_error( array( 'message' => __( 'تم إرسال البريد لكن تعذر حفظ الطلب في المنصة. حاول مرة أخرى.', 'toppers' ) ) );
+		wp_send_json_error( array( 'message' => __( 'تم استلام البريد ولكن يرجى التحقق من لوحة التحكم.', 'toppers' ) ) );
 	}
 
 	wp_send_json_success( array( 'message' => __( 'تم استلام طلبك بنجاح', 'toppers' ) ) );
+}
+
+add_action( 'wp_ajax_toppers_career_apply', 'toppers_handle_career_apply' );
+add_action( 'wp_ajax_nopriv_toppers_career_apply', 'toppers_handle_career_apply' );
+function toppers_handle_career_apply() {
+	check_ajax_referer( 'toppers_form', 'career_nonce' );
+
+	$name       = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
+	$age        = sanitize_text_field( wp_unslash( $_POST['age'] ?? '' ) );
+	$phone      = sanitize_text_field( wp_unslash( $_POST['phone'] ?? '' ) );
+	$graduation = sanitize_text_field( wp_unslash( $_POST['graduation'] ?? '' ) );
+	$email      = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+
+	if ( ! $name || ! $phone ) {
+		wp_send_json_error( array( 'message' => __( 'يرجى إدخال الاسم ورقم الموبايل.', 'toppers' ) ) );
+	}
+
+	$cv_url = '';
+	if ( ! empty( $_FILES['cv_file']['name'] ) ) {
+		if ( ! function_exists( 'wp_handle_upload' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		$uploadedfile     = $_FILES['cv_file'];
+		$upload_overrides = array( 'test_form' => false );
+		$movefile         = wp_handle_upload( $uploadedfile, $upload_overrides );
+
+		if ( $movefile && ! isset( $movefile['error'] ) ) {
+			$cv_url = $movefile['url'];
+		} else {
+			wp_send_json_error( array( 'message' => __( 'خطأ أثناء رفع السيرة الذاتية: ', 'toppers' ) . ( $movefile['error'] ?? '' ) ) );
+		}
+	}
+
+	// 1. Record application in WordPress Dashboard (toppers_career_app)
+	$app_title = $name . ( $graduation ? ' — ' . $graduation : '' );
+	$app_id    = wp_insert_post(
+		array(
+			'post_type'    => 'toppers_career_app',
+			'post_title'   => $app_title,
+			'post_status'  => 'publish',
+		)
+	);
+
+	if ( $app_id && ! is_wp_error( $app_id ) ) {
+		update_post_meta( $app_id, '_applicant_name', $name );
+		update_post_meta( $app_id, '_applicant_age', $age );
+		update_post_meta( $app_id, '_applicant_phone', $phone );
+		update_post_meta( $app_id, '_applicant_graduation', $graduation );
+		update_post_meta( $app_id, '_applicant_qualification', $graduation );
+		if ( $email ) {
+			update_post_meta( $app_id, '_applicant_email', $email );
+		}
+		if ( $cv_url ) {
+			update_post_meta( $app_id, '_applicant_cv_url', $cv_url );
+			update_post_meta( $app_id, '_applicant_portfolio_url', $cv_url );
+		}
+	}
+
+	$details = "طلب انضمام جديد عبر استمارة (انضم إلى توبرز):\n\n"
+		. "اسم المختص: {$name}\n"
+		. "السن / العمر: " . ( $age ?: '—' ) . "\n"
+		. "رقم الموبايل: {$phone}\n"
+		. "التخرج / المؤهل والتخصص: " . ( $graduation ?: '—' ) . "\n"
+		. "ملف السيرة الذاتية (CV): " . ( $cv_url ? $cv_url : 'لم يتم إرفاق ملف' ) . "\n\n"
+		. "---\nتم حفظ هذا الطلب أيضاً في الداش بورد تحت «طلبات التوظيف».";
+
+	if ( class_exists( '\Toppers\Modules\Accounts\Repository\LeadRepository' ) ) {
+		$repo     = new \Toppers\Modules\Accounts\Repository\LeadRepository();
+		$existing = $repo->findByPhone( $phone );
+		if ( $existing ) {
+			$repo->update(
+				(int) $existing['id'],
+				array(
+					'name'   => $name,
+					'email'  => $email,
+					'notes'  => trim( ( (string) ( $existing['notes'] ?? '' ) ) . "\n---\n" . $details ),
+					'status' => 'candidate',
+					'source' => 'career',
+				)
+			);
+		} else {
+			$repo->create(
+				array(
+					'name'   => $name,
+					'phone'  => $phone,
+					'email'  => $email,
+					'source' => 'career',
+					'status' => 'new',
+					'notes'  => $details,
+				)
+			);
+		}
+	}
+
+	$to      = function_exists( 'toppers_notification_email' ) ? toppers_notification_email() : toppers_email();
+	$subject = sprintf( '[Toppers Career] طلب انضمام جديد: %s (%s)', $name, $graduation ?: 'مختص' );
+	$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+	if ( $email ) {
+		$headers[] = 'Reply-To: ' . $email;
+	}
+
+	wp_mail( $to, $subject, $details, $headers );
+
+	wp_send_json_success( array( 'message' => __( 'تم استلام طلب انضمامك بنجاح!', 'toppers' ) ) );
+}
+
+add_action( 'init', 'toppers_ensure_careers_page' );
+function toppers_ensure_careers_page() {
+	if ( get_option( 'toppers_careers_page_synced' ) ) {
+		return;
+	}
+	$existing = get_page_by_path( 'careers' ) ?: get_page_by_path( 'career' );
+	if ( ! $existing ) {
+		$page_id = wp_insert_post(
+			array(
+				'post_title'     => 'انضم إلى توبرز',
+				'post_name'      => 'careers',
+				'post_status'    => 'publish',
+				'post_type'      => 'page',
+				'page_template'  => 'templates/page-career.php',
+			)
+		);
+		if ( $page_id && ! is_wp_error( $page_id ) ) {
+			update_post_meta( $page_id, '_wp_page_template', 'templates/page-career.php' );
+		}
+	} else {
+		wp_update_post(
+			array(
+				'ID'         => $existing->ID,
+				'post_title' => 'انضم إلى توبرز',
+			)
+		);
+		update_post_meta( $existing->ID, '_wp_page_template', 'templates/page-career.php' );
+	}
+	update_option( 'toppers_careers_page_synced', 1 );
 }
 
 add_action( 'admin_notices', 'toppers_admin_notice' );

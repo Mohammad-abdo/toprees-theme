@@ -56,9 +56,10 @@ class Toppers_Widget_Hero_Slider extends Toppers_Widget_Base {
 	public function get_icon() { return 'eicon-slider-push'; }
 
 	protected function register_controls() {
-		$this->start_controls_section( 'section_slides', array( 'label' => __( 'الشرائح (صور فقط)', 'toppers' ) ) );
+		$this->start_controls_section( 'section_slides', array( 'label' => __( 'الشرائح', 'toppers' ) ) );
 		$repeater = new Repeater();
 		$repeater->add_control( 'image', array( 'label' => __( 'صورة البانر', 'toppers' ), 'type' => Controls_Manager::MEDIA, 'default' => array( 'url' => 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1920' ) ) );
+		$repeater->add_control( 'link', array( 'label' => __( 'رابط الشريحة (اختياري)', 'toppers' ), 'type' => Controls_Manager::URL, 'placeholder' => 'https://...' ) );
 		$this->add_control(
 			'slides',
 			array(
@@ -74,25 +75,64 @@ class Toppers_Widget_Hero_Slider extends Toppers_Widget_Base {
 			)
 		);
 		$this->end_controls_section();
+
+		$this->start_controls_section( 'section_cta', array( 'label' => __( 'أزرار الكول تو أكشن (Hero CTA)', 'toppers' ) ) );
+		$this->add_control( 'show_cta', array( 'label' => __( 'إظهار أزرار CTA', 'toppers' ), 'type' => Controls_Manager::SWITCHER, 'default' => 'yes' ) );
+		$this->add_control( 'btn1_text', array( 'label' => __( 'الزر الأول — النص', 'toppers' ), 'type' => Controls_Manager::TEXT, 'default' => 'اطلب استشارتك الأكاديمية' ) );
+		$this->add_control( 'btn1_url', array( 'label' => __( 'الزر الأول — الرابط', 'toppers' ), 'type' => Controls_Manager::URL, 'default' => array( 'url' => toppers_page_url( 'contact' ) ) ) );
+		$this->add_control( 'btn2_text', array( 'label' => __( 'الزر الثاني — النص', 'toppers' ), 'type' => Controls_Manager::TEXT, 'default' => 'تواصل عبر واتساب' ) );
+		$this->add_control( 'btn2_url', array( 'label' => __( 'الزر الثاني — الرابط', 'toppers' ), 'type' => Controls_Manager::URL, 'default' => array( 'url' => toppers_whatsapp_url() ) ) );
+		$this->end_controls_section();
 	}
 
 	protected function render() {
-		$slides = $this->get_settings_for_display()['slides'];
+		$settings = $this->get_settings_for_display();
+		$slides   = $settings['slides'];
 		if ( empty( $slides ) ) {
 			return;
 		}
-		echo '<section class="hero-slider-wrapper hero-slider-wrapper--image-only"><div class="hero-slider" id="heroSlider">';
+		echo '<section class="hero-slider-wrapper hero-slider-wrapper--image-only hero-slider-wrapper--with-cta"><div class="hero-slider" id="heroSlider">';
 		foreach ( $slides as $i => $slide ) {
-			$img = ! empty( $slide['image']['url'] ) ? $slide['image']['url'] : '';
-			$active = 0 === $i ? ' is-active' : '';
+			$img        = ! empty( $slide['image']['url'] ) ? $slide['image']['url'] : '';
+			$active     = 0 === $i ? ' is-active' : '';
+			$slide_link = ! empty( $slide['link']['url'] ) ? $slide['link']['url'] : '';
 			echo '<div class="hero-slide' . esc_attr( $active ) . ' slide-' . esc_attr( $i + 1 ) . '">';
+			if ( $slide_link ) {
+				echo '<a href="' . esc_url( $slide_link ) . '" class="slide-click-link" aria-label="' . esc_attr( sprintf( __( 'رابط الشريحة %d', 'toppers' ), $i + 1 ) ) . '"></a>';
+			}
 			echo '<div class="slide-bg">';
 			if ( $img ) {
 				echo '<img src="' . esc_url( $img ) . '" alt="" decoding="async"' . ( 0 === $i ? ' fetchpriority="high"' : ' loading="lazy"' ) . '>';
 			}
 			echo '</div></div>';
 		}
-		echo '</div><div class="slider-controls"><button class="slider-btn" id="sliderPrev" type="button" aria-label="' . esc_attr__( 'السابق', 'toppers' ) . '"><i class="fa-solid fa-chevron-right" style="font-size:18px;" aria-hidden="true"></i></button><div class="slider-dots" id="sliderDots">';
+		echo '</div>';
+
+		if ( 'yes' === ( $settings['show_cta'] ?? 'yes' ) ) {
+			$btn1_text = $settings['btn1_text'] ?? '';
+			$btn1_url  = ! empty( $settings['btn1_url']['url'] ) ? $settings['btn1_url']['url'] : '';
+			$btn2_text = $settings['btn2_text'] ?? '';
+			$btn2_url  = ! empty( $settings['btn2_url']['url'] ) ? $settings['btn2_url']['url'] : '';
+			if ( ( $btn1_text && $btn1_url ) || ( $btn2_text && $btn2_url ) ) {
+				echo '<div class="hero-cta-banner-overlay"><div class="hero-cta-actions">';
+				if ( $btn1_text && $btn1_url ) {
+					echo '<a href="' . esc_url( $btn1_url ) . '" class="btn hero-cta-btn hero-cta-btn--primary"><span>' . esc_html( $btn1_text ) . '</span><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></a>';
+				}
+				if ( $btn2_text && $btn2_url ) {
+					$is_wa = ( false !== strpos( $btn2_url, 'wa.me' ) || false !== strpos( $btn2_url, 'whatsapp' ) );
+					echo '<a href="' . esc_url( $btn2_url ) . '" class="btn hero-cta-btn hero-cta-btn--secondary' . ( $is_wa ? ' is-whatsapp' : '' ) . '"' . ( $is_wa ? ' target="_blank" rel="noopener"' : '' ) . '>';
+					if ( $is_wa ) {
+						echo '<i class="fa-brands fa-whatsapp" aria-hidden="true"></i>';
+					} else {
+						echo '<i class="fa-solid fa-layer-group" aria-hidden="true"></i>';
+					}
+					echo '<span>' . esc_html( $btn2_text ) . '</span></a>';
+				}
+				echo '</div></div>';
+			}
+		}
+
+		echo '<div class="slider-controls"><button class="slider-btn" id="sliderPrev" type="button" aria-label="' . esc_attr__( 'السابق', 'toppers' ) . '"><i class="fa-solid fa-chevron-right" style="font-size:18px;" aria-hidden="true"></i></button><div class="slider-dots" id="sliderDots">';
 		foreach ( $slides as $i => $slide ) {
 			echo '<button class="slider-dot' . ( 0 === $i ? ' active' : '' ) . '" data-index="' . esc_attr( $i ) . '" type="button"></button>';
 		}
@@ -410,7 +450,10 @@ class Toppers_Widget_Faq extends Toppers_Widget_Base {
 		echo '<section class="section section--alt"><div class="container" style="max-width:820px">';
 		$this->render_section_head( $s );
 		foreach ( $items as $i => $item ) {
-			echo '<div class="faq-item' . ( 0 === $i ? ' is-open' : '' ) . '"><div class="faq-q"><span>' . esc_html( $item['q'] ) . '</span><span class="plus"></span></div><div class="faq-a"><p>' . esc_html( $item['a'] ) . '</p></div></div>';
+			echo '<div class="faq-item' . ( 0 === $i ? ' is-open' : '' ) . '">';
+			echo '<button type="button" class="faq-q" aria-expanded="' . ( 0 === $i ? 'true' : 'false' ) . '"><span>' . esc_html( $item['q'] ) . '</span><span class="plus" aria-hidden="true"></span></button>';
+			echo '<div class="faq-a"><div class="faq-a-inner"><p>' . esc_html( $item['a'] ) . '</p></div></div>';
+			echo '</div>';
 		}
 		echo '</div></section>';
 	}
@@ -436,7 +479,7 @@ class Toppers_Widget_Cta extends Toppers_Widget_Base {
 		$url = ! empty( $s['btn1_link']['url'] ) ? $s['btn1_link']['url'] : toppers_page_url( 'contact', '#' );
 		echo '<section class="section--tight"><div class="container"><div class="cta-band"><h2>' . esc_html( $s['title'] ) . '</h2><p>' . esc_html( $s['lede'] ) . '</p><div class="cta-actions">';
 		echo '<a href="' . esc_url( $url ) . '" class="btn btn-gold">' . esc_html( $s['btn1'] ) . '</a>';
-		echo '<a href="' . esc_url( toppers_whatsapp_url() ) . '" target="_blank" rel="noopener" class="btn btn-outline">' . esc_html( $s['btn2'] ) . '</a>';
+		echo '<a href="' . esc_url( toppers_whatsapp_url() ) . '" target="_blank" rel="noopener" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i> ' . esc_html( $s['btn2'] ) . '</a>';
 		echo '</div></div></div></section>';
 	}
 }
@@ -516,7 +559,7 @@ class Toppers_Widget_Blog_Grid extends Toppers_Widget_Base {
 			}
 			wp_reset_postdata();
 		}
-		echo '</div><div style="text-align:center;margin-top:40px;"><a href="' . esc_url( toppers_blog_url() ) . '" class="btn btn-outline">' . esc_html__( 'عرض كل المقالات', 'toppers' ) . '</a></div></div></section>';
+		echo '</div><div style="text-align:center;margin-top:40px;"><a href="' . esc_url( toppers_blog_url() ) . '" class="btn btn-outline-dark">' . esc_html__( 'عرض كل المقالات', 'toppers' ) . '</a></div></div></section>';
 	}
 }
 

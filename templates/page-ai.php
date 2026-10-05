@@ -10,6 +10,7 @@ get_header();
 $ai_settings  = toppers_get_ai_settings();
 $quick_chips  = $ai_settings['quick_chips'];
 $contact_url  = toppers_page_url( 'contact' );
+$request_url  = toppers_system_request_url( 'خدمة مخصصة', 0, array( 'custom' => '1' ) );
 $whatsapp_raw = toppers_opt( 'toppers_whatsapp', '966549093465' );
 $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 ?>
@@ -163,7 +164,9 @@ $whatsapp_num = preg_replace( '/\D+/', '', $whatsapp_raw );
 window.ToppersAIData = {
 	templates: <?php echo wp_json_encode( $ai_settings['title_templates'] ); ?>,
 	contactUrl: <?php echo wp_json_encode( $contact_url ); ?>,
-	whatsappNum: <?php echo wp_json_encode( $whatsapp_num ); ?>
+	requestUrl: <?php echo wp_json_encode( $request_url ); ?>,
+	whatsappNum: <?php echo wp_json_encode( $whatsapp_num ); ?>,
+	loggedIn: <?php echo is_user_logged_in() ? 'true' : 'false'; ?>
 };
 </script>
 

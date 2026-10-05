@@ -82,59 +82,65 @@ function toppers_seed_demo() {
 		update_option( 'page_for_posts', $ids['blog'] );
 	}
 
-	$cats = array(
-		'uni'      => 'الطلاب الجامعيين',
-		'grad'     => 'الدراسات العليا',
-		'research' => 'منهجية البحث العلمي',
-		'write'    => 'الكتابة والنشر',
-	);
+	$cats = array();
+	foreach ( toppers_services_categories() as $slug => $cat ) {
+		$cats[ $slug ] = $cat['name'];
+	}
 	$cat_ids = array();
 	foreach ( $cats as $slug => $name ) {
-		$term = term_exists( $name, 'service_category' );
+		$term = term_exists( $slug, 'service_category' );
 		if ( ! $term ) {
-			$term = wp_insert_term( $name, 'service_category', array( 'slug' => $slug ) );
+			$term = term_exists( $name, 'service_category' );
+		}
+		if ( ! $term ) {
+			$meta = toppers_services_categories()[ $slug ];
+			$term = wp_insert_term(
+				$name,
+				'service_category',
+				array(
+					'slug'        => $slug,
+					'description' => $meta['description'],
+				)
+			);
 		}
 		if ( ! is_wp_error( $term ) ) {
 			$cat_ids[ $slug ] = (int) ( is_array( $term ) ? $term['term_id'] : $term );
 		}
 	}
 
-	$services = array(
-		array( 'البحوث الجامعية', 'إعداد بحوث جامعية بمنهجية علمية دقيقة تناسب متطلبات كل مقرر.', 'uni', 'الأكثر طلباً', 'research.jpg' ),
-		array( 'دعم مشاريع التخرج', 'مساعدة متكاملة في التخطيط والتنفيذ وكتابة تقارير مشاريع التخرج.', 'uni', '', 'meeting.jpg' ),
-		array( 'رسائل الماجستير', 'مرافقة كاملة من اختيار العنوان حتى المناقشة والتنسيق النهائي.', 'grad', 'حصري', 'masters.jpg' ),
-		array( 'أطروحات الدكتوراه', 'دعم بحثي متقدم للباحثين في مراحل الدكتوراه المختلفة.', 'grad', '', 'phd.jpg' ),
-		array( 'خطة البحث والمقترح', 'صياغة مقترح بحثي متكامل يحدد مشكلة البحث وأهدافه ومنهجيته.', 'grad', '', 'proposal.jpg' ),
-		array( 'التحليل الإحصائي', 'تحليل بيانات البحث باستخدام البرامج الإحصائية المناسبة.', 'research', '', 'hero-3.jpg' ),
-		array( 'الترجمة الأكاديمية', 'ترجمة دقيقة للأبحاث والمصادر بين العربية ولغات البحث العلمي.', 'write', '', 'laptop.jpg' ),
-		array( 'التدقيق اللغوي', 'مراجعة لغوية شاملة لرسائل الماجستير والدكتوراه والأبحاث.', 'write', '', 'proof.jpg' ),
-		array( 'فحص نسبة الاقتباس', 'تقرير دقيق لنسبة التشابه مع توصيات لتحسين الأصالة العلمية.', 'research', '', 'library.jpg' ),
-		array( 'النشر في المجلات المحكمة', 'تجهيز الورقة العلمية وفق شروط المجلات ومتابعة عملية النشر.', 'write', '', 'publish.jpg' ),
-	);
-
-	foreach ( $services as $i => $svc ) {
-		if ( toppers_post_exists_title( $svc[0], 'toppers_service' ) ) {
-			continue;
+	// Prefer the canonical catalog sync for services.
+	if ( function_exists( 'toppers_sync_services_catalog' ) ) {
+		toppers_sync_services_catalog();
+	} else {
+		$services = array();
+		foreach ( toppers_services_catalog() as $svc ) {
+			$services[] = array( $svc[0], $svc[1], $svc[2], $svc[3], $svc[4] . '.jpg' );
 		}
-		$id = wp_insert_post(
-			array(
-				'post_title'   => $svc[0],
-				'post_content' => $svc[1],
-				'post_excerpt' => $svc[1],
-				'post_status'  => 'publish',
-				'post_type'    => 'toppers_service',
-				'menu_order'   => $i,
-			)
-		);
-		if ( $id && ! is_wp_error( $id ) ) {
-			if ( ! empty( $svc[3] ) ) {
-				update_post_meta( $id, '_toppers_badge', $svc[3] );
+
+		foreach ( $services as $i => $svc ) {
+			if ( toppers_post_exists_title( $svc[0], 'toppers_service' ) ) {
+				continue;
 			}
-			if ( ! empty( $svc[4] ) ) {
-				update_post_meta( $id, '_toppers_image', $svc[4] );
-			}
-			if ( ! empty( $cat_ids[ $svc[2] ] ) ) {
-				wp_set_object_terms( $id, array( $cat_ids[ $svc[2] ] ), 'service_category' );
+			$id = wp_insert_post(
+				array(
+					'post_title'   => $svc[0],
+					'post_content' => $svc[1],
+					'post_excerpt' => $svc[1],
+					'post_status'  => 'publish',
+					'post_type'    => 'toppers_service',
+					'menu_order'   => $i,
+				)
+			);
+			if ( $id && ! is_wp_error( $id ) ) {
+				if ( ! empty( $svc[3] ) ) {
+					update_post_meta( $id, '_toppers_badge', $svc[3] );
+				}
+				if ( ! empty( $svc[4] ) ) {
+					update_post_meta( $id, '_toppers_image', $svc[4] );
+				}
+				if ( ! empty( $cat_ids[ $svc[2] ] ) ) {
+					wp_set_object_terms( $id, array( $cat_ids[ $svc[2] ] ), 'service_category' );
+				}
 			}
 		}
 	}
@@ -452,6 +458,69 @@ function toppers_align_primary_nav_v2() {
 	}
 
 	update_option( 'toppers_aligned_primary_nav_v2', 1 );
+}
+
+/**
+ * Primary nav v3: flat links + one parent with submenu (عن توبرز).
+ */
+add_action( 'init', 'toppers_align_primary_nav_v3', 48 );
+function toppers_align_primary_nav_v3() {
+	if ( get_option( 'toppers_aligned_primary_nav_v3' ) ) {
+		return;
+	}
+	$locations = get_nav_menu_locations();
+	$menu_id   = isset( $locations['primary'] ) ? (int) $locations['primary'] : 0;
+	if ( ! $menu_id ) {
+		$menu    = wp_get_nav_menu_object( 'Toppers Primary' );
+		$menu_id = $menu ? (int) $menu->term_id : 0;
+	}
+	if ( ! $menu_id ) {
+		return;
+	}
+
+	$existing = wp_get_nav_menu_items( $menu_id );
+	if ( $existing ) {
+		foreach ( $existing as $item ) {
+			wp_delete_post( $item->ID, true );
+		}
+	}
+
+	$add = static function ( $menu_id, $title, $url, $pos, $parent = 0 ) {
+		if ( empty( $url ) || '#' === $url ) {
+			return 0;
+		}
+		return (int) wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-title'     => $title,
+				'menu-item-url'       => $url,
+				'menu-item-status'    => 'publish',
+				'menu-item-type'      => 'custom',
+				'menu-item-position'  => $pos,
+				'menu-item-parent-id' => (int) $parent,
+			)
+		);
+	};
+
+	$pos = 1;
+	$add( $menu_id, 'الرئيسية', home_url( '/' ), $pos++ );
+	$add( $menu_id, 'الخدمات', toppers_page_url( 'services' ), $pos++ );
+	$add( $menu_id, 'المساعد البحثي', toppers_page_url( 'ai-assistant' ), $pos++ );
+
+	$parent_id = $add( $menu_id, 'عن توبرز', toppers_page_url( 'about' ), $pos++ );
+	if ( $parent_id ) {
+		$add( $menu_id, 'من نحن', toppers_page_url( 'about' ), $pos++, $parent_id );
+		$add( $menu_id, 'الضمانات', toppers_page_url( 'guarantees' ), $pos++, $parent_id );
+		$add( $menu_id, 'انضم لتوبرز', toppers_page_url( 'team' ), $pos++, $parent_id );
+		$add( $menu_id, 'الأسئلة الشائعة', toppers_page_url( 'faq' ), $pos++, $parent_id );
+	}
+
+	$add( $menu_id, 'آراء العملاء', toppers_page_url( 'testimonials' ), $pos++ );
+	$add( $menu_id, 'المدونة', toppers_blog_url(), $pos++ );
+	$add( $menu_id, 'تواصل معنا', toppers_page_url( 'contact' ), $pos++ );
+
+	update_option( 'toppers_aligned_primary_nav_v3', 1 );
 }
 
 add_action( 'init', 'toppers_align_primary_nav_v1', 47 );

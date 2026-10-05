@@ -88,9 +88,12 @@ foreach ( $groups as $items ) {
 			toppers_hero_args(
 				'faq',
 				array(
-					'title'   => __( 'الأسئلة الشائعة | شركة توبرز للاستشارات والحلول البحثية', 'toppers' ),
-					'eyebrow' => __( 'دليل الإجابات الشامل', 'toppers' ),
-					'lede'    => __( 'جمعنا لك إجابات شاملة عن أكثر الأسئلة التي يطرحها الباحثون وطلاب الدراسات العليا قبل التعامل مع شركة توبرز، موزّعة على تصنيفات واضحة تغطي خدماتنا وأسعارنا ومواعيدنا وضماناتنا.', 'toppers' ),
+					'title'   => __( 'الأسئلة الشائعة', 'toppers' ),
+					'eyebrow' => __( 'شركة توبرز للاستشارات والحلول البحثية', 'toppers' ),
+					'crumb'   => __( 'الأسئلة الشائعة', 'toppers' ),
+					'lede'    => __( 'جمعنا لك في هذه الصفحة إجابات شاملة عن أكثر الأسئلة التي يطرحها الباحثون وطلاب الدراسات العليا قبل التعامل مع شركة توبرز للاستشارات والحلول البحثية، موزّعة على تصنيفات واضحة تغطي كل ما يخص خدماتنا، أسعارنا، مواعيدنا، وضماناتنا.', 'toppers' ),
+					'center'  => true,
+					'orbs'    => true,
 				)
 			)
 		);
@@ -131,8 +134,15 @@ foreach ( $groups as $items ) {
 							<div class="faq-panel">
 								<?php foreach ( $items as $item ) : ?>
 									<div class="faq-item<?php echo $open ? ' is-open' : ''; ?>">
-										<button type="button" class="faq-q"><span><?php echo esc_html( $item[0] ); ?></span><span class="plus" aria-hidden="true"></span></button>
-										<div class="faq-a"><p><?php echo esc_html( $item[1] ); ?></p></div>
+										<button type="button" class="faq-q" aria-expanded="<?php echo $open ? 'true' : 'false'; ?>">
+											<span><?php echo esc_html( $item[0] ); ?></span>
+											<span class="plus" aria-hidden="true"></span>
+										</button>
+										<div class="faq-a">
+											<div class="faq-a-inner">
+												<p><?php echo esc_html( $item[1] ); ?></p>
+											</div>
+										</div>
 									</div>
 									<?php $open = false; ?>
 								<?php endforeach; ?>
@@ -150,7 +160,10 @@ foreach ( $groups as $items ) {
 					<p><?php esc_html_e( 'تواصل معنا مباشرة وسيسعدنا الرد على جميع استفساراتك.', 'toppers' ); ?></p>
 					<div class="cta-actions">
 						<a class="btn btn-gold" href="<?php echo esc_url( toppers_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'تواصل معنا', 'toppers' ); ?></a>
-						<a class="btn btn-outline" href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'واتساب', 'toppers' ); ?></a>
+						<a class="btn btn-whatsapp" href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener">
+							<i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+							<?php esc_html_e( 'واتساب', 'toppers' ); ?>
+						</a>
 					</div>
 				</div>
 			</div>

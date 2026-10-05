@@ -61,10 +61,22 @@ if ( $extra->have_posts() ) {
 }
 
 $steps = array(
-	array( 'التوجيه العلمي والمنهجي', 'يتولى الباحث المختص في المجال الأكاديمي الدقيق وضع الإطار العلمي والإشراف على المضمون ورسم ملامح الفصول.' ),
-	array( 'المعالجة والتحليل الإحصائي', 'ينقل الملف إلى خبراء الإحصاء والبيانات لمعالجة الأرقام وبناء العلاقات الإحصائية واختبار الفرضيات بأعلى درجات الدقة.' ),
-	array( 'التدقيق والضبط اللغوي', 'يخضع العمل لمراجعة شاملة من حُرّاس اللغة والضبط الأكاديمي لضمان الرصانة والسلامة اللغوية والخلو من الانتحال العلمي.' ),
-	array( 'الفلترة والجودة النهائية', 'تتولى إدارة الجودة المطابقة النهائية للمواصفات والشروط الأكاديمية ودليل الجامعة المعتمد قبل تسليم الباحث.' ),
+	array(
+		toppers_content( 'team_step_1_title', __( 'التوجيه العلمي والمنهجي', 'toppers' ) ),
+		toppers_content( 'team_step_1_desc', __( 'يتولى الباحث المختص في المجال الأكاديمي الدقيق وضع الإطار العلمي والإشراف على المضمون ورسم ملامح الفصول.', 'toppers' ) ),
+	),
+	array(
+		toppers_content( 'team_step_2_title', __( 'المعالجة والتحليل الإحصائي', 'toppers' ) ),
+		toppers_content( 'team_step_2_desc', __( 'ينقل الملف إلى خبراء الإحصاء والبيانات لمعالجة الأرقام وبناء العلاقات الإحصائية واختبار الفرضيات بأعلى درجات الدقة.', 'toppers' ) ),
+	),
+	array(
+		toppers_content( 'team_step_3_title', __( 'التدقيق والضبط اللغوي', 'toppers' ) ),
+		toppers_content( 'team_step_3_desc', __( 'يخضع العمل لمراجعة شاملة من حُرّاس اللغة والضبط الأكاديمي لضمان الرصانة والسلامة اللغوية والخلو من الانتحال العلمي.', 'toppers' ) ),
+	),
+	array(
+		toppers_content( 'team_step_4_title', __( 'الفلترة والجودة النهائية', 'toppers' ) ),
+		toppers_content( 'team_step_4_desc', __( 'تتولى إدارة الجودة المطابقة النهائية للمواصفات والشروط الأكاديمية ودليل الجامعة المعتمد قبل تسليم الباحث.', 'toppers' ) ),
+	),
 );
 ?>
 <main class="site-main">
@@ -85,7 +97,9 @@ $steps = array(
 					'eyebrow' => __( 'فريق العمل', 'toppers' ),
 					'crumb'   => __( 'فريق العمل', 'toppers' ),
 					'lede'    => __( 'في «توبرز»، لا نؤمن بالحلول العشوائية أو العمل الفردي. يقف خلف كل رسالة علمية وبحث مُحكّم منظومة متكاملة تقودها نخبة من الباحثين والأكاديميين، مدعومين بفريق تقني وإداري يعمل على مدار الساعة ليضمن لك رحلة بحثية آمنة، دقيقة، وخالية من التعقيد.', 'toppers' ),
-					'plain'   => true,
+					'image'   => toppers_photo( 'team' ),
+					'center'  => true,
+					'orbs'    => true,
 				)
 			)
 		);
@@ -169,7 +183,10 @@ $steps = array(
 					<p style="margin-top: 12px; margin-bottom: 24px; color: rgba(255,255,255,0.85);"><?php esc_html_e( 'ابدأ مشروعك الآن مع النخبة الأكاديمية والتقنية في الوطن العربي واحصل على تقارير الأصالة المعتمدة.', 'toppers' ); ?></p>
 					<div class="cta-actions">
 						<a class="btn btn-gold" href="<?php echo esc_url( toppers_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'تواصل معنا الآن', 'toppers' ); ?></a>
-						<a class="btn btn-outline" href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'تواصل عبر الواتساب', 'toppers' ); ?></a>
+						<a class="btn btn-whatsapp" href="<?php echo esc_url( toppers_whatsapp_url() ); ?>" target="_blank" rel="noopener">
+							<i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+							<?php esc_html_e( 'تواصل عبر الواتساب', 'toppers' ); ?>
+						</a>
 					</div>
 				</div>
 			</div>

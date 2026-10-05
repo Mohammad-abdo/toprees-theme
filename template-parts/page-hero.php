@@ -26,16 +26,17 @@ $bg = '';
 if ( ! $plain && $image ) {
 	$bg = 'background: linear-gradient(135deg, rgba(14,23,48,0.95) 0%, rgba(26,45,92,0.95) 100%), url(\'' . esc_url( $image ) . '\') center/cover no-repeat;';
 	if ( $orbs ) {
-		$bg .= ' padding-top: 180px; padding-bottom: 120px; position: relative; overflow: hidden;';
+		$bg .= ' padding-top: 100px; padding-bottom: 80px; position: relative; overflow: hidden;';
 	}
 }
 ?>
 <section class="page-hero"<?php echo $bg ? ' style="' . $bg . '"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<?php if ( $orbs ) : ?>
-		<div style="position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: rgba(201,154,59,0.3); filter: blur(100px); border-radius: 50%;"></div>
-		<div style="position: absolute; bottom: -100px; left: -100px; width: 500px; height: 500px; background: rgba(14,23,48,0.8); filter: blur(150px); border-radius: 50%;"></div>
+		<div style="position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: rgba(201,154,59,0.25); filter: blur(100px); border-radius: 50%; pointer-events: none;"></div>
+		<div style="position: absolute; bottom: -100px; left: -100px; width: 500px; height: 500px; background: rgba(14,23,48,0.85); filter: blur(150px); border-radius: 50%; pointer-events: none;"></div>
+		<div class="hero-field" style="pointer-events: none;"></div>
 	<?php else : ?>
-		<div class="hero-field"></div>
+		<div class="hero-field" style="pointer-events: none;"></div>
 	<?php endif; ?>
 	<div class="container" style="position: relative; z-index: 2;<?php echo $center ? ' text-align: center;' : ''; ?>">
 		<div class="breadcrumb"<?php echo $center ? ' style="justify-content: center;"' : ''; ?>>
